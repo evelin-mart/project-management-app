@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const ProfilePage = () => {
+export const Loader = () => {
   return <div></div>;
 };

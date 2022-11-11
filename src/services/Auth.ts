@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { AUTH, SERVER } from 'constants/server';
+import { SERVER } from 'constants/SERVER';
+import { METHOD } from 'constants/METHODS';
 
-export const AuthAPI = createApi({
-  reducerPath: 'SignIn',
+export const authAPI = createApi({
+  reducerPath: 'authAPI',
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER.BASE_LINK,
   }),
@@ -10,8 +11,8 @@ export const AuthAPI = createApi({
     signIn: build.mutation({
       query: (data) => {
         return {
-          url: AUTH.SIGNIN,
-          method: 'POST',
+          url: SERVER.SIGNIN,
+          method: METHOD.POST,
           body: data,
         };
       },
@@ -19,8 +20,8 @@ export const AuthAPI = createApi({
     signUp: build.mutation({
       query: (data) => {
         return {
-          url: AUTH.SIGNUP,
-          method: 'POST',
+          url: SERVER.SIGNUP,
+          method: METHOD.POST,
           body: data,
         };
       },

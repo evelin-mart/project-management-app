@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import setupStore from 'state/store';
+import { store } from '../../store';
 
 const theme = createTheme({
   palette: {
@@ -23,7 +23,6 @@ const theme = createTheme({
 });
 
 export const App = () => {
-  const store = setupStore();
   return (
     <>
       <CssBaseline />

@@ -1,5 +1,7 @@
 export enum Pages {
   HOME = '/',
-  NOT_FOUND = '404',
+  SING_IN = 'sing-in',
+  SING_UP = 'sign-up',
   PROFILE = 'profile',
+  NOT_FOUND = '404',
 }

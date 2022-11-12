@@ -7,30 +7,48 @@ import { ProfilePage } from 'pages/ProfilePage';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import setupStore from 'state/store';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#fe6b61',
+    },
+    secondary: {
+      main: '#ffc967',
+    },
+  },
+});
 
 export const App = () => {
   const store = setupStore();
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path={Pages.HOME}
-            element={
-              <>
-                <Header />
-                <Outlet />
-                <Footer />
-              </>
-            }
-          >
-            <Route index element={<HomePage />} />
-            <Route path={Pages.PROFILE} element={<ProfilePage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </Provider>
+    <>
+      <CssBaseline />
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <Routes>
+              <Route
+                path={Pages.HOME}
+                element={
+                  <>
+                    <Header />
+                    <Outlet />
+                    <Footer />
+                  </>
+                }
+              >
+                <Route index element={<HomePage />} />
+                <Route path={Pages.PROFILE} element={<ProfilePage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </>
   );
 };

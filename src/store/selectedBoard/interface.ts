@@ -16,5 +16,5 @@ export interface TaskData {
 }
 
 export interface selectedBoardState extends BoardData {
-  columns: ColumnData;
+  columns: ColumnData[];
 };

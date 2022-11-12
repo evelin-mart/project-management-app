@@ -4,7 +4,7 @@ import { boardsSlice } from './boards';
 import { selectedBoardSlice } from './selectedBoard';
 import { userSlice } from './user';
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     [userSlice.name]: userSlice.reducer,
     [boardsSlice.name]: boardsSlice.reducer,

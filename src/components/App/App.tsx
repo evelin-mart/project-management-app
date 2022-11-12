@@ -1,5 +1,12 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import setupStore from 'state/store';
 
 export const App = () => {
-  return <div></div>;
+  const store = setupStore();
+  return (
+    <Provider store={store}>
+      <div></div>
+    </Provider>
+  );
 };

@@ -1,14 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { SERVER } from 'constants/Server';
 import { METHOD } from 'constants/Methods';
-import { RootState } from 'state/store';
+import { RootState } from '../store';
 
 export const usersAPI = createApi({
   reducerPath: 'usersAPI',
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER.BASE_LINK,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).user.token;
+      const token = (getState() as RootState).user.data.token;
       if (token) {
         headers.set('authorization', `Bearer ${token}`);
       }

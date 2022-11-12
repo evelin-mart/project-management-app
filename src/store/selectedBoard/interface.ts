@@ -1,4 +1,4 @@
-import { BoardData } from "store/boards";
+import { BoardData } from 'store/boards';
 
 export interface ColumnData {
   id: string;
@@ -17,4 +17,4 @@ export interface TaskData {
 
 export interface selectedBoardState extends BoardData {
   columns: ColumnData[];
-};
+}

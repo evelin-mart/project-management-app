@@ -39,13 +39,13 @@ export const Footer = () => {
               width: '100%',
             }}
           >
-            <Link href="https://rs.school/react/">
+            <Link href="https://rs.school/react/" target="_blank">
               <Image src={RsSchoolLogo} alt="home image" loading="lazy" />
             </Link>
             <Grid container spacing={2} justifyContent="center" alignItems="center">
               {Object.entries(gitHubUsers).map(([user, link]) => (
                 <Grid item key={user}>
-                  <Link href={link} underline="hover">
+                  <Link href={link} underline="hover" target="_blank">
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Image src={GitHubLogo} alt="github image" loading="lazy"></Image>
                       <Typography sx={{ px: 1 }}>{user}</Typography>

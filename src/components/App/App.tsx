@@ -1,6 +1,6 @@
 import { Footer } from 'components/Footer';
 import { Header } from 'components/Header';
-import { Pages } from 'constants/Routes';
+import { Pages } from '../../constants';
 import { NotFoundPage } from 'pages/404';
 import { HomePage } from 'pages/HomePage';
 import { ProfilePage } from 'pages/ProfilePage';

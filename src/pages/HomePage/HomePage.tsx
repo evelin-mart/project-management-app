@@ -1,11 +1,19 @@
-import { Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
-import { Box } from '@mui/system';
 import React from 'react';
+import {
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
+import { Box } from '@mui/system';
+import { styled } from '@mui/system';
 import MainImage from '../../assets/img/home-main-img.jpg';
 import DenisAvatar from '../../assets/img/denis-avatar.png';
 import EvelinAvatar from '../../assets/img/evelin-avatar.png';
 import TanyaAvatar from '../../assets/img/tanya-avatar.png';
-import { styled } from '@mui/system';
 
 const Image = styled('img')({
   maxWidth: '100%',
@@ -29,8 +37,11 @@ const developers = {
 };
 
 export const HomePage = () => {
+  const theme = useTheme();
+  const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+
   return (
-    <Box sx={{ p: 6, maxWidth: '1200px', margin: 'auto' }}>
+    <Box sx={{ p: 4, maxWidth: '1200px', margin: 'auto' }}>
       <Grid container spacing={2}>
         <Grid
           item
@@ -43,10 +54,15 @@ export const HomePage = () => {
             flexDirection: 'column',
           }}
         >
-          <Typography variant="h4" component="h2" sx={{ my: 2 }}>
+          <Typography
+            color="textPrimary"
+            variant={smUp ? 'h4' : 'h5'}
+            component="h2"
+            sx={{ my: 2 }}
+          >
             About EASYtoDO
           </Typography>
-          <Typography>
+          <Typography color="textPrimary">
             Текст текст текст текст Много текста: текст текст текст текст текст текст текст текст
             текст текст текст текст текст текст текст текст текст текст Еще текст Еще текст Текст
             текст текст текст Много текста: текст текст текст текст текст текст текст текст текст
@@ -71,7 +87,13 @@ export const HomePage = () => {
         </Grid>
       </Grid>
       <Box sx={{ my: 10 }}>
-        <Typography variant="h4" component="h2" align="center" sx={{ my: 2 }}>
+        <Typography
+          variant={smUp ? 'h4' : 'h5'}
+          component="h2"
+          align="center"
+          color="textPrimary"
+          sx={{ my: 2 }}
+        >
           Team
         </Typography>
         <Grid container spacing={6} justifyContent="center" alignItems="stretch">
@@ -85,12 +107,10 @@ export const HomePage = () => {
                   sx={{ height: '100px', width: 'auto', mt: 2, mx: 'auto' }}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" align="center">
+                  <Typography gutterBottom variant="h6" component="div" align="center">
                     {developer}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {text}
-                  </Typography>
+                  <Typography variant="body2">{text}</Typography>
                 </CardContent>
               </Card>
             </Grid>

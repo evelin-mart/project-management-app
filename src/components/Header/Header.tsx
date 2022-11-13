@@ -12,10 +12,13 @@ import {
   Avatar,
   ToggleButton,
   ToggleButtonGroup,
+  useScrollTrigger,
 } from '@mui/material';
 import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useTheme } from '@mui/material/styles';
 import { Pages } from 'constants/Routes';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const pages = {
   [Pages.SING_IN]: 'Sing In',
@@ -25,7 +28,14 @@ const pages = {
 export const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const theme = useTheme();
+  const smUp = useMediaQuery(theme.breakpoints.up('sm'));
   const loggedUser = null;
+
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 100,
+  });
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -42,8 +52,11 @@ export const Header = () => {
     setAnchorElUser(null);
   };
 
+  const color = trigger ? theme.palette.text.primary : theme.palette.text.secondary;
+  const colorTransition = { transition: 'all 0.5s ease', color };
+
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" color={trigger ? 'secondary' : 'primary'} sx={colorTransition}>
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
@@ -51,11 +64,11 @@ export const Header = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            color: 'white',
           }}
         >
           <Typography
-            variant="h4"
+            color="primary"
+            variant={smUp ? 'h4' : 'h6'}
             noWrap
             component="a"
             href={Pages.HOME}
@@ -77,8 +90,8 @@ export const Header = () => {
                 <ToggleButton
                   value="en"
                   sx={{
-                    color: 'white',
-                    '&.Mui-selected, &.Mui-selected:hover': { color: 'white' },
+                    ...colorTransition,
+                    '&.Mui-selected, &.Mui-selected:hover': colorTransition,
                     py: 0.3,
                   }}
                 >
@@ -87,8 +100,8 @@ export const Header = () => {
                 <ToggleButton
                   value="ru"
                   sx={{
-                    color: 'white',
-                    '&.Mui-selected, &.Mui-selected:hover': { color: 'white' },
+                    ...colorTransition,
+                    '&.Mui-selected, &.Mui-selected:hover': colorTransition,
                     py: 0.3,
                   }}
                 >
@@ -127,7 +140,7 @@ export const Header = () => {
                     <Button
                       key={key}
                       onClick={handleCloseNavMenu}
-                      sx={{ my: 2, color: 'white', display: 'block', fontWeight: 700 }}
+                      sx={{ my: 2, ...colorTransition, display: 'block', fontWeight: 700 }}
                     >
                       {name}
                     </Button>

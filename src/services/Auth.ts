@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { SERVER } from 'constants/Server';
-import { METHOD } from 'constants/Methods';
+import { METHOD, SERVER } from './../constants';
 
 export const authAPI = createApi({
   reducerPath: 'authAPI',
@@ -9,20 +8,20 @@ export const authAPI = createApi({
   }),
   endpoints: (build) => ({
     signIn: build.mutation({
-      query: (data) => {
+      query: (body) => {
         return {
           url: SERVER.SIGNIN,
           method: METHOD.POST,
-          body: data,
+          body: body,
         };
       },
     }),
     signUp: build.mutation({
-      query: (data) => {
+      query: (body) => {
         return {
           url: SERVER.SIGNUP,
           method: METHOD.POST,
-          body: data,
+          body: body,
         };
       },
     }),

@@ -2,9 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 import { METHOD, SERVER } from './../constants';
 import { RootState } from 'store';
 
-export const usersAPI = createApi({
-  reducerPath: 'usersAPI',
-  tagTypes: ['User'],
+export const fileAPI = createApi({
+  reducerPath: 'fileAPI',
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER.BASE_LINK,
     prepareHeaders: (headers, { getState }) => {
@@ -16,37 +15,36 @@ export const usersAPI = createApi({
     },
   }),
   endpoints: (build) => ({
-    getAllUsers: build.query({
-      query: () => {
+    getFileByIdsListUserIdTaskId: build.query({
+      query: (query) => {
         return {
-          url: SERVER.USERS,
+          url: `${SERVER.FILE}?${query}`,
           method: METHOD.GET,
         };
       },
     }),
-    getUserById: build.query({
-      query: (userId) => {
+    uploadFile: build.mutation({
+      query: (formData) => {
         return {
-          url: `${SERVER.USERS}/${userId}`,
+          url: `${SERVER.FILE}`,
+          method: METHOD.POST,
+          credentials: 'include',
+          body: formData,
+        };
+      },
+    }),
+    getFilesByBoardId: build.query({
+      query: (boardId) => {
+        return {
+          url: `${SERVER.FILE}/${boardId}`,
           method: METHOD.GET,
         };
       },
-      providesTags: () => ['User'],
     }),
-    updateUserById: build.mutation({
-      query: ({ userId, body }) => {
+    deleteFileById: build.mutation({
+      query: (boardId) => {
         return {
-          url: `${SERVER.USERS}/${userId}`,
-          method: METHOD.PUT,
-          body: body,
-        };
-      },
-      invalidatesTags: () => ['User'],
-    }),
-    deleteUserById: build.mutation({
-      query: (userId) => {
-        return {
-          url: `${SERVER.USERS}/${userId}`,
+          url: `${SERVER.FILE}/${boardId}`,
           method: METHOD.DELETE,
         };
       },

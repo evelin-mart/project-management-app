@@ -16,7 +16,7 @@ export const fileAPI = createApi({
   }),
   endpoints: (build) => ({
     getFileByIdsListUserIdTaskId: build.query({
-      query: (query) => {
+      query: (query: string) => {
         return {
           url: `${SERVER.FILE}?${query}`,
           method: METHOD.GET,
@@ -24,7 +24,7 @@ export const fileAPI = createApi({
       },
     }),
     uploadFile: build.mutation({
-      query: (formData) => {
+      query: (formData: FormData) => {
         return {
           url: `${SERVER.FILE}`,
           method: METHOD.POST,
@@ -34,7 +34,7 @@ export const fileAPI = createApi({
       },
     }),
     getFilesByBoardId: build.query({
-      query: (boardId) => {
+      query: (boardId: string) => {
         return {
           url: `${SERVER.FILE}/${boardId}`,
           method: METHOD.GET,
@@ -42,7 +42,7 @@ export const fileAPI = createApi({
       },
     }),
     deleteFileById: build.mutation({
-      query: (boardId) => {
+      query: (boardId: string) => {
         return {
           url: `${SERVER.FILE}/${boardId}`,
           method: METHOD.DELETE,

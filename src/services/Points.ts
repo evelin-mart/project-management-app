@@ -16,7 +16,7 @@ export const pointsAPI = createApi({
   }),
   endpoints: (build) => ({
     getPointsByIdsListOrUserId: build.query({
-      query: (query) => {
+      query: (query: string) => {
         return {
           url: `${SERVER.POINTS}?${query}`,
           method: METHOD.GET,
@@ -24,7 +24,7 @@ export const pointsAPI = createApi({
       },
     }),
     createPoint: build.mutation({
-      query: (body) => {
+      query: (body: { title: string; taskId: string; boardId: string; done: boolean }) => {
         return {
           url: `${SERVER.POINTS}`,
           method: METHOD.POST,
@@ -33,7 +33,7 @@ export const pointsAPI = createApi({
       },
     }),
     updateSetOfPoints: build.mutation({
-      query: (body) => {
+      query: (body: { _id: string; done: boolean }) => {
         return {
           url: `${SERVER.POINTS}`,
           method: METHOD.PATCH,
@@ -42,7 +42,7 @@ export const pointsAPI = createApi({
       },
     }),
     getPointsByTaskId: build.query({
-      query: (taskId) => {
+      query: (taskId: string) => {
         return {
           url: `${SERVER.POINTS}/${taskId}`,
           method: METHOD.GET,
@@ -50,7 +50,7 @@ export const pointsAPI = createApi({
       },
     }),
     updatePoint: build.mutation({
-      query: ({ pointId, body }) => {
+      query: ({ pointId, body }: { pointId: string; body: { title: string; done: boolean } }) => {
         return {
           url: `${SERVER.POINTS}/${pointId}`,
           method: METHOD.PATCH,
@@ -59,7 +59,7 @@ export const pointsAPI = createApi({
       },
     }),
     deletePointById: build.mutation({
-      query: (pointId) => {
+      query: (pointId: string) => {
         return {
           url: `${SERVER.POINTS}/${pointId}`,
           method: METHOD.DELETE,

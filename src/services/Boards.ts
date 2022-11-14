@@ -26,7 +26,7 @@ export const boardsAPI = createApi({
       providesTags: () => ['Board'],
     }),
     createBoard: build.mutation({
-      query: (body) => {
+      query: (body: { title: string; owner: string; users: string[] }) => {
         return {
           url: SERVER.BOARDS,
           method: METHOD.POST,
@@ -36,7 +36,7 @@ export const boardsAPI = createApi({
       invalidatesTags: () => ['Board'],
     }),
     getBoardById: build.query({
-      query: (boardId) => {
+      query: (boardId: string) => {
         return {
           url: `${SERVER.BOARDS}/${boardId}`,
           method: METHOD.GET,
@@ -44,7 +44,13 @@ export const boardsAPI = createApi({
       },
     }),
     updateBoardById: build.mutation({
-      query: ({ boardId, body }) => {
+      query: ({
+        boardId,
+        body,
+      }: {
+        boardId: string;
+        body: { title: string; owner: string; users: string[] };
+      }) => {
         return {
           url: `${SERVER.BOARDS}/${boardId}`,
           method: METHOD.PUT,
@@ -54,7 +60,7 @@ export const boardsAPI = createApi({
       invalidatesTags: () => ['Board'],
     }),
     deleteBoardById: build.mutation({
-      query: (boardId) => {
+      query: (boardId: string) => {
         return {
           url: `${SERVER.BOARDS}/${boardId}`,
           method: METHOD.DELETE,
@@ -63,7 +69,7 @@ export const boardsAPI = createApi({
       invalidatesTags: () => ['Board'],
     }),
     getBoardsByIdsList: build.query({
-      query: (ids) => {
+      query: (ids: string) => {
         return {
           url: `${SERVER.BOARDS_SET}`,
           method: METHOD.GET,
@@ -74,7 +80,7 @@ export const boardsAPI = createApi({
       },
     }),
     getBoardsByUserId: build.query({
-      query: (ids) => {
+      query: (ids: string) => {
         return {
           url: `${SERVER.BOARDS_SET}`,
           method: METHOD.GET,

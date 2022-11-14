@@ -4,7 +4,7 @@ import { Pages } from '../../constants';
 import { NotFoundPage } from 'pages/404';
 import { HomePage } from 'pages/HomePage';
 import { ProfilePage } from 'pages/ProfilePage';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';

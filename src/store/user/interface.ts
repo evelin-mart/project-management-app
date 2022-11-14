@@ -3,9 +3,11 @@ export interface UserData {
   name: string;
   login: string;
   token: string;
+  exp: number;
 }
 
 export interface UserState {
   data: UserData;
-  isAuth: boolean;
+  isLoading: boolean;
+  error: string;
 }

@@ -23,7 +23,7 @@ export const Footer = () => {
   return (
     <AppBar
       position="static"
-      sx={{ backgroundColor: '#e8e8e8', boxShadow: 'none' }}
+      sx={{ backgroundColor: theme.palette.grey[100], boxShadow: 'none' }}
       component="footer"
     >
       <Container maxWidth="xl" sx={{ py: smUp ? 0 : 2 }}>
@@ -68,7 +68,7 @@ export const Footer = () => {
                 </Grid>
               ))}
             </Grid>
-            <Typography component="span" noWrap sx={{ overflow: 'unset' }}>
+            <Typography component="span" color="text.primary" noWrap sx={{ overflow: 'unset' }}>
               2022. React 2022Q3
             </Typography>
           </Box>

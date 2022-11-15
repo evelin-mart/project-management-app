@@ -1,3 +1,3 @@
 export { METHOD } from './Methods';
-export { Pages } from './Routes';
+export { ROUTES } from './Routes';
 export { SERVER } from './Server';

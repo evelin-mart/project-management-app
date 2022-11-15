@@ -1,4 +1,4 @@
-export enum Pages {
+export enum ROUTES {
   HOME = '/',
   SING_IN = 'sing-in',
   SING_UP = 'sign-up',

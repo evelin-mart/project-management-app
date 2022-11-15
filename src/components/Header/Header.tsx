@@ -17,17 +17,19 @@ import {
 import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
-import { Pages } from 'constants/Routes';
+import { ROUTES } from 'constants/Routes';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from 'react-router-dom';
 
-const pages = {
-  [Pages.SING_IN]: 'Sing In',
-  [Pages.SING_UP]: 'Sing Up',
+const routes = {
+  [ROUTES.SING_IN]: 'Sing In',
+  [ROUTES.SING_UP]: 'Sing Up',
 };
 
 export const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
   const loggedUser = null;
@@ -48,11 +50,16 @@ export const Header = () => {
     setAnchorElNav(null);
   };
 
+  const handleNavMenuClick = (link: string) => {
+    navigate(`/${link}`);
+    handleCloseNavMenu();
+  };
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
 
-  const color = trigger ? theme.palette.text.primary : theme.palette.text.secondary;
+  const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;
   const colorTransition = { transition: 'all 0.5s ease', color };
 
   return (
@@ -71,12 +78,10 @@ export const Header = () => {
             variant={smUp ? 'h4' : 'h6'}
             noWrap
             component="a"
-            href={Pages.HOME}
+            href={ROUTES.HOME}
             sx={{
-              mr: 2,
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
@@ -126,7 +131,7 @@ export const Header = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {Object.entries(pages).map(([key, name]) => (
+                  {Object.entries(routes).map(([key, name]) => (
                     <MenuItem key={key} onClick={handleCloseUserMenu}>
                       <Typography textAlign="center">{name} </Typography>
                     </MenuItem>
@@ -136,10 +141,10 @@ export const Header = () => {
             ) : (
               <>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                  {Object.entries(pages).map(([key, name]) => (
+                  {Object.entries(routes).map(([key, name]) => (
                     <Button
                       key={key}
-                      onClick={handleCloseNavMenu}
+                      onClick={() => handleNavMenuClick(key)}
                       sx={{ my: 2, ...colorTransition, display: 'block', fontWeight: 700 }}
                     >
                       {name}
@@ -167,8 +172,8 @@ export const Header = () => {
                     onClose={handleCloseNavMenu}
                     sx={{ display: { xs: 'block', md: 'none' } }}
                   >
-                    {Object.entries(pages).map(([key, name]) => (
-                      <MenuItem key={key} onClick={handleCloseNavMenu}>
+                    {Object.entries(routes).map(([key, name]) => (
+                      <MenuItem key={key} onClick={() => handleNavMenuClick(key)}>
                         <Typography textAlign="center">{name}</Typography>
                       </MenuItem>
                     ))}

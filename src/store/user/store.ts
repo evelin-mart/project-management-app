@@ -21,16 +21,17 @@ export const createUser = createAsyncThunk<UserData, SignUpQuery, AsyncThunkConf
   async (query) => {
     const data = await signUp(query);
 
-    return initialState.data;
+    return data;
   }
 );
 
-export const authorizeUser = createAsyncThunk<UserData, SignInQuery, AsyncThunkConfig>(
+export const authorizeUser = createAsyncThunk<Partial<UserData>, SignInQuery, AsyncThunkConfig>(
   'user/authorizeUser',
-  async (query) => {
+  async (query, { dispatch }) => {
     const data = await signIn(query);
+    //dispatch(getUserName(data.id));
 
-    return initialState.data;
+    return data;
   }
 );
 
@@ -49,11 +50,11 @@ export const userSlice = createSlice({
       })
       .addCase(authorizeUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = action.payload;
+        state.data = { ...state.data, ...action.payload };
       })
       .addCase(authorizeUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
+        state.error = action.error.message || '';
       })
       .addCase(createUser.pending, (state) => {
         state.isLoading = true;
@@ -64,7 +65,7 @@ export const userSlice = createSlice({
       })
       .addCase(createUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Something went wrong';
+        state.error = action.error.message || '';
       });
   },
 });

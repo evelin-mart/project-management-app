@@ -13,11 +13,9 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Pages } from 'constants/Routes';
-import { useAppDispatch } from 'store';
-import { authorizeUser } from 'store/user';
 
 const pages = {
   [Pages.SING_IN]: 'Sing In',
@@ -43,11 +41,6 @@ export const Header = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(authorizeUser({ login: 'evelin', password: 'Aws123123' }));
-  }, []);
 
   return (
     <AppBar position="sticky">

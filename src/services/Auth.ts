@@ -12,15 +12,15 @@ import {
 export const signUp = async (query: SignUpQuery) => {
   const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
   const { id } = response.data;
-  const token = await signIn(query);
+  const { token, exp } = await signIn(query);
 
-  return { id, ...query, token };
+  return { id, ...query, token, exp };
 };
 
 export const signIn = async (query: SignInQuery) => {
   const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
   const { token } = response.data;
-  const { id, login, exp } = jwt_decode(token) as DecodedTokenData;
+  const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
 
-  return {id, login, token, exp};
+  return { id, login, token, exp };
 };

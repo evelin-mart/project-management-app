@@ -21,7 +21,7 @@ export const errorBoundary = (err: unknown) => {
     info.message = data;
   } else if ((err as RequestError).request) {
     info.code = 'Request error';
-    info.message = 'Сheck your internet connection or try again later';
+    info.message = 'Check your internet connection or try again later';
   } else {
     info.code = 'Unknown error';
     info.message = 'We are working on it. Please, try again later';

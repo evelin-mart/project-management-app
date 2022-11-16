@@ -44,7 +44,7 @@ export const Footer = () => {
               flexDirection: smUp ? 'row' : 'column',
             }}
           >
-            <Link href="https://rs.school/react/">
+            <Link href="https://rs.school/react/" target="_blank">
               <Image src={RsSchoolLogo} alt="home image" loading="lazy" />
             </Link>
             <Grid
@@ -57,7 +57,7 @@ export const Footer = () => {
             >
               {Object.entries(gitHubUsers).map(([user, link]) => (
                 <Grid item key={user} sx={{ p: 0 }}>
-                  <Link href={link} underline="hover">
+                  <Link href={link} underline="hover" target="_blank">
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       {smUp && <Image src={GitHubLogo} alt="github image" loading="lazy"></Image>}
                       <Typography color="text.primary" sx={{ px: 1 }}>

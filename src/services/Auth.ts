@@ -1,29 +1,30 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { METHOD, SERVER } from './../constants';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import { SERVER } from '../constants';
+import {
+  DecodedTokenData,
+  SignInAnswer,
+  SignInQuery,
+  SignUpAnswer,
+  SignUpQuery,
+} from './Auth.types';
 
-export const authAPI = createApi({
-  reducerPath: 'authAPI',
-  baseQuery: fetchBaseQuery({
-    baseUrl: SERVER.BASE_LINK,
-  }),
-  endpoints: (build) => ({
-    signIn: build.mutation({
-      query: (body: { login: string; password: string }) => {
-        return {
-          url: SERVER.SIGNIN,
-          method: METHOD.POST,
-          body: body,
-        };
-      },
-    }),
-    signUp: build.mutation({
-      query: (body: { name: string; login: string; password: string }) => {
-        return {
-          url: SERVER.SIGNUP,
-          method: METHOD.POST,
-          body: body,
-        };
-      },
-    }),
-  }),
+export const api = axios.create({
+  baseURL: SERVER.BASE_LINK,
 });
+
+export const signUp = async (query: SignUpQuery) => {
+  const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
+  const { id } = response.data;
+  const { token, exp } = await signIn(query);
+
+  return { id, ...query, token, exp };
+};
+
+export const signIn = async (query: SignInQuery) => {
+  const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
+  const { token } = response.data;
+  const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
+
+  return { id, login, token, exp };
+};

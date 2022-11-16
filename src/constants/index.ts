@@ -1,3 +1,3 @@
-export { METHOD } from './Methods';
-export { ROUTES } from './Routes';
-export { SERVER } from './Server';
+export * from './Routes';
+export * from './Methods';
+export * from './Server';

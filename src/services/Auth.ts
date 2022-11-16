@@ -16,7 +16,8 @@ export const api = axios.create({
 export const signUp = async (query: SignUpQuery) => {
   const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
   const { id } = response.data;
-  const { token, exp } = await signIn(query);
+  const { login, password } = query;
+  const { token, exp } = await signIn({ login, password });
 
   return { id, ...query, token, exp };
 };

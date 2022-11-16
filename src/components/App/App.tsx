@@ -12,12 +12,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { store } from '../../store';
 import { SignUpPage } from 'pages/SignUp';
 import { Box } from '@mui/system';
+import { BoardPage } from 'pages/BoardPage';
 
 const theme = createTheme({
   palette: {
     primary: {
       main: '#4f5285',
-      light: '#F6F6FC',
     },
     secondary: {
       main: '#ffc967',
@@ -78,7 +78,8 @@ export const App = () => {
                 }
               >
                 <Route index element={<HomePage />} />
-                <Route path={ROUTES.SING_UP} element={<SignUpPage />} />
+                <Route path={ROUTES.BOARD} element={<BoardPage />} />
+                <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
                 <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>

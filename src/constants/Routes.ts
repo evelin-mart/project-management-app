@@ -1,7 +1,8 @@
 export enum ROUTES {
   HOME = '/',
-  SING_IN = 'sing-in',
-  SING_UP = 'sign-up',
+  SIGN_IN = 'sign-in',
+  SIGN_UP = 'sign-up',
   PROFILE = 'profile',
+  BOARD = 'board',
   NOT_FOUND = '404',
 }

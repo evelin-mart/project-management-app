@@ -1,4 +1,4 @@
-import { api } from 'services';
+import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { SERVER } from '../constants';
 import {
@@ -8,6 +8,10 @@ import {
   SignUpAnswer,
   SignUpQuery,
 } from './Auth.types';
+
+export const api = axios.create({
+  baseURL: SERVER.BASE_LINK,
+});
 
 export const signUp = async (query: SignUpQuery) => {
   const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });

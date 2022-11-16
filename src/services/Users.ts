@@ -4,6 +4,7 @@ import { RootState } from '../store';
 
 export const usersAPI = createApi({
   reducerPath: 'usersAPI',
+  tagTypes: ['User'],
   baseQuery: fetchBaseQuery({
     baseUrl: SERVER.BASE_LINK,
     prepareHeaders: (headers, { getState }) => {
@@ -24,28 +25,35 @@ export const usersAPI = createApi({
       },
     }),
     getUserById: build.query({
-      query: () => {
+      query: (userId: string) => {
         return {
-          url: SERVER.USERS,
+          url: `${SERVER.USERS}/${userId}`,
           method: METHOD.GET,
         };
       },
+      providesTags: () => ['User'],
     }),
     updateUserById: build.mutation({
-      query: (data) => {
+      query: ({
+        userId,
+        body,
+      }: {
+        userId: string;
+        body: { name: string; login: string; password: string };
+      }) => {
         return {
-          url: SERVER.USERS,
+          url: `${SERVER.USERS}/${userId}`,
           method: METHOD.PUT,
-          body: data,
+          body: body,
         };
       },
+      invalidatesTags: () => ['User'],
     }),
     deleteUserById: build.mutation({
-      query: (data) => {
+      query: (userId: string) => {
         return {
-          url: SERVER.USERS,
+          url: `${SERVER.USERS}/${userId}`,
           method: METHOD.DELETE,
-          body: data,
         };
       },
     }),

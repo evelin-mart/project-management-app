@@ -1,6 +1,7 @@
-import axios from 'axios';
-import { SERVER } from '../constants';
-
-export const api = axios.create({
-  baseURL: SERVER.BASE_LINK,
-});
+export * from './Auth';
+export * from './Users';
+export * from './Boards';
+export * from './Columns';
+export * from './Files';
+export * from './Points';
+export * from './Tasks';

@@ -9,7 +9,7 @@ import {
   getBoardByIdRequest,
   updateBoardByIdAnswer,
   updateBoardByIdRequest,
-} from './Board.types';
+} from './types/Board.types';
 import { api } from './apiCreate';
 
 export class Board {
@@ -20,7 +20,7 @@ export class Board {
 
   static createBoard = async (query: createBoardRequest) => {
     const { body } = query;
-    const response = await api.post<createBoardAnswer>(SERVER.BOARDS, body);
+    const response = await api.post<Response<createBoardAnswer>>(SERVER.BOARDS, body);
     return response.data;
   };
 
@@ -41,7 +41,7 @@ export class Board {
 
   static deleteBoardById = async (query: deleteBoardByIdRequest) => {
     const { boardId } = query;
-    const response = await api.delete(`${SERVER.BOARDS}/${boardId}`);
+    const response = await api.delete<Response<undefined>>(`${SERVER.BOARDS}/${boardId}`);
     return response.data;
   };
 }

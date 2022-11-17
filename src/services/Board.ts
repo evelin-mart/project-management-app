@@ -18,17 +18,20 @@ export class Board {
     return response.data;
   };
 
-  static createBoard = async ({ body }: createBoardRequest) => {
+  static createBoard = async (query: createBoardRequest) => {
+    const { body } = query;
     const response = await api.post<createBoardAnswer>(SERVER.BOARDS, body);
     return response.data;
   };
 
-  static getBoardById = async ({ boardId }: getBoardByIdRequest) => {
+  static getBoardById = async (query: getBoardByIdRequest) => {
+    const { boardId } = query;
     const response = await api.get<Response<getBoardByIdAnswer>>(`${SERVER.BOARDS}/${boardId}`);
     return response.data;
   };
 
-  static updateBoardById = async ({ boardId, body }: updateBoardByIdRequest) => {
+  static updateBoardById = async (query: updateBoardByIdRequest) => {
+    const { boardId, body } = query;
     const response = await api.put<Response<updateBoardByIdAnswer>>(
       `${SERVER.BOARDS}/${boardId}`,
       body
@@ -36,7 +39,8 @@ export class Board {
     return response.data;
   };
 
-  static deleteBoardById = async ({ boardId }: deleteBoardByIdRequest) => {
+  static deleteBoardById = async (query: deleteBoardByIdRequest) => {
+    const { boardId } = query;
     const response = await api.delete(`${SERVER.BOARDS}/${boardId}`);
     return response.data;
   };

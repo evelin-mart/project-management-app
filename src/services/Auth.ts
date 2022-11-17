@@ -25,7 +25,7 @@ export const signUp = async (query: SignUpQuery) => {
 export const signIn = async (query: SignInQuery) => {
   const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
   const { token } = response.data;
-  const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
+  const { userId: id, login, iat: exp } = jwt_decode<DecodedTokenData>(token);
 
   return { id, login, token, exp };
 };

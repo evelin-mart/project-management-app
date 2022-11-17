@@ -4,14 +4,14 @@ import { Box, Button, Paper, TextField } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ERRORS } from 'constants/ValidationErrors';
 import { ROUTES } from 'constants/Routes';
-import { createUser, selectUser } from 'store/user';
+import { selectUser, authorizeUser } from 'store/user';
 import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
-import { SignUpQuery } from 'services/Auth.types';
+import { SignInQuery } from 'services/Auth.types';
 import { NavLink } from 'react-router-dom';
 
-export const SignUpPage = () => {
+export const SignInPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export const SignUpPage = () => {
     formState: { errors, isDirty },
     handleSubmit,
     reset,
-  } = useForm<SignUpQuery>();
+  } = useForm<SignInQuery>();
 
   useEffect(() => {
     if (!isLoading && data.id) {
@@ -29,8 +29,8 @@ export const SignUpPage = () => {
     }
   }, [data.id, isLoading, navigate]);
 
-  const onSubmit: SubmitHandler<SignUpQuery> = (data) => {
-    dispatch(createUser(data));
+  const onSubmit: SubmitHandler<SignInQuery> = (data) => {
+    dispatch(authorizeUser(data));
     reset();
   };
 
@@ -51,14 +51,6 @@ export const SignUpPage = () => {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <TextField
-          {...register('name', { required: ERRORS.required })}
-          fullWidth
-          error={!!errors.name}
-          helperText={(errors.name?.message as string) || ''}
-          label="Name"
-          margin="normal"
-        />
         <TextField
           {...register('login', { required: ERRORS.required })}
           fullWidth
@@ -86,11 +78,11 @@ export const SignUpPage = () => {
             color="secondary"
             disabled={isDirty && !!Object.keys(errors).length}
           >
-            Sign up
+            Sign in
           </Button>
         </Box>
         <Box sx={{ my: 2 }}>
-          <NavLink to={`/${ROUTES.SIGN_IN}`}>Already have an account? Sign In</NavLink>
+          <NavLink to={`/${ROUTES.SIGN_UP}`}>Don&#39;t have an account? Sign Up</NavLink>
         </Box>
       </Paper>
     </Loader>

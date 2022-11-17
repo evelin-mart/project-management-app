@@ -17,7 +17,7 @@ import {
 import React from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
-import { ROUTES } from 'constants/Routes';
+import { ROUTES } from '../../constants';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
@@ -63,7 +63,7 @@ export const Header = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
-    navigate(`/${ROUTES.SIGN_IN}`);
+    navigate(`/${ROUTES.HOME}`);
     setAnchorElUser(null);
   };
 

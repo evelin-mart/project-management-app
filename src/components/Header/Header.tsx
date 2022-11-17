@@ -20,19 +20,24 @@ import { useTheme } from '@mui/material/styles';
 import { ROUTES } from 'constants/Routes';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'store';
+import { logout, selectUser } from 'store/user';
 
 const routes = {
-  [ROUTES.SING_IN]: 'Sing In',
-  [ROUTES.SING_UP]: 'Sing Up',
+  [ROUTES.SIGN_IN]: 'Sign In',
+  [ROUTES.SIGN_UP]: 'Sign Up',
 };
 
 export const Header = () => {
+  const dispatch = useAppDispatch();
+  const {
+    data: { id: loggedUserId },
+  } = useAppSelector(selectUser);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
-  const loggedUser = null;
 
   const trigger = useScrollTrigger({
     disableHysteresis: true,
@@ -53,6 +58,13 @@ export const Header = () => {
   const handleNavMenuClick = (link: string) => {
     navigate(`/${link}`);
     handleCloseNavMenu();
+    setAnchorElUser(null);
+  };
+
+  const handleLogOut = () => {
+    dispatch(logout());
+    navigate(`/${ROUTES.SIGN_IN}`);
+    setAnchorElUser(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -91,7 +103,7 @@ export const Header = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box>
-              <ToggleButtonGroup value="ru" exclusive size="small" sx={{ m: 1 }}>
+              <ToggleButtonGroup value="ru" exclusive size="small" sx={{ mx: 2 }}>
                 <ToggleButton
                   value="en"
                   sx={{
@@ -114,7 +126,7 @@ export const Header = () => {
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>
-            {loggedUser ? (
+            {loggedUserId ? (
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -131,11 +143,12 @@ export const Header = () => {
                   open={Boolean(anchorElUser)}
                   onClose={handleCloseUserMenu}
                 >
-                  {Object.entries(routes).map(([key, name]) => (
-                    <MenuItem key={key} onClick={handleCloseUserMenu}>
-                      <Typography textAlign="center">{name} </Typography>
-                    </MenuItem>
-                  ))}
+                  <MenuItem onClick={() => handleNavMenuClick(ROUTES.PROFILE)}>
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogOut}>
+                    <Typography textAlign="center">Log Out</Typography>
+                  </MenuItem>
                 </Menu>
               </Box>
             ) : (
@@ -145,7 +158,7 @@ export const Header = () => {
                     <Button
                       key={key}
                       onClick={() => handleNavMenuClick(key)}
-                      sx={{ my: 2, ...colorTransition, display: 'block', fontWeight: 700 }}
+                      sx={{ ...colorTransition, display: 'block', fontWeight: 700 }}
                     >
                       {name}
                     </Button>

@@ -13,6 +13,7 @@ import { store } from '../../store';
 import { SignUpPage } from 'pages/SignUp';
 import { Box } from '@mui/system';
 import { BoardPage } from 'pages/BoardPage';
+import { SignInPage } from 'pages/SignIn';
 
 const theme = createTheme({
   palette: {
@@ -78,8 +79,9 @@ export const App = () => {
                 }
               >
                 <Route index element={<HomePage />} />
-                <Route path={ROUTES.BOARD} element={<BoardPage />} />
+                <Route path={ROUTES.BOARDS} element={<BoardPage />} />
                 <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
+                <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
                 <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
                 <Route path="*" element={<NotFoundPage />} />
               </Route>

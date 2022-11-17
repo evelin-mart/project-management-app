@@ -3,6 +3,6 @@ export enum ROUTES {
   SIGN_IN = 'sign-in',
   SIGN_UP = 'sign-up',
   PROFILE = 'profile',
-  BOARD = 'board',
+  BOARDS = 'boards',
   NOT_FOUND = '404',
 }

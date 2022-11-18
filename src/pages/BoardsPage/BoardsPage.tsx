@@ -22,7 +22,7 @@ export const BoardsPage = () => {
       </Typography>
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 2, md: 4 }}>
         {data.map((board) => (
-          <BoardItem board={board} />
+          <BoardItem board={board} key={board.id} />
         ))}
         <Button onClick={addBoard}>+ add board</Button>
       </Grid>

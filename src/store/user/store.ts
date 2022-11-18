@@ -10,7 +10,7 @@ const initialState = {
     name: '',
     login: '',
     token: '',
-    exp: Date.now(),
+    iat: Date.now(),
   },
   isLoading: false,
   error: '',

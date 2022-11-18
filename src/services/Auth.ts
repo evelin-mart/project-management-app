@@ -14,18 +14,18 @@ export const api = axios.create({
 });
 
 export const signUp = async (query: SignUpQuery) => {
-  const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
+  const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, query);
   const { id } = response.data;
   const { login, password } = query;
-  const { token, exp } = await signIn({ login, password });
+  const { token, iat } = await signIn({ login, password });
 
-  return { id, ...query, token, exp };
+  return { id, ...query, token, iat };
 };
 
 export const signIn = async (query: SignInQuery) => {
-  const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
+  const response = await api.post<SignInAnswer>(SERVER.SIGNIN, query);
   const { token } = response.data;
-  const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
+  const { userId, login, iat } = jwt_decode<DecodedTokenData>(token);
 
-  return { id, login, token, exp };
+  return { id: userId, login, token, iat };
 };

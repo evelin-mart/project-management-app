@@ -14,12 +14,3 @@ export interface BadRequestAnswer {
   statusCode: string;
   message: string;
 }
-
-export interface Response<T> {
-  data: T;
-  status: number;
-  statusText: string;
-  headers: Headers;
-  config: unknown;
-  request?: unknown;
-}

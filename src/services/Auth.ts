@@ -7,7 +7,7 @@ import {
   SignInQuery,
   SignUpAnswer,
   SignUpQuery,
-} from './Auth.types';
+} from './types/Auth.types';
 
 export const api = axios.create({
   baseURL: SERVER.BASE_LINK,

@@ -1,47 +1,39 @@
 import { SERVER } from 'constants/Server';
-import { Response } from './types';
 import {
   createBoardAnswer,
   createBoardRequest,
-  deleteBoardByIdRequest,
+  deleteBoardRequest,
   getAllBoardsAnswer,
-  getBoardByIdAnswer,
-  getBoardByIdRequest,
-  updateBoardByIdAnswer,
-  updateBoardByIdRequest,
+  getBoardAnswer,
+  getBoardRequest,
+  updateBoardAnswer,
+  updateBoardRequest,
 } from './types/Board.types';
 import { api } from './apiCreate';
 
 export class Board {
   static getAllBoards = async () => {
-    const response = await api.get<Response<getAllBoardsAnswer>>(SERVER.BOARDS);
+    const response = await api.get<getAllBoardsAnswer>(SERVER.BOARDS);
     return response.data;
   };
 
-  static createBoard = async (query: createBoardRequest) => {
-    const { body } = query;
-    const response = await api.post<Response<createBoardAnswer>>(SERVER.BOARDS, body);
+  static createBoard = async ({ body }: createBoardRequest) => {
+    const response = await api.post<createBoardAnswer>(SERVER.BOARDS, body);
     return response.data;
   };
 
-  static getBoardById = async (query: getBoardByIdRequest) => {
-    const { boardId } = query;
-    const response = await api.get<Response<getBoardByIdAnswer>>(`${SERVER.BOARDS}/${boardId}`);
+  static getBoard = async ({ boardId }: getBoardRequest) => {
+    const response = await api.get<getBoardAnswer>(`${SERVER.BOARDS}/${boardId}`);
     return response.data;
   };
 
-  static updateBoardById = async (query: updateBoardByIdRequest) => {
-    const { boardId, body } = query;
-    const response = await api.put<Response<updateBoardByIdAnswer>>(
-      `${SERVER.BOARDS}/${boardId}`,
-      body
-    );
+  static updateBoard = async ({ boardId, body }: updateBoardRequest) => {
+    const response = await api.put<updateBoardAnswer>(`${SERVER.BOARDS}/${boardId}`, body);
     return response.data;
   };
 
-  static deleteBoardById = async (query: deleteBoardByIdRequest) => {
-    const { boardId } = query;
-    const response = await api.delete<Response<undefined>>(`${SERVER.BOARDS}/${boardId}`);
-    return response.data;
+  static deleteBoard = async ({ boardId }: deleteBoardRequest) => {
+    const response = await api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
+    return response;
   };
 }

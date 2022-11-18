@@ -12,7 +12,7 @@ export interface createBoardRequest {
   body: { title: string; description: string };
 }
 
-export interface getBoardByIdAnswer {
+export interface getBoardAnswer {
   id: string;
   title: string;
   description: string;
@@ -31,22 +31,21 @@ export interface getBoardByIdAnswer {
   }[];
 }
 
-export interface getBoardByIdRequest {
+export interface getBoardRequest {
   boardId: string;
 }
 
-export interface updateBoardByIdAnswer {
+export interface updateBoardRequest {
+  boardId: string;
+  body: { title: string; description: string };
+}
+
+export interface updateBoardAnswer {
   id: string;
   title: string;
   description: string;
 }
 
-export interface updateBoardByIdRequest {
-  boardId: string;
-  body: { title: string; description: string };
-}
-
-export interface deleteBoardByIdRequest {
+export interface deleteBoardRequest {
   boardId: string;
 }
-

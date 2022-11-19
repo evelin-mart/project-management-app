@@ -8,7 +8,7 @@ import { createUser, selectUser } from 'store/user';
 import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
-import { SignUpQuery } from 'services/Auth.types';
+import { SignUpQuery } from 'services/types/Auth.types';
 import { NavLink } from 'react-router-dom';
 
 export const SignUpPage = () => {

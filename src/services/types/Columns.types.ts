@@ -1,35 +1,32 @@
-interface ColumnData {
+export type ColumnData = {
   id: string;
   title: string;
   order: number;
-}
+};
 
-export interface getAllColumnsRequest {
+export type getAllColumnsRequest = {
   boardId: string;
-}
+};
 
-export interface getAllColumnsAnswer {
+export type getAllColumnsAnswer = {
   [index: number]: ColumnData;
-}
+};
 
-export interface createColumnRequest {
+export type createColumnRequest = {
   boardId: string;
   body: {
     title: string;
   };
-}
+};
 
 export type createColumnAnswer = ColumnData;
 
-export interface getColumnRequest {
+export type getColumnRequest = {
   boardId: string;
   columnId: string;
-}
+};
 
-export interface getBoardAnswer {
-  id: string;
-  title: string;
-  order: number;
+export type getBoardAnswer = ColumnData & {
   tasks: {
     id: string;
     title: string;
@@ -42,20 +39,20 @@ export interface getBoardAnswer {
       fileSize: number;
     }[];
   }[];
-}
+};
 
-export interface updateColumnRequest {
+export type updateColumnRequest = {
   boardId: string;
   columnId: string;
   body: {
     title: string;
     order: number;
   };
-}
+};
 
 export type updateColumnAnswer = ColumnData;
 
-export interface deleteColumnRequest {
+export type deleteColumnRequest = {
   boardId: string;
   columnId: string;
-}
+};

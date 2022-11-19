@@ -2,9 +2,10 @@ import axios, { AxiosError } from 'axios';
 import { SERVER } from 'constants/Server';
 import { ChangeEvent } from 'react';
 import { api } from './apiCreate';
+import { downloadFileRequest, uploadFileRequest } from './types/File.types';
 
 export class File {
-  static async uploadFile({ e, taskId }: { e: ChangeEvent<HTMLInputElement>; taskId: string }) {
+  static async uploadFile({ e, taskId }: uploadFileRequest) {
     try {
       const formData = new FormData();
       if (e.target.files) {
@@ -28,7 +29,7 @@ export class File {
     }
   }
 
-  static async downloadFile({ taskId, filename }: { taskId: string; filename: string }) {
+  static async downloadFile({ taskId, filename }: downloadFileRequest) {
     try {
       const response = await api.get<Blob>(`${SERVER.FILE}/${taskId}/${filename}`, {
         responseType: 'blob',

@@ -1,25 +1,25 @@
-export interface getAllTasksRequest {
+type TaskData = {
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
   boardId: string;
   columnId: string;
-}
+};
+type TaskFile = { files: { filename: string; fileSize: number }[] };
 
-export interface getAllTasksAnswer {
-  [index: number]: {
-    id: string;
-    title: string;
-    order: number;
-    description: string;
-    userId: string;
-    boardId: string;
-    columnId: string;
-    files: {
-      filename: string;
-      fileSize: number;
-    }[];
-  };
-}
+type TaskPath = { boardId: string; columnId: string; taskId: string };
 
-export interface createTaskRequest {
+export type getAllTasksRequest = {
+  boardId: string;
+  columnId: string;
+};
+
+export type getAllTasksAnswer = {
+  [index: number]: TaskData & { id: string } & TaskFile;
+};
+
+export type createTaskRequest = {
   boardId: string;
   columnId: string;
   body: {
@@ -27,61 +27,21 @@ export interface createTaskRequest {
     description: string;
     userId: string;
   };
-}
+};
 
-export interface createTaskAnswer {
+export type createTaskAnswer = {
   id: string;
   title: string;
   description: string;
   userId: string;
-}
+};
 
-export interface getTaskRequest {
-  boardId: string;
-  columnId: string;
-  taskId: string;
-}
+export type getTaskRequest = TaskPath;
 
-export interface getTaskAnswer {
-  id: string;
-  title: string;
-  order: number;
-  description: string;
-  userId: string;
-  boardId: string;
-  columnId: string;
-  files: {
-    filename: string;
-    fileSize: number;
-  }[];
-}
+export type getTaskAnswer = TaskData & { id: string } & TaskFile;
 
-export interface updateTaskRequest {
-  boardId: string;
-  columnId: string;
-  taskId: string;
-  body: {
-    title: string;
-    order: number;
-    description: string;
-    userId: string;
-    boardId: string;
-    columnId: string;
-  };
-}
+export type updateTaskRequest = TaskPath & { body: TaskData };
 
-export interface updateTaskAnswer {
-  id: string;
-  title: string;
-  order: number;
-  description: string;
-  userId: string;
-  boardId: string;
-  columnId: string;
-}
+export type updateTaskAnswer = TaskData;
 
-export interface deleteTaskRequest {
-  boardId: string;
-  columnId: string;
-  taskId: string;
-}
+export type deleteTaskRequest = TaskPath;

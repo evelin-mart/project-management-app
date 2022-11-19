@@ -1,28 +1,26 @@
-export interface getAllUsersAnswer {
-  [index: number]: { id: string; name: string; login: string };
-}
-
-export interface getUserByIdRequest {
-  userId: string;
-}
-
-export interface getUserByIdAnswer {
+type UserData = {
   id: string;
   name: string;
   login: string;
-}
+};
 
-export interface updateUserByIdRequest {
+export type getAllUsersAnswer = {
+  [index: number]: UserData;
+};
+
+export type getUserByIdRequest = {
+  userId: string;
+};
+
+export type getUserByIdAnswer = UserData;
+
+export type updateUserByIdRequest = {
   userId: string;
   body: { name: string; login: string; password: string };
-}
+};
 
-export interface updateUserByIdAnswer {
-  id: string;
-  name: string;
-  login: string;
-}
+export type updateUserByIdAnswer = UserData;
 
-export interface deleteUserByIdRequest {
+export type deleteUserByIdRequest = {
   userId: string;
-}
+};

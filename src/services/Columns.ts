@@ -14,39 +14,59 @@ import {
 
 export class Columns {
   static async getAllColumns({ boardId }: getAllColumnsRequest) {
-    const response = await api.get<getAllColumnsAnswer>(
-      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`
-    );
-    return response.data;
+    try {
+      const response = await api.get<getAllColumnsAnswer>(
+        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while getting all columns');
+    }
   }
 
   static async createColumn({ boardId, body }: createColumnRequest) {
-    const response = await api.post<createColumnAnswer>(
-      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`,
-      body
-    );
-    return response.data;
+    try {
+      const response = await api.post<createColumnAnswer>(
+        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`,
+        body
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while creating column');
+    }
   }
 
   static getColumn = async ({ boardId, columnId }: getColumnRequest) => {
-    const response = await api.get<getBoardAnswer>(
-      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
-    );
-    return response.data;
+    try {
+      const response = await api.get<getBoardAnswer>(
+        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while getting column');
+    }
   };
 
   static async updateColumn({ boardId, columnId, body }: updateColumnRequest) {
-    const response = await api.put<updateColumnAnswer>(
-      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`,
-      body
-    );
-    return response.data;
+    try {
+      const response = await api.put<updateColumnAnswer>(
+        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`,
+        body
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while updating column');
+    }
   }
 
   static async deleteColumn({ boardId, columnId }: deleteColumnRequest) {
-    const response = await api.delete<undefined>(
-      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
-    );
-    return response.data;
+    try {
+      const response = await api.delete<undefined>(
+        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
+      );
+      return response;
+    } catch (error) {
+      throw new Error('Error while deleting column');
+    }
   }
 }

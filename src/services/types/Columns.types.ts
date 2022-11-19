@@ -1,13 +1,15 @@
+interface ColumnData {
+  id: string;
+  title: string;
+  order: number;
+}
+
 export interface getAllColumnsRequest {
   boardId: string;
 }
 
 export interface getAllColumnsAnswer {
-  [index: number]: {
-    id: string;
-    title: string;
-    order: number;
-  };
+  [index: number]: ColumnData;
 }
 
 export interface createColumnRequest {
@@ -17,11 +19,7 @@ export interface createColumnRequest {
   };
 }
 
-export interface createColumnAnswer {
-  id: string;
-  title: string;
-  order: number;
-}
+export type createColumnAnswer = ColumnData;
 
 export interface getColumnRequest {
   boardId: string;
@@ -55,11 +53,7 @@ export interface updateColumnRequest {
   };
 }
 
-export interface updateColumnAnswer {
-  id: string;
-  title: string;
-  order: number;
-}
+export type updateColumnAnswer = ColumnData;
 
 export interface deleteColumnRequest {
   boardId: string;

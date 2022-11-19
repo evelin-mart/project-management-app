@@ -14,18 +14,25 @@ export const api = axios.create({
 });
 
 export const signUp = async (query: SignUpQuery) => {
-  const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
-  const { id } = response.data;
-  const { login, password } = query;
-  const { token, exp } = await signIn({ login, password });
-
-  return { id, ...query, token, exp };
+  try {
+    const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
+    const { id } = response.data;
+    const { login, password } = query;
+    const { token, exp } = await signIn({ login, password });
+    return { id, ...query, token, exp };
+  } catch (error) {
+    throw new Error('Error while signing up');
+  }
 };
 
 export const signIn = async (query: SignInQuery) => {
-  const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
-  const { token } = response.data;
-  const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
+  try {
+    const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
+    const { token } = response.data;
+    const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
 
-  return { id, login, token, exp };
+    return { id, login, token, exp };
+  } catch (error) {
+    throw new Error('Error while signing in');
+  }
 };

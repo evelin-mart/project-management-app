@@ -11,22 +11,38 @@ import {
 
 export class Users {
   static async getAllUsers() {
-    const response = await api.get<getAllUsersAnswer>(SERVER.USERS);
-    return response.data;
+    try {
+      const response = await api.get<getAllUsersAnswer>(SERVER.USERS);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while getting all users');
+    }
   }
 
   static async getUserById({ userId }: getUserByIdRequest) {
-    const response = await api.get<getUserByIdAnswer>(`${SERVER.USERS}/${userId}`);
-    return response.data;
+    try {
+      const response = await api.get<getUserByIdAnswer>(`${SERVER.USERS}/${userId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while getting user');
+    }
   }
 
   static async updateUserById({ userId, body }: updateUserByIdRequest) {
-    const response = await api.put<updateUserByIdAnswer>(`${SERVER.USERS}/${userId}`, body);
-    return response.data;
+    try {
+      const response = await api.put<updateUserByIdAnswer>(`${SERVER.USERS}/${userId}`, body);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while updating user');
+    }
   }
 
   static async deleteUserById({ userId }: deleteUserByIdRequest) {
-    const response = await api.delete<undefined>(`${SERVER.USERS}/${userId}`);
-    return response;
+    try {
+      const response = await api.delete<undefined>(`${SERVER.USERS}/${userId}`);
+      return response;
+    } catch (error) {
+      throw new Error('Error while deleting user');
+    }
   }
 }

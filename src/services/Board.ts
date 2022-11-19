@@ -13,27 +13,47 @@ import { api } from './apiCreate';
 
 export class Board {
   static getAllBoards = async () => {
-    const response = await api.get<getAllBoardsAnswer>(SERVER.BOARDS);
-    return response.data;
+    try {
+      const response = await api.get<getAllBoardsAnswer>(SERVER.BOARDS);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while getting all boards');
+    }
   };
 
   static createBoard = async ({ body }: createBoardRequest) => {
-    const response = await api.post<createBoardAnswer>(SERVER.BOARDS, body);
-    return response.data;
+    try {
+      const response = await api.post<createBoardAnswer>(SERVER.BOARDS, body);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while creating board');
+    }
   };
 
   static getBoard = async ({ boardId }: getBoardRequest) => {
-    const response = await api.get<getBoardAnswer>(`${SERVER.BOARDS}/${boardId}`);
-    return response.data;
+    try {
+      const response = await api.get<getBoardAnswer>(`${SERVER.BOARDS}/${boardId}`);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while getting board');
+    }
   };
 
   static updateBoard = async ({ boardId, body }: updateBoardRequest) => {
-    const response = await api.put<updateBoardAnswer>(`${SERVER.BOARDS}/${boardId}`, body);
-    return response.data;
+    try {
+      const response = await api.put<updateBoardAnswer>(`${SERVER.BOARDS}/${boardId}`, body);
+      return response.data;
+    } catch (error) {
+      throw new Error('Error while updating board');
+    }
   };
 
   static deleteBoard = async ({ boardId }: deleteBoardRequest) => {
-    const response = await api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
-    return response;
+    try {
+      const response = await api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
+      return response;
+    } catch (error) {
+      throw new Error('Error while deleting board');
+    }
   };
 }

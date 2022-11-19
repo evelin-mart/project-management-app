@@ -1,12 +1,14 @@
-export interface getAllBoardsAnswer {
-  [index: number]: { id: string; title: string; description: string };
-}
-
-export interface createBoardAnswer {
+interface BoardData {
   id: string;
   title: string;
   description: string;
 }
+
+export interface getAllBoardsAnswer {
+  [index: number]: BoardData;
+}
+
+export type createBoardAnswer = BoardData;
 
 export interface createBoardRequest {
   body: { title: string; description: string };
@@ -40,11 +42,7 @@ export interface updateBoardRequest {
   body: { title: string; description: string };
 }
 
-export interface updateBoardAnswer {
-  id: string;
-  title: string;
-  description: string;
-}
+export type updateBoardAnswer = BoardData;
 
 export interface deleteBoardRequest {
   boardId: string;

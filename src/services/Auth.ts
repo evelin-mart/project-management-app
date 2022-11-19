@@ -26,13 +26,9 @@ export const signUp = async (query: SignUpQuery) => {
 };
 
 export const signIn = async (query: SignInQuery) => {
-  try {
-    const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
-    const { token } = response.data;
-    const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
+  const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
+  const { token } = response.data;
+  const { userId: id, login, iat: exp } = jwt_decode<DecodedTokenData>(token);
 
-    return { id, login, token, exp };
-  } catch (error) {
-    throw new Error('Error while signing in');
-  }
+  return { id, login, token, exp };
 };

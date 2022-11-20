@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
 import { SignInQuery } from 'services/types/Auth.types';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export const SignInPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
@@ -82,7 +82,7 @@ export const SignInPage = () => {
           </Button>
         </Box>
         <Box sx={{ my: 2 }}>
-          <NavLink to={`/${ROUTES.SIGN_UP}`}>Don&#39;t have an account? Sign Up</NavLink>
+          <Link to={`/${ROUTES.SIGN_UP}`}>Don&#39;t have an account? Sign Up</Link>
         </Box>
       </Paper>
     </Loader>

@@ -7,7 +7,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Button,
   Tooltip,
   Avatar,
   ToggleButton,
@@ -19,7 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import { ROUTES } from '../../constants';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { logout, selectUser } from 'store/user';
 
@@ -154,13 +153,23 @@ export const Header = () => {
               <>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                   {Object.entries(routes).map(([key, name]) => (
-                    <Button
+                    <Typography
                       key={key}
-                      onClick={() => handleNavMenuClick(key)}
-                      sx={{ ...colorTransition, display: 'block', fontWeight: 700 }}
+                      to={`/${key}`}
+                      component={NavLink}
+                      sx={{
+                        ...colorTransition,
+                        textDecoration: 'none',
+                        display: 'block',
+                        textTransform: 'uppercase',
+                        '&.active': {
+                          textDecoration: `solid underline ${theme.palette.primary.contrastText} 3px`,
+                        },
+                        px: 1,
+                      }}
                     >
                       {name}
-                    </Button>
+                    </Typography>
                   ))}
                 </Box>
                 <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

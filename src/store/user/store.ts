@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signIn, signUp } from 'services/Auth';
+import { UpdateUserResponse } from 'services/types/Users.types';
+import { Auth, Users } from 'services';
 import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
 import { UserData } from './interface';
+import { UpdateUserRequest } from 'services/types/Users.types';
 
 const initialState = {
   data: {
@@ -19,19 +21,36 @@ const initialState = {
 export const createUser = createAsyncThunk<UserData, SignUpQuery, AsyncThunkConfig>(
   'user/createUser',
   async (query) => {
-    const data = await signUp(query);
-
-    return data;
+    const signUpData = await Auth.signUp(query);
+    const { login, password } = query;
+    const signInData = await Auth.signIn({ login, password });
+    const userData = await Users.getUserById(signInData);
+    return { ...signUpData, ...signInData, ...userData };
   }
 );
 
 export const authorizeUser = createAsyncThunk<Partial<UserData>, SignInQuery, AsyncThunkConfig>(
   'user/authorizeUser',
-  async (query, { dispatch }) => {
-    const data = await signIn(query);
-    //dispatch(getUserName(data.id));
+  async (query) => {
+    const signInData = await Auth.signIn(query);
+    const { name } = await Users.getUserById(signInData);
+    return { ...signInData, name };
+  }
+);
 
-    return data;
+export const updateUser = createAsyncThunk<UpdateUserResponse, UpdateUserRequest, AsyncThunkConfig>(
+  'user/updateUser',
+  async (query, { getState }) => {
+    const { id } = getState().user.data;
+    return Users.updateUserById({ ...query, id });
+  }
+);
+
+export const deleteUser = createAsyncThunk<void, undefined, AsyncThunkConfig>(
+  'user/deleteUser',
+  async (query, { getState }) => {
+    const { id } = getState().user.data;
+    await Users.deleteUserById({ id });
   }
 );
 
@@ -64,6 +83,27 @@ export const userSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(createUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || '';
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = { ...state.data, ...action.payload };
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || '';
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteUser.fulfilled, () => {
+        return initialState;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || '';
       });

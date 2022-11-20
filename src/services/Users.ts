@@ -1,48 +1,34 @@
-import { SERVER } from 'constants/Server';
-import { api } from './apiCreate';
+import { SERVER } from '../constants';
 import {
-  deleteUserByIdRequest,
-  getAllUsersAnswer,
-  getUserByIdAnswer,
-  getUserByIdRequest,
-  updateUserByIdAnswer,
-  updateUserByIdRequest,
+  GetUserRequest,
+  GetUserResponse,
+  GetAllUsersAnswer,
+  UpdateUserRequest,
+  DeteleUserRequest,
+  UpdateUserResponse,
 } from './types/Users.types';
+import { BaseService } from './BaseService';
 
-export class Users {
+export class Users extends BaseService {
+  static async getUserById({ id }: GetUserRequest) {
+    const response = await this.api.get<GetUserResponse>(`${SERVER.USERS}/${id}`);
+    const { name, login } = response.data;
+    return { name, login };
+  }
+
   static async getAllUsers() {
-    try {
-      const response = await api.get<getAllUsersAnswer>(SERVER.USERS);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while getting all users');
-    }
+    const response = await this.api.get<GetAllUsersAnswer>(SERVER.USERS);
+    return response.data;
   }
 
-  static async getUserById({ userId }: getUserByIdRequest) {
-    try {
-      const response = await api.get<getUserByIdAnswer>(`${SERVER.USERS}/${userId}`);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while getting user');
-    }
+  static async updateUserById({ id, ...body }: UpdateUserRequest) {
+    const response = await this.api.put<UpdateUserResponse>(`${SERVER.USERS}/${id}`, body);
+    const { name, login } = response.data;
+    return { name, login, id };
   }
 
-  static async updateUserById({ userId, body }: updateUserByIdRequest) {
-    try {
-      const response = await api.put<updateUserByIdAnswer>(`${SERVER.USERS}/${userId}`, body);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while updating user');
-    }
-  }
-
-  static async deleteUserById({ userId }: deleteUserByIdRequest) {
-    try {
-      const response = await api.delete<undefined>(`${SERVER.USERS}/${userId}`);
-      return response;
-    } catch (error) {
-      throw new Error('Error while deleting user');
-    }
+  static async deleteUserById({ id }: DeteleUserRequest) {
+    await this.api.delete<void>(`${SERVER.USERS}/${id}`);
+    return;
   }
 }

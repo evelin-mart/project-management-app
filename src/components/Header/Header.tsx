@@ -63,7 +63,7 @@ export const Header = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
-    navigate(`/${ROUTES.HOME}`);
+    navigate(ROUTES.HOME);
     setAnchorElUser(null);
   };
 

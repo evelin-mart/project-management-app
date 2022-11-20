@@ -8,7 +8,7 @@ import { selectUser, authorizeUser } from 'store/user';
 import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
-import { SignInQuery } from 'services/Auth.types';
+import { SignInQuery } from 'services/types/Auth.types';
 import { NavLink } from 'react-router-dom';
 
 export const SignInPage = () => {

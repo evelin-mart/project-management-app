@@ -6,6 +6,7 @@ import {
   SignInQuery,
   SignUpAnswer,
   SignUpQuery,
+} from './types/Auth.types';
 } from './Auth.types';
 import { SERVER } from '../constants';
 import { getUserById } from 'services';
@@ -30,4 +31,29 @@ export const signIn = async (query: SignInQuery) => {
   const { name } = await getUserById({ id, token });
 
   return { id, login, name, token, exp };
+};
+
+
+export const signUp = async (query: SignUpQuery) => {
+  try {
+    const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
+    const { id } = response.data;
+    const { login, password } = query;
+    const { token, exp } = await signIn({ login, password });
+    return { id, ...query, token, exp };
+  } catch (error) {
+    throw new Error('Error while signing up');
+  }
+};
+
+export const signIn = async (query: SignInQuery) => {
+  try {
+    const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
+    const { token } = response.data;
+    const { userId: id, login, iat: exp } = jwt_decode<DecodedTokenData>(token);
+
+    return { id, login, token, exp };
+  } catch (error) {
+    throw new Error('Error while signing in');
+  }
 };

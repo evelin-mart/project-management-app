@@ -5,8 +5,7 @@ export const getHeaders = (token: string) => ({
 
 export * from './Auth';
 export * from './Users';
-export * from './Boards';
+export * from './Board';
 export * from './Columns';
-export * from './Files';
-export * from './Points';
+export * from './File';
 export * from './Tasks';

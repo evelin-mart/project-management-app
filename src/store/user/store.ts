@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { deleteUserById, signIn, signUp, updateUserById } from 'services';
 import { SignInQuery, SignUpQuery } from 'services/Auth.types';
 import { UpdateUserResponse } from 'services/User.types';
+import { signIn, signUp } from 'services/Auth';
+import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
 import { UserData } from './interface';
 

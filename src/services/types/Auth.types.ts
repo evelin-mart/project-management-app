@@ -18,7 +18,6 @@ export interface SignUpAnswer {
 }
 
 export interface DecodedTokenData {
-  exp: number;
   iat: number;
   userId: string;
   login: string;

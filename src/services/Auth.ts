@@ -1,4 +1,3 @@
-import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import {
   DecodedTokenData,
@@ -7,53 +6,20 @@ import {
   SignUpAnswer,
   SignUpQuery,
 } from './types/Auth.types';
-} from './Auth.types';
 import { SERVER } from '../constants';
-import { getUserById } from 'services';
+import { BaseService } from './BaseService';
 
-const api = axios.create({
-  baseURL: SERVER.BASE_LINK,
-});
-
-export const signUp = async (query: SignUpQuery) => {
-  const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
-  const { id } = response.data;
-  const { login, password } = query;
-  const { token, exp } = await signIn({ login, password });
-
-  return { id, ...query, token, exp };
-};
-
-export const signIn = async (query: SignInQuery) => {
-  const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
-  const { token } = response.data;
-  const { userId: id, login, iat: exp } = jwt_decode<DecodedTokenData>(token);
-  const { name } = await getUserById({ id, token });
-
-  return { id, login, name, token, exp };
-};
-
-
-export const signUp = async (query: SignUpQuery) => {
-  try {
-    const response = await api.post<SignUpAnswer>(SERVER.SIGNUP, { ...query });
-    const { id } = response.data;
-    const { login, password } = query;
-    const { token, exp } = await signIn({ login, password });
-    return { id, ...query, token, exp };
-  } catch (error) {
-    throw new Error('Error while signing up');
+export class Auth extends BaseService {
+  static async signUp(query: SignUpQuery) {
+    const response = await this.api.post<SignUpAnswer>(SERVER.SIGNUP, query);
+    return response.data;
   }
-};
 
-export const signIn = async (query: SignInQuery) => {
-  try {
-    const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
+  static async signIn(query: SignInQuery) {
+    const response = await this.api.post<SignInAnswer>(SERVER.SIGNIN, query);
     const { token } = response.data;
     const { userId: id, login, iat: exp } = jwt_decode<DecodedTokenData>(token);
-
+    this.setToken(token);
     return { id, login, token, exp };
-  } catch (error) {
-    throw new Error('Error while signing in');
   }
-};
+}

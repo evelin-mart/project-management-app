@@ -1,26 +1,19 @@
-type UserData = {
+type User = {
   id: string;
   name: string;
   login: string;
 };
 
-export type getAllUsersAnswer = {
-  [index: number]: UserData;
-};
+type BaseUserRequest = Pick<User, 'id'>;
 
-export type getUserByIdRequest = {
-  userId: string;
-};
+export type GetUserRequest = BaseUserRequest;
 
-export type getUserByIdAnswer = UserData;
+export type GetUserResponse = User;
 
-export type updateUserByIdRequest = {
-  userId: string;
-  body: { name: string; login: string; password: string };
-};
+export type UpdateUserRequest = Extract<User & { password: string }, BaseUserRequest>;
 
-export type updateUserByIdAnswer = UserData;
+export type UpdateUserResponse = User;
 
-export type deleteUserByIdRequest = {
-  userId: string;
-};
+export type DeteleUserRequest = BaseUserRequest;
+
+export type GetAllUsersAnswer = User[];

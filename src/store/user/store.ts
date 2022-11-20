@@ -1,11 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { deleteUserById, signIn, signUp, updateUserById } from 'services';
-import { SignInQuery, SignUpQuery } from 'services/Auth.types';
-import { UpdateUserResponse } from 'services/User.types';
-import { signIn, signUp } from 'services/Auth';
+import { UpdateUserResponse } from 'services/types/Users.types';
+import { Auth, Users } from 'services';
 import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
 import { UserData } from './interface';
+import { UpdateUserRequest } from 'services/types/Users.types';
 
 const initialState = {
   data: {
@@ -21,27 +20,37 @@ const initialState = {
 
 export const createUser = createAsyncThunk<UserData, SignUpQuery, AsyncThunkConfig>(
   'user/createUser',
-  async (query) => signUp(query)
+  async (query) => {
+    const signUpData = await Auth.signUp(query);
+    const { login, password } = query;
+    const signInData = await Auth.signIn({ login, password });
+    const userData = await Users.getUserById(signInData);
+    return { ...signUpData, ...signInData, ...userData };
+  }
 );
 
 export const authorizeUser = createAsyncThunk<Partial<UserData>, SignInQuery, AsyncThunkConfig>(
   'user/authorizeUser',
-  async (query) => signIn(query)
+  async (query) => {
+    const signInData = await Auth.signIn(query);
+    const { name } = await Users.getUserById(signInData);
+    return { ...signInData, name };
+  }
 );
 
-export const updateUser = createAsyncThunk<UpdateUserResponse, UserData, AsyncThunkConfig>(
+export const updateUser = createAsyncThunk<UpdateUserResponse, UpdateUserRequest, AsyncThunkConfig>(
   'user/updateUser',
   async (query, { getState }) => {
-    const { token, id } = getState().user.data;
-    return updateUserById({ ...query, token, id });
+    const { id } = getState().user.data;
+    return Users.updateUserById({ ...query, id });
   }
 );
 
 export const deleteUser = createAsyncThunk<void, undefined, AsyncThunkConfig>(
   'user/deleteUser',
   async (query, { getState }) => {
-    const { token, id } = getState().user.data;
-    await deleteUserById({ token, id });
+    const { id } = getState().user.data;
+    await Users.deleteUserById({ id });
   }
 );
 

@@ -8,7 +8,7 @@ import { deleteUser, selectUser, updateUser } from 'store/user';
 import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
-import { UpdateUserQuery } from 'services/User.types';
+import { UpdateUserRequest } from 'services/types/Users.types';
 
 export const ProfilePage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
@@ -22,7 +22,7 @@ export const ProfilePage = () => {
     formState: { errors, isDirty },
     handleSubmit,
     reset,
-  } = useForm<UpdateUserQuery>({
+  } = useForm<UpdateUserRequest>({
     defaultValues: useMemo(() => {
       return { name: data.name, login: data.login };
     }, [data]),
@@ -38,7 +38,7 @@ export const ProfilePage = () => {
     }
   }, [data.id, isLoading, navigate]);
 
-  const onUpdateSubmit: SubmitHandler<UpdateUserQuery> = (data) => {
+  const onUpdateSubmit: SubmitHandler<UpdateUserRequest> = (data) => {
     dispatch(updateUser(data));
     reset();
   };

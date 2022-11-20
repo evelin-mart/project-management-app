@@ -1,5 +1,5 @@
 import { SERVER } from 'constants/Server';
-import { api } from './apiCreate';
+import { BaseService } from './BaseService';
 import {
   createTaskAnswer,
   createTaskRequest,
@@ -12,10 +12,10 @@ import {
   updateTaskRequest,
 } from './types/Tasks.types';
 
-export class Tasks {
+export class Tasks extends BaseService {
   static async getAllTasks({ boardId, columnId }: getAllTasksRequest) {
     try {
-      const response = await api.get<getAllTasksAnswer>(
+      const response = await this.api.get<getAllTasksAnswer>(
         `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}/${SERVER.TASKS}`
       );
       return response.data;
@@ -26,7 +26,7 @@ export class Tasks {
 
   static async createTask({ boardId, columnId, body }: createTaskRequest) {
     try {
-      const response = await api.post<createTaskAnswer>(
+      const response = await this.api.post<createTaskAnswer>(
         `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}/${SERVER.TASKS}`,
         body
       );
@@ -38,7 +38,7 @@ export class Tasks {
 
   static async getTask({ boardId, columnId, taskId }: getTaskRequest) {
     try {
-      const response = await api.get<getTaskAnswer>(
+      const response = await this.api.get<getTaskAnswer>(
         `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}/${SERVER.TASKS}/${taskId}`
       );
       return response.data;
@@ -49,7 +49,7 @@ export class Tasks {
 
   static async updateTask({ boardId, columnId, taskId, body }: updateTaskRequest) {
     try {
-      const response = await api.put<updateTaskAnswer>(
+      const response = await this.api.put<updateTaskAnswer>(
         `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}/${SERVER.TASKS}/${taskId}`,
         body
       );
@@ -61,7 +61,7 @@ export class Tasks {
 
   static async deleteTask({ boardId, columnId, taskId }: deleteTaskRequest) {
     try {
-      const response = await api.delete<undefined>(
+      const response = await this.api.delete<undefined>(
         `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}/${SERVER.TASKS}/${taskId}`
       );
       return response.data;

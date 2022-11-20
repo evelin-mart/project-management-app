@@ -1,6 +1,5 @@
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
-import { SERVER } from '../constants';
 import {
   DecodedTokenData,
   SignInAnswer,
@@ -8,8 +7,10 @@ import {
   SignUpAnswer,
   SignUpQuery,
 } from './Auth.types';
+import { SERVER } from '../constants';
+import { getUserById } from 'services';
 
-export const api = axios.create({
+const api = axios.create({
   baseURL: SERVER.BASE_LINK,
 });
 
@@ -25,7 +26,8 @@ export const signUp = async (query: SignUpQuery) => {
 export const signIn = async (query: SignInQuery) => {
   const response = await api.post<SignInAnswer>(SERVER.SIGNIN, { ...query });
   const { token } = response.data;
-  const { id, login, exp } = jwt_decode<DecodedTokenData>(token);
+  const { userId: id, login, iat: exp } = jwt_decode<DecodedTokenData>(token);
+  const { name } = await getUserById({ id, token });
 
-  return { id, login, token, exp };
+  return { id, login, name, token, exp };
 };

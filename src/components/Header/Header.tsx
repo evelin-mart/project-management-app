@@ -19,7 +19,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import { ROUTES } from '../../constants';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { logout, selectUser } from 'store/user';
 
@@ -86,21 +86,20 @@ export const Header = () => {
           }}
         >
           <Typography
-            color="primary"
+            to={ROUTES.HOME}
+            color="white"
             variant={smUp ? 'h4' : 'h6'}
             noWrap
-            component="a"
-            href={ROUTES.HOME}
+            component={Link}
             sx={{
+              textDecoration: 'none',
               fontFamily: 'monospace',
               fontWeight: 700,
               color: 'inherit',
-              textDecoration: 'none',
             }}
           >
             EASYtoDO
           </Typography>
-
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box>
               <ToggleButtonGroup value="ru" exclusive size="small" sx={{ mx: 2 }}>
@@ -130,7 +129,7 @@ export const Header = () => {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <Avatar src="/static/images/avatar/2.jpg" />
                   </IconButton>
                 </Tooltip>
                 <Menu

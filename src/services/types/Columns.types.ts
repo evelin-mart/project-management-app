@@ -1,7 +1,10 @@
+import { ITaskService } from './Tasks.types';
+
 export type ColumnData = {
   id: string;
   title: string;
   order: number;
+  tasks: ITaskService[];
 };
 
 export type getAllColumnsRequest = {

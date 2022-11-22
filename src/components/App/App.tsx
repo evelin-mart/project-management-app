@@ -81,6 +81,7 @@ export const App = () => {
               >
                 <Route index element={<HomePage />} />
                 <Route path={ROUTES.BOARDS} element={<BoardPage />} />
+                <Route path={`${ROUTES.BOARDS}/:idBoard`} element={<BoardPage />} />
                 <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
                 <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
                 <Route path={ROUTES.PROFILE} element={<ProfilePage />} />

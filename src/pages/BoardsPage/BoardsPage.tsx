@@ -4,16 +4,18 @@ import { Loader } from 'components/Loader';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { selectBoards } from 'store/boards';
+import { getBoards, selectBoards } from 'store/boards';
 
 export const BoardsPage = () => {
   const { data, isLoading, error } = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const addBoard = () => {};
+  const HandleAddBoard = () => {};
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    dispatch(getBoards());
+  }, []);
 
   return (
     <Loader isLoading={isLoading}>
@@ -24,7 +26,7 @@ export const BoardsPage = () => {
         {data.map((board) => (
           <BoardItem board={board} key={board.id} />
         ))}
-        <Button onClick={addBoard}>+ add board</Button>
+        <Button onClick={HandleAddBoard}>+ add board</Button>
       </Grid>
     </Loader>
   );

@@ -5,6 +5,7 @@ import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
 import { UserData } from './interface';
 import { UpdateUserRequest } from 'services/types/Users.types';
+import { unknownErrorMessage } from '../../constants';
 
 const initialState = {
   data: {
@@ -63,35 +64,44 @@ export const userSlice = createSlice({
       .addCase(authorizeUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(authorizeUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.data = action.payload;
+      .addCase(authorizeUser.fulfilled, (_, action) => {
+        return {
+          data: action.payload,
+          isLoading: false,
+          error: '',
+        };
       })
       .addCase(authorizeUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || '';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(createUser.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.data = action.payload;
+      .addCase(createUser.fulfilled, (_, action) => {
+        return {
+          data: action.payload,
+          isLoading: false,
+          error: '',
+        };
       })
       .addCase(createUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || '';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateUser.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.data = { ...state.data, ...action.payload };
+        return {
+          data: { ...state.data, ...action.payload },
+          isLoading: false,
+          error: '',
+        };
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || '';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(deleteUser.pending, (state) => {
         state.isLoading = true;
@@ -101,7 +111,7 @@ export const userSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || '';
+        state.error = action.error.message || unknownErrorMessage;
       });
   },
 });

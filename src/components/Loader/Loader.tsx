@@ -1,7 +1,7 @@
 import React from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 export const Loader = ({
   isLoading,
@@ -10,18 +10,32 @@ export const Loader = ({
   isLoading: boolean;
   children: React.ReactNode;
 }) => {
-  return isLoading ? (
-    <Box
+  return (
+    <Container
+      maxWidth="xl"
       sx={{
         display: 'flex',
-        justifyContent: 'center',
-        aligntItems: 'center',
-        margin: 'auto',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100%',
+        pb: 2,
+        pt: 2,
       }}
     >
-      <CircularProgress />
-    </Box>
-  ) : (
-    <>{children}</>
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: 'auto',
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        children
+      )}
+    </Container>
   );
 };

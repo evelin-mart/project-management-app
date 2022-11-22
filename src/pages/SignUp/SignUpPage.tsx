@@ -45,6 +45,7 @@ export const SignUpPage = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          m: 'auto',
           backgroundColor: theme.palette.grey[100],
         }}
         noValidate

@@ -10,6 +10,6 @@ export class BaseService {
   });
 
   static setToken(token: string) {
-    this.api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    this.api.defaults.headers['Authorization'] = `Bearer ${token}`;
   }
 }

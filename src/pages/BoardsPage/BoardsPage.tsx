@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, Card, Stack, Typography, useTheme } from '@mui/material';
 import { BoardItem } from 'components/BoardItem';
 import { Loader } from 'components/Loader';
 import React, { useEffect } from 'react';
@@ -10,6 +10,7 @@ export const BoardsPage = () => {
   const { data, isLoading, error } = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const HandleAddBoard = () => {};
 
@@ -19,15 +20,19 @@ export const BoardsPage = () => {
 
   return (
     <Loader isLoading={isLoading}>
-      <Typography variant="h1" component="h1">
+      <Typography variant="h3" component="h1" color={theme.palette.primary.main} marginBottom={2}>
         Boards
       </Typography>
-      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 1, sm: 2, md: 4 }}>
+      <Stack direction="row" gap={2} justifyContent="center" flexWrap="wrap">
+        <Card sx={{ width: '200px' }}>
+          <Button onClick={HandleAddBoard} sx={{ width: '100%', height: '100%' }}>
+            + add board
+          </Button>
+        </Card>
         {data.map((board) => (
           <BoardItem board={board} key={board.id} />
         ))}
-        <Button onClick={HandleAddBoard}>+ add board</Button>
-      </Grid>
+      </Stack>
     </Loader>
   );
 };

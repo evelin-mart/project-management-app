@@ -1,61 +1,34 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { SERVER, METHOD } from '../constants';
-import { RootState } from '../store';
+import { SERVER } from '../constants';
+import {
+  GetUserRequest,
+  GetUserResponse,
+  GetAllUsersAnswer,
+  UpdateUserRequest,
+  DeteleUserRequest,
+  UpdateUserResponse,
+} from './types/Users.types';
+import { BaseService } from './BaseService';
 
-export const usersAPI = createApi({
-  reducerPath: 'usersAPI',
-  tagTypes: ['User'],
-  baseQuery: fetchBaseQuery({
-    baseUrl: SERVER.BASE_LINK,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).user.data.token;
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  endpoints: (build) => ({
-    getAllUsers: build.query({
-      query: () => {
-        return {
-          url: SERVER.USERS,
-          method: METHOD.GET,
-        };
-      },
-    }),
-    getUserById: build.query({
-      query: (userId: string) => {
-        return {
-          url: `${SERVER.USERS}/${userId}`,
-          method: METHOD.GET,
-        };
-      },
-      providesTags: () => ['User'],
-    }),
-    updateUserById: build.mutation({
-      query: ({
-        userId,
-        body,
-      }: {
-        userId: string;
-        body: { name: string; login: string; password: string };
-      }) => {
-        return {
-          url: `${SERVER.USERS}/${userId}`,
-          method: METHOD.PUT,
-          body: body,
-        };
-      },
-      invalidatesTags: () => ['User'],
-    }),
-    deleteUserById: build.mutation({
-      query: (userId: string) => {
-        return {
-          url: `${SERVER.USERS}/${userId}`,
-          method: METHOD.DELETE,
-        };
-      },
-    }),
-  }),
-});
+export class Users extends BaseService {
+  static async getUserById({ id }: GetUserRequest) {
+    const response = await this.api.get<GetUserResponse>(`${SERVER.USERS}/${id}`);
+    const { name, login } = response.data;
+    return { name, login };
+  }
+
+  static async getAllUsers() {
+    const response = await this.api.get<GetAllUsersAnswer>(SERVER.USERS);
+    return response.data;
+  }
+
+  static async updateUserById({ id, ...body }: UpdateUserRequest) {
+    const response = await this.api.put<UpdateUserResponse>(`${SERVER.USERS}/${id}`, body);
+    const { name, login } = response.data;
+    return { name, login, id };
+  }
+
+  static async deleteUserById({ id }: DeteleUserRequest) {
+    await this.api.delete<void>(`${SERVER.USERS}/${id}`);
+    return;
+  }
+}

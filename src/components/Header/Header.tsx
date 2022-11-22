@@ -7,7 +7,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Button,
   Tooltip,
   Avatar,
   ToggleButton,
@@ -19,7 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 import { ROUTES } from '../../constants';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { logout, selectUser } from 'store/user';
 
@@ -63,7 +62,7 @@ export const Header = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
-    navigate(`/${ROUTES.HOME}`);
+    navigate(ROUTES.HOME);
     setAnchorElUser(null);
   };
 
@@ -86,21 +85,20 @@ export const Header = () => {
           }}
         >
           <Typography
-            color="primary"
+            to={ROUTES.HOME}
+            color="white"
             variant={smUp ? 'h4' : 'h6'}
             noWrap
-            component="a"
-            href={ROUTES.HOME}
+            component={Link}
             sx={{
+              textDecoration: 'none',
               fontFamily: 'monospace',
               fontWeight: 700,
               color: 'inherit',
-              textDecoration: 'none',
             }}
           >
             EASYtoDO
           </Typography>
-
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box>
               <ToggleButtonGroup value="ru" exclusive size="small" sx={{ mx: 2 }}>
@@ -130,7 +128,7 @@ export const Header = () => {
               <Box sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                    <Avatar src="/static/images/avatar/2.jpg" />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -155,13 +153,23 @@ export const Header = () => {
               <>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                   {Object.entries(routes).map(([key, name]) => (
-                    <Button
+                    <Typography
                       key={key}
-                      onClick={() => handleNavMenuClick(key)}
-                      sx={{ ...colorTransition, display: 'block', fontWeight: 700 }}
+                      to={`/${key}`}
+                      component={NavLink}
+                      sx={{
+                        ...colorTransition,
+                        textDecoration: 'none',
+                        display: 'block',
+                        textTransform: 'uppercase',
+                        '&.active': {
+                          textDecoration: `solid underline ${theme.palette.primary.contrastText} 3px`,
+                        },
+                        px: 1,
+                      }}
                     >
                       {name}
-                    </Button>
+                    </Typography>
                   ))}
                 </Box>
                 <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

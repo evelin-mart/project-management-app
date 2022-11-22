@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { signIn, signUp } from 'services/Auth';
-import { SignInQuery, SignUpQuery } from 'services/Auth.types';
+import { UpdateUserResponse } from 'services/types/Users.types';
+import { Auth, Users } from 'services';
+import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
 import { UserData } from './interface';
+import { UpdateUserRequest } from 'services/types/Users.types';
 
 const initialState = {
   data: {
@@ -19,19 +21,32 @@ const initialState = {
 export const createUser = createAsyncThunk<UserData, SignUpQuery, AsyncThunkConfig>(
   'user/createUser',
   async (query) => {
-    const data = await signUp(query);
-
-    return data;
+    return await Auth.signUp(query);
   }
 );
 
-export const authorizeUser = createAsyncThunk<Partial<UserData>, SignInQuery, AsyncThunkConfig>(
+export const authorizeUser = createAsyncThunk<UserData, SignInQuery, AsyncThunkConfig>(
   'user/authorizeUser',
-  async (query, { dispatch }) => {
-    const data = await signIn(query);
-    //dispatch(getUserName(data.id));
+  async (query) => {
+    const signInData = await Auth.signIn(query);
+    const { name } = await Users.getUserById(signInData);
+    return { ...signInData, name };
+  }
+);
 
-    return data;
+export const updateUser = createAsyncThunk<UpdateUserResponse, UpdateUserRequest, AsyncThunkConfig>(
+  'user/updateUser',
+  async (query, { getState }) => {
+    const { id } = getState().user.data;
+    return Users.updateUserById({ ...query, id });
+  }
+);
+
+export const deleteUser = createAsyncThunk<void, undefined, AsyncThunkConfig>(
+  'user/deleteUser',
+  async (_, { getState }) => {
+    const { id } = getState().user.data;
+    await Users.deleteUserById({ id });
   }
 );
 
@@ -50,7 +65,7 @@ export const userSlice = createSlice({
       })
       .addCase(authorizeUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.data = { ...state.data, ...action.payload };
+        state.data = action.payload;
       })
       .addCase(authorizeUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -64,6 +79,27 @@ export const userSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(createUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || '';
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.data = { ...state.data, ...action.payload };
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || '';
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteUser.fulfilled, () => {
+        return initialState;
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || '';
       });

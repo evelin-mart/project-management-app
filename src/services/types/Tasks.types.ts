@@ -1,4 +1,4 @@
-type TaskData = {
+export type TaskData = {
   title: string;
   order: number;
   description: string;
@@ -6,7 +6,19 @@ type TaskData = {
   boardId: string;
   columnId: string;
 };
-type TaskFile = { files: { filename: string; fileSize: number }[] };
+
+export type ITask = TaskData & { id: string } & TaskFile;
+
+export interface ITaskService {
+  id: string;
+  title: string;
+  order: number;
+  description: string;
+  userId: string;
+  files: { filename: string; fileSize: number }[];
+}
+
+export type TaskFile = { files: { filename: string; fileSize: number }[] };
 
 type TaskPath = { boardId: string; columnId: string; taskId: string };
 

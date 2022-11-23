@@ -1,5 +1,3 @@
-import { ColumnData } from './Columns.types';
-
 type BoardData = {
   id: string;
   title: string;
@@ -14,19 +12,43 @@ export type createBoardRequest = {
   body: { title: string; description: string };
 };
 
-export type getBoardAnswer = BoardData & {
-  columns: ColumnData &
-    {
-      tasks: {
-        id: string;
-        title: string;
-        order: number;
-        description: string;
-        userId: string;
-        files: { filename: string; fileSize: number }[];
-      }[];
+export type getBoardAnswer = {
+  id: string;
+  title: string;
+  description: string;
+  columns: {
+    id: string;
+    title: string;
+    order: number;
+    tasks: {
+      id: string;
+      title: string;
+      order: number;
+      description: string;
+      userId: string;
+      files: { filename: string; fileSize: number }[];
     }[];
+  }[];
 };
+
+export interface IBoardService {
+  id: string;
+  title: string;
+  description: string;
+  columns: {
+    id: string;
+    title: string;
+    order: number;
+    tasks: {
+      id: string;
+      title: string;
+      order: number;
+      description: string;
+      userId: string;
+      files: { filename: string; fileSize: number }[];
+    }[];
+  }[];
+}
 
 export type getBoardRequest = {
   boardId: string;

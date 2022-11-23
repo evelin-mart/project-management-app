@@ -3,7 +3,7 @@ export interface UserData {
   name: string;
   login: string;
   token: string;
-  exp: number;
+  iat: number;
 }
 
 export interface UserState {

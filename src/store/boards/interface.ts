@@ -4,4 +4,8 @@ export interface BoardData {
   description: string;
 }
 
-export type BoardsState = Array<BoardData>;
+export type BoardsState = {
+  data: Array<BoardData>;
+  isLoading: boolean;
+  error: string;
+};

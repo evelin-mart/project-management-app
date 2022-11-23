@@ -7,6 +7,7 @@ import {
   CardMedia,
   useTheme,
   useMediaQuery,
+  Container,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { styled } from '@mui/system';
@@ -41,7 +42,17 @@ export const HomePage = () => {
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
-    <Box sx={{ p: 4, maxWidth: '1200px', margin: 'auto' }}>
+    <Container
+      maxWidth="xl"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100%',
+        pb: 2,
+        pt: 2,
+      }}
+    >
       <Grid container spacing={2}>
         <Grid
           item
@@ -117,6 +128,6 @@ export const HomePage = () => {
           ))}
         </Grid>
       </Box>
-    </Box>
+    </Container>
   );
 };

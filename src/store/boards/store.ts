@@ -47,11 +47,7 @@ export const updateBoard = createAsyncThunk<BoardData, updateBoardRequest, Async
 export const boardsSlice = createSlice({
   name: 'boards',
   initialState,
-  reducers: {
-    setBoards(state, action: PayloadAction<BoardData[]>) {
-      state.data = action.payload;
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(getBoards.pending, (state) => {

@@ -9,11 +9,13 @@ import {
   Typography,
 } from '@mui/material';
 import { BoardData } from 'store/boards';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from 'store';
+import { openModal } from 'store/modal';
+import { EditBoard } from 'components/Modal/EditBoard';
 
 export const BoardItem = ({ board }: { board: BoardData }) => {
   const dispatch = useAppDispatch();
@@ -28,6 +30,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
 
   const editBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
+    dispatch(openModal(<EditBoard board={board} />));
   };
 
   const deleteBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -37,7 +40,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
   return (
     <Card
       onClick={() => navigate(`/boards/${board.id}`)}
-      sx={{ cursor: 'pointer' }}
+      sx={{ cursor: 'pointer', width: '200px' }}
       title="Go to the board"
     >
       <CardHeader

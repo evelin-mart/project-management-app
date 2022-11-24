@@ -54,7 +54,13 @@ export const SignUpPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <TextField
-          {...register('name', { required: ERRORS.required })}
+          {...register('name', {
+            required: ERRORS.required,
+            minLength: {
+              value: 5,
+              message: 'Name must have a minimum of 5 characters.',
+            },
+          })}
           fullWidth
           error={!!errors.name}
           helperText={(errors.name?.message as string) || ''}
@@ -62,7 +68,13 @@ export const SignUpPage = () => {
           margin="normal"
         />
         <TextField
-          {...register('login', { required: ERRORS.required })}
+          {...register('login', {
+            required: ERRORS.required,
+            minLength: {
+              value: 5,
+              message: 'Login must have a minimum of 5 characters.',
+            },
+          })}
           fullWidth
           error={!!errors.login}
           helperText={(errors.login?.message as string) || ''}
@@ -70,7 +82,13 @@ export const SignUpPage = () => {
           margin="normal"
         />
         <TextField
-          {...register('password', { required: ERRORS.required })}
+          {...register('password', {
+            required: ERRORS.required,
+            minLength: {
+              value: 5,
+              message: 'Passwords must have a minimum of 5 characters.',
+            },
+          })}
           fullWidth
           error={!!errors.password}
           helperText={(errors.password?.message as string) || ''}

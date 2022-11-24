@@ -7,8 +7,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Tooltip,
-  Avatar,
   ToggleButton,
   ToggleButtonGroup,
   useScrollTrigger,
@@ -22,18 +20,12 @@ import { useNavigate, Link, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { logout, selectUser } from 'store/user';
 
-const routes = {
-  [ROUTES.SIGN_IN]: 'Sign In',
-  [ROUTES.SIGN_UP]: 'Sign Up',
-};
-
 export const Header = () => {
   const dispatch = useAppDispatch();
   const {
     data: { id: loggedUserId },
   } = useAppSelector(selectUser);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
@@ -46,9 +38,6 @@ export const Header = () => {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
@@ -57,21 +46,27 @@ export const Header = () => {
   const handleNavMenuClick = (link: string) => {
     navigate(`/${link}`);
     handleCloseNavMenu();
-    setAnchorElUser(null);
   };
 
   const handleLogOut = () => {
     dispatch(logout());
     navigate(ROUTES.HOME);
-    setAnchorElUser(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
   };
 
   const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;
   const colorTransition = { transition: 'all 0.5s ease', color };
+
+  const routes = loggedUserId
+    ? {
+        'Go to Main Page': ROUTES.BOARDS,
+        'Create New Board': () => {},
+        'Edit Profile': ROUTES.PROFILE,
+        'Sign Out': handleLogOut,
+      }
+    : {
+        'Sign In': ROUTES.SIGN_IN,
+        'Sign Up': ROUTES.SIGN_UP,
+      };
 
   return (
     <AppBar position="sticky" color={trigger ? 'secondary' : 'primary'} sx={colorTransition}>
@@ -124,44 +119,18 @@ export const Header = () => {
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>
-            {loggedUserId ? (
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar src="/static/images/avatar/2.jpg" />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  sx={{ mt: '45px' }}
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  keepMounted
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
-                  <MenuItem onClick={() => handleNavMenuClick(ROUTES.PROFILE)}>
-                    <Typography textAlign="center">Profile</Typography>
-                  </MenuItem>
-                  <MenuItem onClick={handleLogOut}>
-                    <Typography textAlign="center">Log Out</Typography>
-                  </MenuItem>
-                </Menu>
-              </Box>
-            ) : (
-              <>
-                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                  {Object.entries(routes).map(([key, name]) => (
+            <Box>
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                {Object.entries(routes).map(([name, action]) =>
+                  typeof action === 'string' ? (
                     <Typography
-                      key={key}
-                      to={`/${key}`}
+                      key={name}
+                      to={`/${action}`}
                       component={NavLink}
                       sx={{
                         ...colorTransition,
                         textDecoration: 'none',
                         display: 'block',
-                        textTransform: 'uppercase',
                         '&.active': {
                           textDecoration: `solid underline ${theme.palette.primary.contrastText} 3px`,
                         },
@@ -170,38 +139,56 @@ export const Header = () => {
                     >
                       {name}
                     </Typography>
+                  ) : (
+                    <Typography
+                      key={name}
+                      onClick={action}
+                      sx={{
+                        ...colorTransition,
+                        cursor: 'pointer',
+                        display: 'block',
+                        px: 1,
+                      }}
+                    >
+                      {name}
+                    </Typography>
+                  )
+                )}
+              </Box>
+              <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleOpenNavMenu}
+                  color="inherit"
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorElNav}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                  keepMounted
+                  transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  open={Boolean(anchorElNav)}
+                  onClose={handleCloseNavMenu}
+                  sx={{ display: { xs: 'block', md: 'none' } }}
+                >
+                  {Object.entries(routes).map(([name, action]) => (
+                    <MenuItem
+                      key={name}
+                      onClick={() => {
+                        typeof action === 'string' ? handleNavMenuClick(action) : action();
+                      }}
+                    >
+                      <Typography textAlign="center">{name}</Typography>
+                    </MenuItem>
                   ))}
-                </Box>
-                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                  <IconButton
-                    size="large"
-                    aria-label="account of current user"
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleOpenNavMenu}
-                    color="inherit"
-                  >
-                    <MenuIcon />
-                  </IconButton>
-                  <Menu
-                    id="menu-appbar"
-                    anchorEl={anchorElNav}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                    keepMounted
-                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                    open={Boolean(anchorElNav)}
-                    onClose={handleCloseNavMenu}
-                    sx={{ display: { xs: 'block', md: 'none' } }}
-                  >
-                    {Object.entries(routes).map(([key, name]) => (
-                      <MenuItem key={key} onClick={() => handleNavMenuClick(key)}>
-                        <Typography textAlign="center">{name}</Typography>
-                      </MenuItem>
-                    ))}
-                  </Menu>
-                </Box>
-              </>
-            )}
+                </Menu>
+              </Box>
+            </Box>
           </Box>
         </Toolbar>
       </Container>

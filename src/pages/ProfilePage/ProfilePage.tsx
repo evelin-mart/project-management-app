@@ -55,7 +55,8 @@ export const ProfilePage = () => {
         component="form"
         sx={{
           p: 3,
-          width: '500px',
+          maxWidth: '500px',
+          width: 'inherit',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

@@ -41,7 +41,8 @@ export const SignInPage = () => {
         component="form"
         sx={{
           p: 3,
-          width: '400px',
+          maxWidth: '400px',
+          width: 'inherit',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',

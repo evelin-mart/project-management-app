@@ -13,7 +13,7 @@ const style = {
   bgcolor: 'background.paper',
   borderRadius: '10px',
   boxShadow: 24,
-  p: 4,
+  p: 3,
 };
 
 export const CommonModal = () => {
@@ -23,7 +23,7 @@ export const CommonModal = () => {
   const handleClose = () => dispatch(closeModal());
 
   return (
-    <Modal hideBackdrop open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>{content}</Box>
     </Modal>
   );

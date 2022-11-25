@@ -8,24 +8,30 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { BoardData } from 'store/boards';
+import { BoardData, deleteBoard } from 'store/boards';
 import { useNavigate } from 'react-router-dom';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from 'store';
-import { openModal } from 'store/modal';
+import { closeModal, openModal } from 'store/modal';
 import { EditBoard } from 'components/Modal/EditBoard';
+import { ConfirmDeletion } from 'components/Modal/ConfirmDeletion';
+import { ShowBoard } from 'components/Modal/ShowBoard';
 
 export const BoardItem = ({ board }: { board: BoardData }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const description =
-    board.description.length > 100 ? `${board.description.slice(0, 97)}...` : board.description;
+    board.description.length > 50 ? `${board.description.slice(0, 47)}...` : board.description;
+
+  const onSubmitDeleteBoard = () =>
+    dispatch(deleteBoard(board.id)).then(() => dispatch(closeModal()));
 
   const expandBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
+    dispatch(openModal(<ShowBoard board={board} />));
   };
 
   const editBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
@@ -33,14 +39,15 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
     dispatch(openModal(<EditBoard board={board} />));
   };
 
-  const deleteBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleDeleteBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
+    dispatch(openModal(<ConfirmDeletion onSubmit={onSubmitDeleteBoard} type="board" />));
   };
 
   return (
     <Card
       onClick={() => navigate(`/boards/${board.id}`)}
-      sx={{ cursor: 'pointer', width: '200px' }}
+      sx={{ cursor: 'pointer', width: '200px', display: 'flex', flexDirection: 'column' }}
       title="Go to the board"
     >
       <CardHeader
@@ -52,7 +59,9 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
         }
       />
       <CardContent>
-        <Typography variant="body2">{description}</Typography>
+        <Typography variant="body2" sx={{ overflowWrap: 'break-word' }}>
+          {description}
+        </Typography>
       </CardContent>
       <Stack direction="row" gap={1} justifyContent="center" sx={{ p: 1, mt: 'auto' }}>
         <Button size="small" variant="outlined" startIcon={<EditIcon />} onClick={editBoard}>
@@ -63,7 +72,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
           variant="outlined"
           color="error"
           endIcon={<DeleteIcon />}
-          onClick={deleteBoard}
+          onClick={handleDeleteBoard}
         >
           Delete
         </Button>

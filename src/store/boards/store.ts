@@ -29,11 +29,11 @@ export const addBoard = createAsyncThunk<BoardData, createBoardRequest, AsyncThu
   }
 );
 
-export const deleteBoard = createAsyncThunk<string, deleteBoardRequest, AsyncThunkConfig>(
+export const deleteBoard = createAsyncThunk<string, string, AsyncThunkConfig>(
   'boards/deleteBoard',
   async (query) => {
     await Board.deleteBoard(query);
-    return query.boardId;
+    return query;
   }
 );
 

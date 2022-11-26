@@ -1,16 +1,19 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box, Button, Paper, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ERRORS } from 'constants/ValidationErrors';
 import { ROUTES } from 'constants/Routes';
-import { deleteUser, selectUser, updateUser } from 'store/user';
+import { selectUser, updateUser } from 'store/user';
 import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
 import { UpdateUserRequest } from 'services/types/Users.types';
+import { DelUser } from 'components/Modal/ModalDelUser';
+import { UserProfileFields, userForm } from 'constants/UserForm';
 
 export const ProfilePage = () => {
+  const [deleteUserModal, setDeleteUserModal] = useState(false);
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -43,11 +46,6 @@ export const ProfilePage = () => {
     reset();
   };
 
-  const onDelete = () => {
-    dispatch(deleteUser());
-    navigate(`/${ROUTES.SIGN_UP}`);
-  };
-
   return (
     <Loader isLoading={isLoading}>
       <Paper
@@ -73,50 +71,25 @@ export const ProfilePage = () => {
         >
           My profile
         </Typography>
-        <TextField
-          {...register('name', {
-            required: ERRORS.required,
-            minLength: {
-              value: 5,
-              message: 'Name must have a minimum of 5 characters.',
-            },
-          })}
-          fullWidth
-          error={!!errors.name}
-          helperText={(errors.name?.message as string) || ''}
-          label="Name"
-          margin="normal"
-        />
-        <TextField
-          {...register('login', {
-            required: ERRORS.required,
-            minLength: {
-              value: 5,
-              message: 'Login must have a minimum of 5 characters.',
-            },
-          })}
-          fullWidth
-          error={!!errors.login}
-          helperText={(errors.login?.message as string) || ''}
-          label="Login"
-          margin="normal"
-        />
-        <TextField
-          {...register('password', {
-            required: ERRORS.required,
-            minLength: {
-              value: 5,
-              message: 'Passwords must have a minimum of 5 characters.',
-            },
-          })}
-          fullWidth
-          error={!!errors.password}
-          helperText={(errors.password?.message as string) || ''}
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          margin="normal"
-        />
+        {Object.values(UserProfileFields).map((key) => (
+          <TextField
+            key={key}
+            {...register(key, {
+              required: userForm[key].required ? ERRORS.required : false,
+              minLength: {
+                value: userForm[key].minLength,
+                message: ERRORS.minLength(userForm[key].title, userForm[key].minLength),
+              },
+            })}
+            fullWidth
+            error={!!errors[key]}
+            helperText={(errors[key]?.message as string) || ''}
+            label={userForm[key].title}
+            margin="normal"
+            type={key === UserProfileFields.password ? 'password' : 'text'}
+            autoComplete={key === UserProfileFields.password ? 'current-password' : 'text'}
+          />
+        ))}
         <Box
           sx={{
             display: 'flex',
@@ -130,7 +103,7 @@ export const ProfilePage = () => {
             form="form"
             variant="contained"
             color="error"
-            onClick={onDelete}
+            onClick={() => setDeleteUserModal(true)}
           >
             Delete user
           </Button>
@@ -146,6 +119,7 @@ export const ProfilePage = () => {
           </Button>
         </Box>
       </Paper>
+      <DelUser open={deleteUserModal} onClose={() => setDeleteUserModal(false)} />
     </Loader>
   );
 };

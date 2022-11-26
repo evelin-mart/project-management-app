@@ -29,7 +29,13 @@ export const BoardPage = () => {
           flexGrow: 1,
         }}
       >
-        <Grid container direction="row" justifyContent="space-between" alignItems="flex-end">
+        <Grid
+          container
+          direction="row"
+          justifyContent="space-between"
+          alignItems="flex-end"
+          my="1rem"
+        >
           <Button variant="text" sx={{ width: '5%' }}>
             <ArrowBackIcon />
           </Button>
@@ -51,7 +57,6 @@ export const BoardPage = () => {
           sx={{
             minWidth: 'max-content',
             overflow: 'hidden',
-            height: '81vh',
           }}
         >
           {board.columns?.map((column) => (

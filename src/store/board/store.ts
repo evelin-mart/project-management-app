@@ -13,7 +13,7 @@ import {
 import { BoardStore } from './interface';
 
 const initialState = {
-  board: {},
+  board: { columns: [] },
   users: [],
   isLoading: false,
   modal: '',
@@ -43,6 +43,10 @@ export const boardSlice = createSlice({
     setIsLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    setColumnsInBoard: (state, action) => {
+      state.board.columns = action.payload;
+    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -50,6 +54,8 @@ export const boardSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loadBoard.fulfilled, (state, action) => {
+        console.log(action.payload.board);
+
         state.isLoading = false;
         state.board = action.payload.board;
         state.users = action.payload.users;
@@ -72,12 +78,14 @@ export const {
   setModalDataColumnId,
   setModalDataTaskId,
   setEditTitleColumnId,
+  setColumnsInBoard,
 } = boardSlice.actions;
 export default boardSlice.reducer;
 
 export const loadBoard = createAsyncThunk('board/loadBoard', async (boardId: string) => {
   const board = await Board.getBoard({ boardId: String(boardId) });
   const users = await Users.getAllUsers();
+  // board.columns.sort((a, b) => a.order - b.order);
   return { board, users };
 });
 

@@ -2,14 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { boardSlice } from './board';
 import { boardsSlice } from './boards';
-import { selectedBoardSlice } from './selectedBoard';
+import { modalSlice } from './modal';
 import { userSlice } from './user';
 
 export const store = configureStore({
   reducer: {
     [userSlice.name]: userSlice.reducer,
     [boardsSlice.name]: boardsSlice.reducer,
-    [selectedBoardSlice.name]: selectedBoardSlice.reducer,
+    [modalSlice.name]: modalSlice.reducer,
     [boardSlice.name]: boardSlice.reducer,
   },
 });

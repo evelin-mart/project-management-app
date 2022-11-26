@@ -48,7 +48,7 @@ export class Board extends BaseService {
     }
   };
 
-  static deleteBoard = async ({ boardId }: deleteBoardRequest) => {
+  static deleteBoard = async (boardId: string) => {
     try {
       const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
       return response;

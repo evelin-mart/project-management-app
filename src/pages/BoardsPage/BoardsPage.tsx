@@ -1,18 +1,20 @@
 import { Button, Card, Stack, Typography, useTheme } from '@mui/material';
 import { BoardItem } from 'components/BoardItem';
 import { Loader } from 'components/Loader';
+import { CommonModal } from 'components/Modal';
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
+import { ModalTypes, openModal } from '../../store/modal';
 import { getBoards, selectBoards } from 'store/boards';
 
 export const BoardsPage = () => {
   const { data, isLoading, error } = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const theme = useTheme();
 
-  const HandleAddBoard = () => {};
+  const HandleAddBoard = () => {
+    dispatch(openModal({ type: ModalTypes.ADD_BOARD, props: null }));
+  };
 
   useEffect(() => {
     dispatch(getBoards());
@@ -33,6 +35,7 @@ export const BoardsPage = () => {
           <BoardItem board={board} key={board.id} />
         ))}
       </Stack>
+      <CommonModal />
     </Loader>
   );
 };

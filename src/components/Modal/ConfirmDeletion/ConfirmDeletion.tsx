@@ -3,11 +3,15 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useAppDispatch } from 'store';
 import { closeModal } from 'store/modal';
 import { deleteBoard } from 'store/boards';
+import { ROUTES } from 'constants/Routes';
+import { useNavigate } from 'react-router';
+import { deleteUser } from 'store/user';
 
 export enum DeleteItems {
   BOARD = 'board',
   COLUMN = 'column',
   TASK = 'task',
+  USER = 'user',
 }
 
 export interface SubmitDeleteProps {
@@ -16,6 +20,7 @@ export interface SubmitDeleteProps {
 }
 
 export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const handleClose = () => dispatch(closeModal());
@@ -33,6 +38,14 @@ export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
     }
     case DeleteItems.TASK: {
       onSubmit = () => {};
+      break;
+    }
+    case DeleteItems.USER: {
+      onSubmit = async () => {
+        await dispatch(deleteUser());
+        dispatch(closeModal());
+        navigate(`/${ROUTES.SIGN_UP}`);
+      };
       break;
     }
     default: {

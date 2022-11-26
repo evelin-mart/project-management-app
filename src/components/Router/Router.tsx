@@ -10,6 +10,7 @@ import { BoardsPage } from 'pages/BoardsPage';
 import { SignInPage } from 'pages/SignIn';
 import { SignUpPage } from 'pages/SignUp';
 import { BoardPage } from 'pages/BoardPage/BoardPage';
+import { CommonModal } from 'components/Modal';
 
 export const Router = () => {
   return (
@@ -22,6 +23,7 @@ export const Router = () => {
               <Header />
               <Outlet />
               <Footer />
+              <CommonModal />
             </>
           }
         >

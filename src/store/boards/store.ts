@@ -1,13 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { unknownErrorMessage } from '../../constants';
 import { Board } from 'services';
 import { AsyncThunkConfig, RootState } from 'store';
 import { BoardData } from './interface';
-import {
-  createBoardRequest,
-  deleteBoardRequest,
-  updateBoardRequest,
-} from 'services/types/Board.types';
+import { createBoardRequest, updateBoardRequest } from 'services/types/Board.types';
 
 const initialState = {
   data: [] as BoardData[],

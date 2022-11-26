@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, MouseEventHandler } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box, Button, Paper, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -9,11 +9,11 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
 import { UpdateUserRequest } from 'services/types/Users.types';
-import { DelUser } from 'components/Modal/ModalDelUser';
 import { UserProfileFields, userForm } from 'constants/UserForm';
+import { ModalTypes, openModal } from 'store/modal';
+import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
 
 export const ProfilePage = () => {
-  const [deleteUserModal, setDeleteUserModal] = useState(false);
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -44,6 +44,11 @@ export const ProfilePage = () => {
   const onUpdateSubmit: SubmitHandler<UpdateUserRequest> = (data) => {
     dispatch(updateUser(data));
     reset();
+  };
+
+  const handleDeleteUser: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    dispatch(openModal({ type: ModalTypes.DELETE, props: { type: DeleteItems.USER } }));
   };
 
   return (
@@ -103,7 +108,7 @@ export const ProfilePage = () => {
             form="form"
             variant="contained"
             color="error"
-            onClick={() => setDeleteUserModal(true)}
+            onClick={handleDeleteUser}
           >
             Delete user
           </Button>
@@ -119,7 +124,6 @@ export const ProfilePage = () => {
           </Button>
         </Box>
       </Paper>
-      <DelUser open={deleteUserModal} onClose={() => setDeleteUserModal(false)} />
     </Loader>
   );
 };

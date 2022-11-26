@@ -5,6 +5,7 @@ export enum ModalTypes {
   EDIT_BOARD = 'EditBoard',
   SHOW_BOARD = 'ShowBoard',
   DELETE = 'Delete',
+  DELETE_USER = 'DeleteUser',
 }
 
 const initialState = {

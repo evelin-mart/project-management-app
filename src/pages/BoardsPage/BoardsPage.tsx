@@ -1,14 +1,13 @@
 import { Button, Card, Stack, Typography, useTheme } from '@mui/material';
 import { BoardItem } from 'components/BoardItem';
 import { Loader } from 'components/Loader';
-import { CommonModal } from 'components/Modal';
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
 import { ModalTypes, openModal } from '../../store/modal';
 import { getBoards, selectBoards } from 'store/boards';
 
 export const BoardsPage = () => {
-  const { data, isLoading, error } = useAppSelector(selectBoards);
+  const { data, isLoading } = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
   const theme = useTheme();
 
@@ -18,7 +17,7 @@ export const BoardsPage = () => {
 
   useEffect(() => {
     dispatch(getBoards());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Loader isLoading={isLoading}>
@@ -35,7 +34,6 @@ export const BoardsPage = () => {
           <BoardItem board={board} key={board.id} />
         ))}
       </Stack>
-      <CommonModal />
     </Loader>
   );
 };

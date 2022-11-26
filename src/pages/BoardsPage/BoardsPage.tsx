@@ -2,10 +2,9 @@ import { Button, Card, Stack, Typography, useTheme } from '@mui/material';
 import { BoardItem } from 'components/BoardItem';
 import { Loader } from 'components/Loader';
 import { CommonModal } from 'components/Modal';
-import { AddBoard } from 'components/Modal/AddBoard/AddBoard';
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'store';
-import { openModal } from '../../store/modal';
+import { ModalTypes, openModal } from '../../store/modal';
 import { getBoards, selectBoards } from 'store/boards';
 
 export const BoardsPage = () => {
@@ -14,7 +13,7 @@ export const BoardsPage = () => {
   const theme = useTheme();
 
   const HandleAddBoard = () => {
-    dispatch(openModal(<AddBoard />));
+    dispatch(openModal({ type: ModalTypes.ADD_BOARD, props: null }));
   };
 
   useEffect(() => {

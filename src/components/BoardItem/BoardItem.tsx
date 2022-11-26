@@ -8,16 +8,14 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { BoardData, deleteBoard } from 'store/boards';
+import { BoardData } from 'store/boards';
 import { useNavigate } from 'react-router-dom';
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from 'store';
-import { closeModal, openModal } from 'store/modal';
-import { EditBoard } from 'components/Modal/EditBoard';
-import { ConfirmDeletion } from 'components/Modal/ConfirmDeletion';
-import { ShowBoard } from 'components/Modal/ShowBoard';
+import { ModalTypes, openModal } from 'store/modal';
+import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
 
 export const BoardItem = ({ board }: { board: BoardData }) => {
   const dispatch = useAppDispatch();
@@ -26,22 +24,21 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
   const description =
     board.description.length > 50 ? `${board.description.slice(0, 47)}...` : board.description;
 
-  const onSubmitDeleteBoard = () =>
-    dispatch(deleteBoard(board.id)).then(() => dispatch(closeModal()));
-
   const expandBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    dispatch(openModal(<ShowBoard board={board} />));
+    dispatch(openModal({ type: ModalTypes.SHOW_BOARD, props: { board } }));
   };
 
   const editBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    dispatch(openModal(<EditBoard board={board} />));
+    dispatch(openModal({ type: ModalTypes.EDIT_BOARD, props: { board } }));
   };
 
   const handleDeleteBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    dispatch(openModal(<ConfirmDeletion onSubmit={onSubmitDeleteBoard} type="board" />));
+    dispatch(
+      openModal({ type: ModalTypes.DELETE, props: { id: board.id, type: DeleteItems.BOARD } })
+    );
   };
 
   return (
@@ -51,7 +48,12 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
       title="Go to the board"
     >
       <CardHeader
-        title={board.title}
+        title={
+          <Typography component="h5" variant="h5" sx={{ maxWidth: '135px', overflow: 'hidden' }}>
+            {board.title}
+          </Typography>
+        }
+        disableTypography={true}
         action={
           <IconButton onClick={expandBoard} title="Show details">
             <ManageSearchIcon />

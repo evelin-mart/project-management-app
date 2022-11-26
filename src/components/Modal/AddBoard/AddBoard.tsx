@@ -64,7 +64,7 @@ export const AddBoard = () => {
         </Typography>
       )}
 
-      <Stack direction="row" justifyContent="space-evenly" sx={{ p: 1 }}>
+      <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
         <Button variant="outlined" type="submit">
           Submit
         </Button>

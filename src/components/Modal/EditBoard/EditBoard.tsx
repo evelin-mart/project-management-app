@@ -33,7 +33,7 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
   return (
     <form onSubmit={handleSubmit(handleBoardUpdate)}>
       <Typography variant="h5" component="h2" align="center">
-        Add Board
+        Edit Board
       </Typography>
       <TextField
         {...register('title', {
@@ -67,7 +67,7 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
         </Typography>
       )}
 
-      <Stack direction="row" justifyContent="space-evenly" sx={{ p: 1 }}>
+      <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
         <Button variant="outlined" type="submit">
           Submit
         </Button>

@@ -5,7 +5,7 @@ import { closeModal } from 'store/modal';
 import { deleteBoard } from 'store/boards';
 import { ROUTES } from 'constants/Routes';
 import { useNavigate } from 'react-router';
-import { deleteUser } from 'store/user';
+import { deleteUser, logout } from 'store/user';
 
 export enum DeleteItems {
   BOARD = 'board',
@@ -44,6 +44,7 @@ export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
       onSubmit = async () => {
         await dispatch(deleteUser());
         dispatch(closeModal());
+        logout();
         navigate(`/${ROUTES.SIGN_UP}`);
       };
       break;

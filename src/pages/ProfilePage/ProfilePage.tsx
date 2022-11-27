@@ -46,8 +46,7 @@ export const ProfilePage = () => {
     reset();
   };
 
-  const handleDeleteUser: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
+  const handleDeleteUser: MouseEventHandler<HTMLButtonElement> = () => {
     dispatch(openModal({ type: ModalTypes.DELETE, props: { type: DeleteItems.USER } }));
   };
 

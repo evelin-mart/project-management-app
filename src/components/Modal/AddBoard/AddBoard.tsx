@@ -66,7 +66,7 @@ export const AddBoard = () => {
 
       <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
         <Button variant="outlined" type="submit">
-          Submit
+          Save
         </Button>
         <Button variant="outlined" color="error" onClick={handleClose}>
           Cancel

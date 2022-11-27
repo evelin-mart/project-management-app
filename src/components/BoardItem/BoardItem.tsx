@@ -66,13 +66,20 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
         </Typography>
       </CardContent>
       <Stack direction="row" gap={1} justifyContent="center" sx={{ p: 1, mt: 'auto' }}>
-        <Button size="small" variant="outlined" startIcon={<EditIcon />} onClick={editBoard}>
+        <Button
+          size="small"
+          variant="outlined"
+          title="edit"
+          startIcon={<EditIcon />}
+          onClick={editBoard}
+        >
           Edit
         </Button>
         <Button
           size="small"
           variant="outlined"
           color="error"
+          title="delete"
           endIcon={<DeleteIcon />}
           onClick={handleDeleteBoard}
         >

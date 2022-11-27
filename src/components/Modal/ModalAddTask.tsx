@@ -59,7 +59,7 @@ export const AddTask = () => {
         maxRows={4}
       />
       {errors?.description && <div style={{ color: 'red' }}>Description is invalid</div>}
-      <FormControl sx={{ my: 1.2, minWidth: 335 }} size={'medium'}>
+      <FormControl fullWidth sx={{ my: 1.2 }} size={'medium'}>
         <InputLabel>User</InputLabel>
         <Select
           label="User"

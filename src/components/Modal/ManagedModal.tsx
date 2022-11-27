@@ -13,7 +13,7 @@ const styleModal = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 320,
   bgcolor: 'background.paper',
   borderRadius: '10px',
   boxShadow: 24,

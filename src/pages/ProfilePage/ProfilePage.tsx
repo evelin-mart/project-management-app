@@ -12,12 +12,14 @@ import { UpdateUserRequest } from 'services/types/Users.types';
 import { UserProfileFields, userForm } from 'constants/UserForm';
 import { ModalTypes, openModal } from 'store/modal';
 import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { useTranslation } from 'react-i18next';
 
 export const ProfilePage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const { t } = useTranslation();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   const {
@@ -74,7 +76,7 @@ export const ProfilePage = () => {
           align="center"
           sx={{ mb: '1rem', wordBreak: 'break-word' }}
         >
-          My profile
+          {t('profile')}
         </Typography>
         {Object.values(UserProfileFields).map((key) => (
           <TextField
@@ -89,7 +91,7 @@ export const ProfilePage = () => {
             fullWidth
             error={!!errors[key]}
             helperText={(errors[key]?.message as string) || ''}
-            label={userForm[key].title}
+            label={t(UserProfileFields[key])}
             margin="normal"
             type={key === UserProfileFields.password ? 'password' : 'text'}
             autoComplete={key === UserProfileFields.password ? 'current-password' : 'text'}
@@ -110,7 +112,7 @@ export const ProfilePage = () => {
             color="error"
             onClick={handleDeleteUser}
           >
-            Delete user
+            {t('del')} {t('user-del')}
           </Button>
           <Button
             sx={{ mt: 2, mx: 1 }}
@@ -120,7 +122,7 @@ export const ProfilePage = () => {
             color="secondary"
             disabled={isDirty && !!Object.keys(errors).length}
           >
-            Save
+            {t('save')}
           </Button>
         </Box>
       </Paper>

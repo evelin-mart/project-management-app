@@ -16,10 +16,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from 'store';
 import { ModalTypes, openModal } from 'store/modal';
 import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { useTranslation } from 'react-i18next';
 
 export const BoardItem = ({ board }: { board: BoardData }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const description =
     board.description.length > 50 ? `${board.description.slice(0, 47)}...` : board.description;
@@ -73,7 +75,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
           startIcon={<EditIcon />}
           onClick={editBoard}
         >
-          Edit
+          {t('edit')}
         </Button>
         <Button
           size="small"
@@ -83,7 +85,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
           endIcon={<DeleteIcon />}
           onClick={handleDeleteBoard}
         >
-          Delete
+          {t('del')}
         </Button>
       </Stack>
     </Card>

@@ -19,9 +19,12 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate, Link, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { logout, selectUser } from 'store/user';
+import { useTranslation } from 'react-i18next';
+import { ModalTypes, openModal } from 'store/modal';
 
 export const Header = () => {
   const dispatch = useAppDispatch();
+  const { t, i18n } = useTranslation();
   const {
     data: { id: loggedUserId },
   } = useAppSelector(selectUser);
@@ -53,19 +56,23 @@ export const Header = () => {
     navigate(ROUTES.HOME);
   };
 
+  const HandleAddBoard = () => {
+    dispatch(openModal({ type: ModalTypes.ADD_BOARD, props: null }));
+  };
+
   const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;
   const colorTransition = { transition: 'all 0.5s ease', color };
 
   const routes = loggedUserId
     ? {
-        'Go to Main Page': ROUTES.BOARDS,
-        'Create New Board': () => {},
-        'Edit Profile': ROUTES.PROFILE,
-        'Sign Out': handleLogOut,
+        gtmp: ROUTES.BOARDS,
+        cnb: HandleAddBoard,
+        epro: ROUTES.PROFILE,
+        signOut: handleLogOut,
       }
     : {
-        'Sign In': ROUTES.SIGN_IN,
-        'Sign Up': ROUTES.SIGN_UP,
+        signIn: ROUTES.SIGN_IN,
+        signUp: ROUTES.SIGN_UP,
       };
 
   return (
@@ -104,6 +111,7 @@ export const Header = () => {
                     '&.Mui-selected, &.Mui-selected:hover': colorTransition,
                     py: 0.3,
                   }}
+                  onClick={() => i18n.changeLanguage('en')}
                 >
                   En
                 </ToggleButton>
@@ -114,6 +122,7 @@ export const Header = () => {
                     '&.Mui-selected, &.Mui-selected:hover': colorTransition,
                     py: 0.3,
                   }}
+                  onClick={() => i18n.changeLanguage('ru')}
                 >
                   Ru
                 </ToggleButton>
@@ -137,7 +146,7 @@ export const Header = () => {
                         px: 1,
                       }}
                     >
-                      {name}
+                      {t(name)}
                     </Typography>
                   ) : (
                     <Typography
@@ -150,7 +159,7 @@ export const Header = () => {
                         px: 1,
                       }}
                     >
-                      {name}
+                      {t(name)}
                     </Typography>
                   )
                 )}
@@ -183,7 +192,7 @@ export const Header = () => {
                         typeof action === 'string' ? handleNavMenuClick(action) : action();
                       }}
                     >
-                      <Typography textAlign="center">{name}</Typography>
+                      <Typography textAlign="center">{t(name)}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>

@@ -2,7 +2,6 @@ import { SERVER } from 'constants/Server';
 import {
   createBoardAnswer,
   createBoardRequest,
-  deleteBoardRequest,
   getAllBoardsAnswer,
   getBoardAnswer,
   getBoardRequest,

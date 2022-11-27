@@ -11,12 +11,15 @@ import { useNavigate } from 'react-router';
 import { SignInQuery } from 'services/types/Auth.types';
 import { Link } from 'react-router-dom';
 import { UserProfileFields, userForm } from 'constants/UserForm';
+import { useTranslation } from 'react-i18next';
 
 export const SignInPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const { t } = useTranslation();
+
   const {
     register,
     formState: { errors, isDirty },
@@ -68,7 +71,7 @@ export const SignInPage = () => {
           fullWidth
           error={!!errors[UserProfileFields.login]}
           helperText={(errors[UserProfileFields.login]?.message as string) || ''}
-          label={userForm[UserProfileFields.login].title}
+          label={t('login')}
           margin="normal"
         />
         <TextField
@@ -85,7 +88,7 @@ export const SignInPage = () => {
           fullWidth
           error={!!errors[UserProfileFields.password]}
           helperText={(errors[UserProfileFields.password]?.message as string) || ''}
-          label={userForm[UserProfileFields.password].title}
+          label={t('password')}
           margin="normal"
           type={'password'}
           autoComplete={'current-password'}
@@ -99,11 +102,13 @@ export const SignInPage = () => {
             color="secondary"
             disabled={isDirty && !!Object.keys(errors).length}
           >
-            Sign in
+            {t('signIn')}
           </Button>
         </Box>
         <Box sx={{ my: 2 }}>
-          <Link to={`/${ROUTES.SIGN_UP}`}>Don&#39;t have an account? Sign Up</Link>
+          <Link to={`/${ROUTES.SIGN_UP}`}>
+            {t('dha')} {t('signUp')}
+          </Link>
         </Box>
       </Paper>
     </Loader>

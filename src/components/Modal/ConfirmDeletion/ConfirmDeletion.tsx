@@ -3,9 +3,8 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useAppDispatch } from 'store';
 import { closeModal } from 'store/modal';
 import { deleteBoard } from 'store/boards';
-import { ROUTES } from 'constants/Routes';
-import { useNavigate } from 'react-router';
-import { deleteUser } from 'store/user';
+import { deleteUser, logout } from 'store/user';
+import { useTranslation } from 'react-i18next';
 
 export enum DeleteItems {
   BOARD = 'board',
@@ -20,8 +19,8 @@ export interface SubmitDeleteProps {
 }
 
 export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const handleClose = () => dispatch(closeModal());
 
@@ -44,7 +43,7 @@ export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
       onSubmit = async () => {
         await dispatch(deleteUser());
         dispatch(closeModal());
-        navigate(`/${ROUTES.SIGN_UP}`);
+        dispatch(logout());
       };
       break;
     }
@@ -56,14 +55,14 @@ export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
   return (
     <>
       <Typography variant="h5" component="h2" align="center">
-        Are you sure want to delete {type}?
+        {t('confirmation')} {t(`${type}-del`)}?
       </Typography>
       <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
         <Button variant="outlined" onClick={handleClose}>
-          Cancel
+          {t('cancel')}
         </Button>
         <Button variant="outlined" color="error" onClick={onSubmit}>
-          Delete
+          {t('del')}
         </Button>
       </Stack>
     </>

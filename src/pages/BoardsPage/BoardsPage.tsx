@@ -6,20 +6,33 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { ModalTypes, openModal } from '../../store/modal';
 import { getBoards, selectBoards } from 'store/boards';
 import { useTranslation } from 'react-i18next';
+import { ROUTES } from 'constants/Routes';
+import { useNavigate } from 'react-router-dom';
+import { selectUser } from 'store/user';
 
 export const BoardsPage = () => {
   const { data, isLoading } = useAppSelector(selectBoards);
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const { t } = useTranslation();
+  const {
+    data: { id },
+  } = useAppSelector(selectUser);
+  const navigate = useNavigate();
 
   const HandleAddBoard = () => {
     dispatch(openModal({ type: ModalTypes.ADD_BOARD, props: null }));
   };
 
   useEffect(() => {
+    if (!id) {
+      navigate(`/${ROUTES.HOME}`);
+    }
+  }, [id]);
+
+  useEffect(() => {
     dispatch(getBoards());
-  }, [dispatch]);
+  }, []);
 
   return (
     <Loader isLoading={isLoading}>

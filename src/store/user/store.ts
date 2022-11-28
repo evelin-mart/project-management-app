@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { UpdateUserResponse } from 'services/types/Users.types';
+import { DeleteUserRequest, UpdateUserResponse } from 'services/types/Users.types';
 import { Auth, Users } from 'services';
 import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
@@ -43,11 +43,10 @@ export const updateUser = createAsyncThunk<UpdateUserResponse, UpdateUserRequest
   }
 );
 
-export const deleteUser = createAsyncThunk<void, undefined, AsyncThunkConfig>(
+export const deleteUser = createAsyncThunk<void, DeleteUserRequest, AsyncThunkConfig>(
   'user/deleteUser',
-  async (_, { getState }) => {
-    const { id } = getState().user.data;
-    await Users.deleteUserById({ id });
+  async (query) => {
+    await Users.deleteUserById(query);
   }
 );
 

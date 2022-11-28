@@ -21,7 +21,7 @@ import { useTranslation } from 'react-i18next';
 export const BoardItem = ({ board }: { board: BoardData }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const description =
     board.description.length > 50 ? `${board.description.slice(0, 47)}...` : board.description;
@@ -39,7 +39,10 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
   const handleDeleteBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     dispatch(
-      openModal({ type: ModalTypes.DELETE, props: { id: board.id, type: DeleteItems.BOARD } })
+      openModal({
+        type: ModalTypes.DELETE,
+        props: { type: DeleteItems.BOARD, args: { id: board.id } },
+      })
     );
   };
 
@@ -47,7 +50,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
     <Card
       onClick={() => navigate(`/boards/${board.id}`)}
       sx={{ cursor: 'pointer', width: '200px', display: 'flex', flexDirection: 'column' }}
-      title="Go to the board"
+      title={`${t('gtb')}`}
     >
       <CardHeader
         title={
@@ -57,7 +60,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
         }
         disableTypography={true}
         action={
-          <IconButton onClick={expandBoard} title="Show details">
+          <IconButton onClick={expandBoard} title={`${t('show')}`}>
             <ManageSearchIcon />
           </IconButton>
         }
@@ -71,8 +74,8 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
         <Button
           size="small"
           variant="outlined"
-          title="edit"
-          startIcon={<EditIcon />}
+          title={`${t('edit')}`}
+          startIcon={i18n.resolvedLanguage === 'en' ? <EditIcon /> : undefined}
           onClick={editBoard}
         >
           {t('edit')}
@@ -81,8 +84,8 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
           size="small"
           variant="outlined"
           color="error"
-          title="delete"
-          endIcon={<DeleteIcon />}
+          title={`${t('del')}`}
+          endIcon={i18n.resolvedLanguage === 'en' ? <DeleteIcon /> : undefined}
           onClick={handleDeleteBoard}
         >
           {t('del')}

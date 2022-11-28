@@ -2,6 +2,7 @@ import { SERVER } from 'constants/Server';
 import {
   createBoardAnswer,
   createBoardRequest,
+  deleteBoardRequest,
   getAllBoardsAnswer,
   getBoardAnswer,
   getBoardRequest,
@@ -47,9 +48,9 @@ export class Board extends BaseService {
     }
   };
 
-  static deleteBoard = async (boardId: string) => {
+  static deleteBoard = async ({ id }: deleteBoardRequest) => {
     try {
-      const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
+      const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${id}`);
       return response;
     } catch (error) {
       throw new Error('Error while deleting board');

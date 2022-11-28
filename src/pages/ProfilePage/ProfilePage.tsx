@@ -39,7 +39,7 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     if (!isLoading && !data.id) {
-      navigate(`/${ROUTES.SIGN_IN}`);
+      navigate(`/${ROUTES.HOME}`);
     }
   }, [data.id, isLoading, navigate]);
 
@@ -50,7 +50,12 @@ export const ProfilePage = () => {
 
   const handleDeleteUser: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
-    dispatch(openModal({ type: ModalTypes.DELETE, props: { type: DeleteItems.USER } }));
+    dispatch(
+      openModal({
+        type: ModalTypes.DELETE,
+        props: { type: DeleteItems.USER, args: { id: data.id } },
+      })
+    );
   };
 
   return (

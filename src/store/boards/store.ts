@@ -3,7 +3,11 @@ import { unknownErrorMessage } from '../../constants';
 import { Board } from 'services';
 import { AsyncThunkConfig, RootState } from 'store';
 import { BoardData } from './interface';
-import { createBoardRequest, updateBoardRequest } from 'services/types/Board.types';
+import {
+  createBoardRequest,
+  deleteBoardRequest,
+  updateBoardRequest,
+} from 'services/types/Board.types';
 
 const initialState = {
   data: [] as BoardData[],
@@ -25,11 +29,11 @@ export const addBoard = createAsyncThunk<BoardData, createBoardRequest, AsyncThu
   }
 );
 
-export const deleteBoard = createAsyncThunk<string, string, AsyncThunkConfig>(
+export const deleteBoard = createAsyncThunk<string, deleteBoardRequest, AsyncThunkConfig>(
   'boards/deleteBoard',
   async (query) => {
     await Board.deleteBoard(query);
-    return query;
+    return query.id;
   }
 );
 

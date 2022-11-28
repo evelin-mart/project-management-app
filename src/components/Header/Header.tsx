@@ -60,6 +60,10 @@ export const Header = () => {
     dispatch(openModal({ type: ModalTypes.ADD_BOARD, props: null }));
   };
 
+  const handleLangChange = (_: React.MouseEvent<HTMLElement>, lang: string) => {
+    i18n.changeLanguage(lang);
+  };
+
   const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;
   const colorTransition = { transition: 'all 0.5s ease', color };
 
@@ -103,7 +107,13 @@ export const Header = () => {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box>
-              <ToggleButtonGroup value="ru" exclusive size="small" sx={{ mx: 2 }}>
+              <ToggleButtonGroup
+                value={i18n.resolvedLanguage}
+                onChange={handleLangChange}
+                exclusive
+                size="small"
+                sx={{ mx: 2 }}
+              >
                 <ToggleButton
                   value="en"
                   sx={{
@@ -111,7 +121,6 @@ export const Header = () => {
                     '&.Mui-selected, &.Mui-selected:hover': colorTransition,
                     py: 0.3,
                   }}
-                  onClick={() => i18n.changeLanguage('en')}
                 >
                   En
                 </ToggleButton>
@@ -122,7 +131,6 @@ export const Header = () => {
                     '&.Mui-selected, &.Mui-selected:hover': colorTransition,
                     py: 0.3,
                   }}
-                  onClick={() => i18n.changeLanguage('ru')}
                 >
                   Ru
                 </ToggleButton>

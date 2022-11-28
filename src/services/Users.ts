@@ -4,8 +4,8 @@ import {
   GetUserResponse,
   GetAllUsersAnswer,
   UpdateUserRequest,
-  DeteleUserRequest,
   UpdateUserResponse,
+  DeleteUserRequest,
 } from './types/Users.types';
 import { BaseService } from './BaseService';
 
@@ -27,7 +27,7 @@ export class Users extends BaseService {
     return { name, login, id };
   }
 
-  static async deleteUserById({ id }: DeteleUserRequest) {
+  static async deleteUserById({ id }: DeleteUserRequest) {
     await this.api.delete<void>(`${SERVER.USERS}/${id}`);
     return;
   }

@@ -5,8 +5,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { store } from '../../store';
 import { theme } from './theme';
 import { Router } from 'components/Router';
+import { getUserFromLocalStorage, hydrate } from 'store/user';
 
 export const App = () => {
+  const user = getUserFromLocalStorage();
+  if (user) {
+    store.dispatch(hydrate(user));
+  }
+
   return (
     <>
       <Provider store={store}>

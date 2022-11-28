@@ -50,7 +50,6 @@ export const Header = () => {
 
   const handleLogOut = () => {
     dispatch(logout());
-    navigate(ROUTES.HOME);
   };
 
   const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;

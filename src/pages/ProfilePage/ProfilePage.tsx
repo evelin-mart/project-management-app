@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, MouseEventHandler } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box, Button, Paper, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -48,15 +48,13 @@ export const ProfilePage = () => {
     reset();
   };
 
-  const handleDeleteUser: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
+  const handleDeleteUser = () =>
     dispatch(
       openModal({
         type: ModalTypes.DELETE,
         props: { type: DeleteItems.USER, args: { id: data.id } },
       })
     );
-  };
 
   return (
     <Loader isLoading={isLoading}>

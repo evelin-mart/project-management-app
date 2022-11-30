@@ -10,6 +10,7 @@ import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
 import { SignUpQuery } from 'services/types/Auth.types';
 import { Link } from 'react-router-dom';
+import { UserProfileFields, userForm } from 'constants/UserForm';
 
 export const SignUpPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
@@ -41,42 +42,37 @@ export const SignUpPage = () => {
         component="form"
         sx={{
           p: 3,
-          width: '400px',
+          maxWidth: '400px',
+          width: 'inherit',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          m: 'auto',
           backgroundColor: theme.palette.grey[100],
         }}
         noValidate
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <TextField
-          {...register('name', { required: ERRORS.required })}
-          fullWidth
-          error={!!errors.name}
-          helperText={(errors.name?.message as string) || ''}
-          label="Name"
-          margin="normal"
-        />
-        <TextField
-          {...register('login', { required: ERRORS.required })}
-          fullWidth
-          error={!!errors.login}
-          helperText={(errors.login?.message as string) || ''}
-          label="Login"
-          margin="normal"
-        />
-        <TextField
-          {...register('password', { required: ERRORS.required })}
-          fullWidth
-          error={!!errors.password}
-          helperText={(errors.password?.message as string) || ''}
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          margin="normal"
-        />
+        {Object.values(UserProfileFields).map((key) => (
+          <TextField
+            key={key}
+            {...register(key, {
+              required: userForm[key].required ? ERRORS.required : false,
+              minLength: {
+                value: userForm[key].minLength,
+                message: ERRORS.minLength(userForm[key].title, userForm[key].minLength),
+              },
+            })}
+            fullWidth
+            error={!!errors[key]}
+            helperText={(errors[key]?.message as string) || ''}
+            label={userForm[key].title}
+            margin="normal"
+            type={key === UserProfileFields.password ? 'password' : 'text'}
+            autoComplete={key === UserProfileFields.password ? 'current-password' : 'text'}
+          />
+        ))}
         <Box>
           <Button
             sx={{ my: 2 }}

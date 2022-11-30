@@ -7,6 +7,7 @@ import {
   CardMedia,
   useTheme,
   useMediaQuery,
+  Container,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { styled } from '@mui/system';
@@ -41,7 +42,17 @@ export const HomePage = () => {
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
-    <Box sx={{ p: 4, maxWidth: '1200px', margin: 'auto' }}>
+    <Container
+      maxWidth="xl"
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '100%',
+        pb: 2,
+        pt: 2,
+      }}
+    >
       <Grid container spacing={2}>
         <Grid
           item
@@ -62,15 +73,19 @@ export const HomePage = () => {
           >
             About EASYtoDO
           </Typography>
-          <Typography color="textPrimary">
-            Текст текст текст текст Много текста: текст текст текст текст текст текст текст текст
-            текст текст текст текст текст текст текст текст текст текст Еще текст Еще текст Текст
-            текст текст текст Много текста: текст текст текст текст текст текст текст текст текст
-            текст текст текст текст текст текст текст текст текст Еще текст Еще текст Текст текст
-            текст текст Много текста: текст текст текст текст текст текст текст текст текст текст
-            текст текст текст текст текст текст текст текст Еще текст Еще текст Текст текст текст
-            текст Много текста: текст текст текст текст текст текст текст текст текст текст текст
-            текст текст текст текст текст текст текст Еще текст Еще текст
+          <Typography component="div" color="textPrimary">
+            <p>
+              EASYtoDO will help you to organize and manage simple and complex tasks more
+              efficiently as well as always be aware of your tasks and keep in touch with your team.
+              You can also use this app to organize grocery lists, personal affairs, planning your
+              next vacation and everything else related to planning.
+            </p>
+            Our application has:
+            <ul>
+              <li>Intuitive interface</li>
+              <li>Flexible Kanban Board</li>
+              <li>Easy drag and drop feature</li>
+            </ul>
           </Typography>
         </Grid>
         <Grid
@@ -117,6 +132,6 @@ export const HomePage = () => {
           ))}
         </Grid>
       </Box>
-    </Box>
+    </Container>
   );
 };

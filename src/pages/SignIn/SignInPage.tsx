@@ -10,6 +10,7 @@ import { Loader } from 'components/Loader';
 import { useNavigate } from 'react-router';
 import { SignInQuery } from 'services/types/Auth.types';
 import { Link } from 'react-router-dom';
+import { UserProfileFields, userForm } from 'constants/UserForm';
 
 export const SignInPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
@@ -41,10 +42,12 @@ export const SignInPage = () => {
         component="form"
         sx={{
           p: 3,
-          width: '400px',
+          maxWidth: '400px',
+          width: 'inherit',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          m: 'auto',
           backgroundColor: theme.palette.grey[100],
         }}
         noValidate
@@ -52,22 +55,40 @@ export const SignInPage = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <TextField
-          {...register('login', { required: ERRORS.required })}
+          {...register(UserProfileFields.login, {
+            required: userForm[UserProfileFields.login].required ? ERRORS.required : false,
+            minLength: {
+              value: userForm[UserProfileFields.login].minLength,
+              message: ERRORS.minLength(
+                userForm[UserProfileFields.login].title,
+                userForm[UserProfileFields.login].minLength
+              ),
+            },
+          })}
           fullWidth
-          error={!!errors.login}
-          helperText={(errors.login?.message as string) || ''}
-          label="Login"
+          error={!!errors[UserProfileFields.login]}
+          helperText={(errors[UserProfileFields.login]?.message as string) || ''}
+          label={userForm[UserProfileFields.login].title}
           margin="normal"
         />
         <TextField
-          {...register('password', { required: ERRORS.required })}
+          {...register(UserProfileFields.password, {
+            required: userForm[UserProfileFields.password].required ? ERRORS.required : false,
+            minLength: {
+              value: userForm[UserProfileFields.password].minLength,
+              message: ERRORS.minLength(
+                userForm[UserProfileFields.password].title,
+                userForm[UserProfileFields.password].minLength
+              ),
+            },
+          })}
           fullWidth
-          error={!!errors.password}
-          helperText={(errors.password?.message as string) || ''}
-          label="Password"
-          type="password"
-          autoComplete="current-password"
+          error={!!errors[UserProfileFields.password]}
+          helperText={(errors[UserProfileFields.password]?.message as string) || ''}
+          label={userForm[UserProfileFields.password].title}
           margin="normal"
+          type={'password'}
+          autoComplete={'current-password'}
         />
         <Box>
           <Button

@@ -63,6 +63,7 @@ export const ProfilePage = () => {
         component="form"
         sx={{
           p: 3,
+          m: 'auto',
           maxWidth: '500px',
           width: 'inherit',
           display: 'flex',

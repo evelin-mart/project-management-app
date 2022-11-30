@@ -1,1 +1,1 @@
-export { ConfirmDeletion } from './ConfirmDeletion';
+export { ConfirmDeletion, DeleteItems } from './ConfirmDeletion';

@@ -15,7 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from 'store';
 import { ModalTypes, openModal } from 'store/modal';
-import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { DeleteItems } from 'components/Modal/ConfirmDeletion';
 import { useTranslation } from 'react-i18next';
 
 export const BoardItem = ({ board }: { board: BoardData }) => {

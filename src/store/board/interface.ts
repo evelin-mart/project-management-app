@@ -11,6 +11,12 @@ export interface BoardStore {
     taskId: string;
   };
   editTitleColumnId: string;
+  error: string;
+  editTask: {
+    title: string;
+    description: string;
+    userId: string;
+  };
 }
 
 export type BoardsState = Array<BoardStore>;

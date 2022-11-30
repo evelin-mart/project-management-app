@@ -5,6 +5,7 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createTask, setModal } from 'store/board';
 import { useAppDispatch, useAppSelector } from 'store';
+import { modalTypes } from './modalTypes';
 
 type FormValues = {
   title: string;
@@ -32,7 +33,7 @@ export const AddTask = () => {
       })
     );
     reset();
-    dispatch(setModal(''));
+    dispatch(setModal(modalTypes.NONE));
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -44,30 +45,38 @@ export const AddTask = () => {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.title}
+        helperText={(errors.title?.message as string) || ''}
         label="Title"
         variant="outlined"
         margin="normal"
       />
-      {errors?.title && <div style={{ color: 'red' }}>Title is invalid</div>}
       <TextField
         {...register('description', {
           required: 'Description is require field!',
         })}
         fullWidth
+        error={!!errors.description}
+        helperText={(errors.description?.message as string) || ''}
         label="Description"
         multiline
         maxRows={4}
       />
-      {errors?.description && <div style={{ color: 'red' }}>Description is invalid</div>}
       <FormControl sx={{ my: 1.2, minWidth: 335 }} size={'medium'}>
         <InputLabel>User</InputLabel>
         <Select
+          defaultValue={'none'}
           label="User"
+          error={!!errors.userId}
           {...register('userId', {
-            required: 'userId is require field!',
+            required: 'User is require field!',
+            pattern: {
+              value: /[^none]/,
+              message: 'User is require field!',
+            },
           })}
         >
-          <MenuItem value="">
+          <MenuItem value="none">
             <em>None</em>
           </MenuItem>
           {users.map((user) => (
@@ -76,7 +85,9 @@ export const AddTask = () => {
             </MenuItem>
           ))}
         </Select>
-        {errors?.userId && <div style={{ color: 'red' }}>userId is invalid</div>}
+        {errors?.userId && (
+          <div style={{ color: '#fe6b61', margin: '3px 15px' }}>{errors.userId.message}</div>
+        )}
       </FormControl>
 
       <Button

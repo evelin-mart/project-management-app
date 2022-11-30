@@ -7,6 +7,7 @@ import { AddTask } from './ModalAddTask';
 import { DelColumn } from './ModalDelColumn';
 import { DelTask } from './ModalDelTask';
 import { EditTask } from './ModalEditTask';
+import { modalTypes } from './modalTypes';
 
 const styleModal = {
   position: 'absolute' as const,
@@ -25,7 +26,7 @@ export const ManagedModal = () => {
   const { modal } = useAppSelector((state) => state.board);
 
   return (
-    <Modal open={true} onClose={() => dispatch(setModal(''))}>
+    <Modal open={true} onClose={() => dispatch(setModal(modalTypes.NONE))}>
       <Box sx={styleModal}>
         {modal === 'addTask' && <AddTask />}
         {modal === 'EditTask' && <EditTask />}

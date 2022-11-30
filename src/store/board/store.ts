@@ -16,12 +16,19 @@ const initialState = {
   board: { columns: [] },
   users: [],
   isLoading: false,
-  modal: '',
+  modal: 'none',
   modalData: {
     columnId: '',
     taskId: '',
   },
+  dragTask: {},
   editTitleColumnId: '',
+  editTask: {
+    title: '',
+    description: '',
+    userId: '',
+  },
+  error: '',
 } as unknown as BoardStore;
 
 export const boardSlice = createSlice({
@@ -46,7 +53,12 @@ export const boardSlice = createSlice({
     setColumnsInBoard: (state, action) => {
       state.board.columns = action.payload;
     },
-
+    setDragTask: (state, action) => {
+      state.board.columns = action.payload;
+    },
+    setEditTask: (state, action) => {
+      state.editTask = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -54,21 +66,126 @@ export const boardSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loadBoard.fulfilled, (state, action) => {
-        console.log(action.payload.board);
-
         state.isLoading = false;
         state.board = action.payload.board;
         state.users = action.payload.users;
       })
-      // .addCase(createTask.fulfilled, (state, action) => {})
-      // .addCase(createColumn.fulfilled, (state, action) => {})
-      // .addCase(updateTask.fulfilled, (state, action) => {})
-      // .addCase(deleteTask.fulfilled, (state, action) => {})
-      // .addCase(deleteColumn.fulfilled, (state, action) => {})
-      // .addCase(updateColumnTitle.fulfilled, (state, action) => {})
-      .addCase(loadBoard.rejected, (state) => {
+      .addCase(loadBoard.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message || 'Error';
+      })
+      .addCase(createTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const columnId = state.modalData.columnId;
+        const column = state.board.columns.find((column) => column.id === columnId);
+        const task = { ...action.payload, files: [], order: column!.tasks.length + 1 };
+        if (column) {
+          column.tasks.push(task);
+        }
+      })
+      .addCase(createTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Error';
+      })
+      .addCase(createColumn.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.board.columns = [...state.board.columns, { ...action.payload, tasks: [] }];
+      })
+      .addCase(createColumn.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Error';
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { columnId } = action.payload;
+        const id = state.modalData.taskId;
+        state.board.columns = state.board.columns.map((column) => {
+          if (column.id === columnId) {
+            return {
+              ...column,
+              tasks: column.tasks.map((task) => {
+                if (task.id === id) {
+                  return { ...task, ...action.payload, files: [] };
+                } else {
+                  return task;
+                }
+              }),
+            };
+          } else {
+            return column;
+          }
+        });
+      })
+      .addCase(updateTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Error';
+      })
+      .addCase(deleteTask.fulfilled, (state) => {
+        state.isLoading = false;
+        const { columnId, taskId } = state.modalData;
+        state.board.columns = state.board.columns.map((column) => {
+          if (column.id === columnId) {
+            return {
+              ...column,
+              tasks: column.tasks.filter((task) => task.id !== taskId),
+            };
+          } else {
+            return column;
+          }
+        });
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Error';
+      })
+      .addCase(deleteColumn.fulfilled, (state) => {
+        state.isLoading = false;
+        state.board.columns = state.board.columns.filter(
+          (column) => column.id !== state.modalData.columnId
+        );
+      })
+      .addCase(deleteColumn.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Error';
+      })
+      .addCase(updateColumnTitle.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.board.columns = state.board.columns.map((column) => {
+          if (column.id === action.payload.id) {
+            return { ...action.payload, tasks: column.tasks };
+          } else {
+            return column;
+          }
+        });
+      })
+      .addCase(updateColumnTitle.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateColumnTitle.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || 'Error';
       });
+    // .addCase(updateMoveColumn.fulfilled, (state, action) => {
+    // state.isLoading = false;
+    // })
+    // .addCase(updateMoveTask.fulfilled, (state, action) => {
+    // state.isLoading = false;
+    // });
   },
 });
 
@@ -79,13 +196,13 @@ export const {
   setModalDataTaskId,
   setEditTitleColumnId,
   setColumnsInBoard,
+  setEditTask,
 } = boardSlice.actions;
 export default boardSlice.reducer;
 
 export const loadBoard = createAsyncThunk('board/loadBoard', async (boardId: string) => {
   const board = await Board.getBoard({ boardId: String(boardId) });
   const users = await Users.getAllUsers();
-  // board.columns.sort((a, b) => a.order - b.order);
   return { board, users };
 });
 
@@ -128,23 +245,22 @@ export const updateTask = createAsyncThunk(
 export const deleteTask = createAsyncThunk(
   'board/deleteTask',
   async ({ boardId, columnId, taskId }: deleteTaskRequest) => {
-    const response = await Tasks.deleteTask({
+    await Tasks.deleteTask({
       boardId: boardId,
       columnId: columnId,
       taskId: taskId,
     });
-    return response;
   }
 );
 
 export const deleteColumn = createAsyncThunk(
   'board/deleteColumn',
   async ({ boardId, columnId }: deleteColumnRequest) => {
-    const response = await Columns.deleteColumn({
+    await Columns.deleteColumn({
       boardId: boardId,
       columnId: columnId,
     });
-    return response;
+    // return response;
   }
 );
 
@@ -154,6 +270,31 @@ export const updateColumnTitle = createAsyncThunk(
     const response = await Columns.updateColumn({
       boardId: boardId,
       columnId: columnId,
+      body: body,
+    });
+    return response;
+  }
+);
+
+export const updateMoveColumn = createAsyncThunk(
+  'board/updateMoveColumn',
+  async ({ boardId, columnId, body }: updateColumnRequest) => {
+    const response = await Columns.updateColumn({
+      boardId: boardId,
+      columnId: columnId,
+      body: body,
+    });
+    return response;
+  }
+);
+
+export const updateMoveTask = createAsyncThunk(
+  'board/updateMoveTask',
+  async ({ boardId, columnId, taskId, body }: updateTaskRequest) => {
+    const response = await Tasks.updateTask({
+      boardId: boardId,
+      columnId: columnId,
+      taskId: taskId,
       body: body,
     });
     return response;

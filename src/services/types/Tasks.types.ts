@@ -15,7 +15,7 @@ export interface ITaskService {
   order: number;
   description: string;
   userId: string;
-  files: { filename: string; fileSize: number }[];
+  files?: { filename?: string; fileSize?: number }[];
 }
 
 export type TaskFile = { files: { filename: string; fileSize: number }[] };

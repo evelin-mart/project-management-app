@@ -2,100 +2,148 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button, Typography } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { loadBoard, setColumnsInBoard, setModal } from 'store/board';
 import { Column } from '../../components/Board/Column';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { ManagedModal } from 'components/Modal/ManagedModal';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { modalTypes } from 'components/Modal/modalTypes';
+import { Loader } from 'components/Loader';
+import { ROUTES } from 'constants/Routes';
+import { ITaskService } from 'services/types/Tasks.types';
 
 export const BoardPage = () => {
   const dispatch = useAppDispatch();
   const { idBoard } = useParams();
-  const { board, modal } = useAppSelector((state) => state.board);
+  const { board, modal, isLoading } = useAppSelector((state) => state.board);
   React.useEffect(() => {
     dispatch(loadBoard(String(idBoard)));
   }, [dispatch, idBoard]);
 
-  const moveColumn = (item) => {
-    const prevColumn = board.columns.slice(0).sort((a, b) => a.order - b.order);
-    const dragColumn = prevColumn.find((column) => column.id === item.id);
-    const newColumns = prevColumn.filter((elem, i) => item.id !== elem.id);
-    newColumns.splice(item.index, 0, dragColumn);
-    console.log(newColumns);
-
-    // newColumns.reduce((acc, elem, i) => (elem.order = i + 1), 0);
-
-    const arr = [];
+  const moveColumn = (item: { id: string; index: number }) => {
+    const column = board.columns.slice(0).sort((a, b) => a.order - b.order);
+    const dragColumn = column.find((column) => column.id === item.id);
+    const newColumns = column.filter((elem) => item.id !== elem.id);
+    newColumns.splice(item.index, 0, dragColumn!);
+    const resultColumn = [];
     for (let i = 0; i < newColumns.length; i += 1) {
-      arr.push({ ...newColumns[i], order: i + 1 });
+      resultColumn.push({ ...newColumns[i], order: i + 1 });
     }
-    dispatch(setColumnsInBoard(arr));
+    dispatch(setColumnsInBoard(resultColumn));
   };
 
-  const moveTask = (drag, dropId) => {
-    console.log(drag, dropId);
-
-    const prev = board.columns.slice(0);
+  const moveTask = (
+    drag: { id: string; index: number; columnId: string; taskId: string; task: ITaskService },
+    dropId: string
+  ) => {
+    const columns = board.columns.slice(0);
     const dragId = drag.id;
     const dragIndex = drag.index;
-    const dragColId = prev.find((column) => column.tasks.find((task) => task.id === dragId)).id;
-    const dropCulId = prev.find((column) => column.tasks.find((task) => task.id === dropId)).id;
+    const dragColId = columns.find((column) => column.tasks.find((task) => task.id === dragId))!.id;
+    const dropCulId = columns.find((column) => column.tasks.find((task) => task.id === dropId))!.id;
 
     if (dragColId === dropCulId) {
-      console.log('same column');
-      const columnId = prev.find((column) => column.tasks.find((task) => task.id === dragId)).id;
-      const newColumns = prev;
+      const columnId = columns.find((column) =>
+        column.tasks.find((task) => task.id === dragId)
+      )!.id;
+      const newColumns = columns;
       const column = newColumns.find((column) => column.id === columnId);
-      const task = column.tasks.find((task) => task.id === dragId);
-      const newTasks = column.tasks.filter((task) => task.id !== dragId);
-      newTasks.splice(dragIndex, 0, task);
-      const arr = [];
+      const task = column!.tasks.find((task) => task.id === dragId);
+      const newTasks = column!.tasks.filter((task) => task.id !== dragId);
+      newTasks.splice(dragIndex, 0, task!);
+      const tasksArray = [];
       for (let i = 0; i < newTasks.length; i += 1) {
-        arr.push({ ...newTasks[i], order: i + 1 });
+        tasksArray.push({ ...newTasks[i], order: i + 1 });
       }
-      const newColumn = { ...column, tasks: arr };
+      const newColumn = { ...column, tasks: tasksArray };
       const newColumnsArr = newColumns.map((column) =>
         column.id === newColumn.id ? newColumn : column
       );
-      console.log('rr', newColumnsArr);
       dispatch(setColumnsInBoard(newColumnsArr));
     } else {
-      console.log('different column');
-      const newColumns = prev;
-      const dragColumn = newColumns.find((column) => column.id === dragColId);
-      const task = dragColumn.tasks.find((task) => task.id === drag.id);
+      const dragColumn = columns.find((column) => column.id === dragColId);
+      const task = dragColumn!.tasks.find((task) => task.id === drag.id);
       const newTask = { ...task, order: drag.index + 1 };
-      const dragColumnWithoutTaskArray = dragColumn.tasks.filter((task) => task.id !== dragId);
+      const dragColumnWithoutTaskArray = dragColumn!.tasks.filter((task) => task.id !== dragId);
       const newDragColumnWithoutTaskArray = [];
       for (let i = 0; i < dragColumnWithoutTaskArray.length; i += 1) {
         newDragColumnWithoutTaskArray.push({ ...dragColumnWithoutTaskArray[i], order: i + 1 });
       }
       const newDragColumn = { ...dragColumn, tasks: newDragColumnWithoutTaskArray };
 
-      const dropColumn = newColumns.find((column) => column.id === dropCulId);
-      const newDropColumn = { ...dropColumn, tasks: [...dropColumn.tasks, newTask] };
+      const dropColumn = columns.find((column) => column.id === dropCulId);
+      const newDropColumn = { ...dropColumn, tasks: [...dropColumn!.tasks, newTask] };
 
-      const newColumnsArr = newColumns.map((column) =>
+      const newColumnsWithNewDragColumn = columns.map((column) =>
         column.id === newDragColumn.id ? newDragColumn : column
       );
-      const newColumnsArr2 = newColumnsArr.map((column) =>
+      const newColumnsWithNewDropColumn = newColumnsWithNewDragColumn.map((column) =>
         column.id === newDropColumn.id ? newDropColumn : column
       );
 
-      dispatch(setColumnsInBoard(newColumnsArr2));
+      dispatch(setColumnsInBoard(newColumnsWithNewDropColumn));
     }
   };
 
-  const col = board.columns.slice();
+  const addTaskInEmptyColumn = (
+    item: {
+      id: string;
+      index: number;
+      columnId: string;
+      taskId: string;
+      task: {
+        description: string;
+        id: string;
+        order: number;
+        title: string;
+        userId: string;
+        files: [];
+      };
+    },
+    columnId: string
+  ) => {
+    if (board.columns.find((column) => column.id === columnId)!.tasks.length === 0) {
+      const columns = board.columns.slice(0);
+      const dragColumn = columns.find((column) => column.id === item.columnId);
+      const newDragColumnTasks = dragColumn!.tasks.filter((elem) => elem.id !== item.taskId);
+      const newDragColumnTasksOrder = newDragColumnTasks.map((elem, index) => ({
+        ...elem,
+        order: index + 1,
+      }));
+      const newDragColumn = { ...dragColumn, tasks: newDragColumnTasksOrder };
+      const dropColumn = columns.find((column) => column.id === columnId);
+      const newDropColumnTasks = item.task ? [{ ...item.task, order: 1 }] : [];
+
+      const newDropColumn = { ...dropColumn, tasks: newDropColumnTasks };
+      const newColumnsArrWithNewDragColumn = columns.map((column) =>
+        column.id === newDragColumn.id ? newDragColumn : column
+      );
+      const newColumnsArrWithNewDropColumn = newColumnsArrWithNewDragColumn.map((column) =>
+        column.id === newDropColumn.id ? newDropColumn : column
+      );
+
+      const newColumnsArrOrder = newColumnsArrWithNewDropColumn.map((column) => {
+        if (column.tasks.find((task) => task.id === item.taskId) && column.id !== columnId) {
+          const arr = { ...column, tasks: column.tasks.filter((task) => task.id !== item.taskId) };
+          const tasks = arr.tasks.map((task, index) => ({ ...task, order: index + 1 }));
+          return { ...arr, tasks: tasks };
+        } else {
+          return column;
+        }
+      });
+      dispatch(setColumnsInBoard(newColumnsArrOrder));
+    }
+  };
+
+  const column = board.columns.slice();
   if (board.columns.length > 0) {
-    col.sort((a, b) => a.order - b.order);
+    column.sort((a, b) => a.order - b.order);
   }
 
   return (
-    <>
+    <Loader isLoading={isLoading}>
       <DndProvider backend={HTML5Backend}>
         <Box
           component="div"
@@ -105,18 +153,16 @@ export const BoardPage = () => {
             overflowX: 'auto',
             width: '100vw',
             flexGrow: 1,
+            height: 'calc(100vh - 128px)',
           }}
         >
-          <Grid container direction="row" justifyContent="space-between" alignItems="flex-end">
-            <Button variant="text" sx={{ width: '5%' }}>
-              <ArrowBackIcon />
-            </Button>
-            <Typography
-              color="textPrimary"
-              sx={{ width: '90%', pl: '35%' }}
-              variant="h4"
-              component="h2"
-            >
+          <Grid sx={{ width: '100%', height: '40px', mt: '5px', display: 'flex' }}>
+            <Link to={`/${ROUTES.BOARDS}`}>
+              <Button variant="text" sx={{ width: '5%' }}>
+                Back
+              </Button>
+            </Link>
+            <Typography color="textPrimary" variant="h4" component="h2" sx={{ ml: '15px' }}>
               {board.title}
             </Typography>
           </Grid>
@@ -132,7 +178,7 @@ export const BoardPage = () => {
               height: '81vh',
             }}
           >
-            {col?.map((column, i) => (
+            {column?.map((column, i) => (
               <Column
                 key={column.id}
                 index={i}
@@ -140,6 +186,7 @@ export const BoardPage = () => {
                 column={column}
                 moveColumn={moveColumn}
                 moveTask={moveTask}
+                addTaskInEmptyColumn={addTaskInEmptyColumn}
               />
             ))}
             <Button
@@ -147,15 +194,15 @@ export const BoardPage = () => {
               style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
               sx={{ m: 1 }}
               onClick={() => {
-                dispatch(setModal('AddColumn'));
+                dispatch(setModal(modalTypes.ADD_COLUMN));
               }}
             >
               New column
             </Button>
           </Grid>
         </Box>
-        {modal !== '' && <ManagedModal />}
+        {modal !== modalTypes.NONE && <ManagedModal />}
       </DndProvider>
-    </>
+    </Loader>
   );
 };

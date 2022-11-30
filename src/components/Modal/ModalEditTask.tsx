@@ -6,6 +6,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { updateTask, setModal } from 'store/board';
 import { User } from 'services/types/Users.types';
 import { useAppDispatch, useAppSelector } from 'store';
+import { modalTypes } from './modalTypes';
 
 interface FormValues {
   title: string;
@@ -15,7 +16,7 @@ interface FormValues {
 
 export const EditTask = () => {
   const dispatch = useAppDispatch();
-  const { users, modalData, board } = useAppSelector((state) => state.board);
+  const { users, modalData, board, editTask } = useAppSelector((state) => state.board);
 
   const {
     handleSubmit,
@@ -43,7 +44,7 @@ export const EditTask = () => {
       })
     );
     reset();
-    dispatch(setModal(''));
+    dispatch(setModal(modalTypes.NONE));
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,25 +56,30 @@ export const EditTask = () => {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.title}
+        helperText={(errors.title?.message as string) || ''}
+        defaultValue={editTask?.title}
         label="Title"
         variant="outlined"
         margin="normal"
       />
-      {errors?.title && <div style={{ color: 'red' }}>title is invalid</div>}
       <TextField
         {...register('description', {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.description}
+        helperText={(errors.description?.message as string) || ''}
         label="Description"
+        defaultValue={editTask?.description}
         multiline
         maxRows={4}
       />
-      {errors?.description && <div style={{ color: 'red' }}>description is invalid</div>}
-
       <FormControl sx={{ my: 1.2, minWidth: 335 }} size={'medium'}>
         <InputLabel>User</InputLabel>
         <Select
+          defaultValue={editTask?.userId}
+          error={!!errors.userId}
           label="User"
           {...register('userId', {
             required: 'userId is require field!',
@@ -88,7 +94,9 @@ export const EditTask = () => {
             </MenuItem>
           ))}
         </Select>
-        {errors?.userId && <div style={{ color: 'red' }}>userId is invalid</div>}
+        {errors?.userId && (
+          <div style={{ color: '#fe6b61', margin: '3px 15px' }}>{errors.userId.message}</div>
+        )}
       </FormControl>
       <Button
         variant="outlined"

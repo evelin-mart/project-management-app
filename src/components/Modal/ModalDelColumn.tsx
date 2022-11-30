@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { deleteColumn, setModal } from 'store/board';
 import { useAppDispatch, useAppSelector } from 'store';
+import { modalTypes } from './modalTypes';
 
 export const DelColumn = () => {
   const { modalData, board } = useAppSelector((state) => state.board);
@@ -23,7 +24,7 @@ export const DelColumn = () => {
               columnId: modalData.columnId,
             })
           );
-          dispatch(setModal(''));
+          dispatch(setModal(modalTypes.NONE));
         }}
       >
         Yes
@@ -32,7 +33,7 @@ export const DelColumn = () => {
         variant="outlined"
         style={{ backgroundColor: 'white', height: '3rem', width: '100%' }}
         sx={{ mt: 2 }}
-        onClick={() => dispatch(setModal(''))}
+        onClick={() => dispatch(setModal(modalTypes.NONE))}
       >
         Cancel
       </Button>

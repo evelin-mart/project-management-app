@@ -5,6 +5,7 @@ import { TextField } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { createColumn, setModal } from 'store/board';
 import { useAppDispatch, useAppSelector } from 'store';
+import { modalTypes } from './modalTypes';
 
 type FormValues = {
   title: string;
@@ -28,7 +29,7 @@ export const AddColumn = () => {
       })
     );
     reset();
-    dispatch(setModal(''));
+    dispatch(setModal(modalTypes.NONE));
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -40,11 +41,12 @@ export const AddColumn = () => {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.title}
+        helperText={(errors.title?.message as string) || ''}
         label="Title"
         variant="outlined"
         margin="normal"
       />
-      {errors?.title && <div style={{ color: 'red' }}>title is invalid</div>}
 
       <Button
         variant="outlined"

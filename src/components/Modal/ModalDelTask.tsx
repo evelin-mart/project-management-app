@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { deleteTask, setModal } from 'store/board';
 import { useAppDispatch, useAppSelector } from 'store';
+import { modalTypes } from './modalTypes';
 
 export const DelTask = () => {
   const { modalData, board } = useAppSelector((state) => state.board);
@@ -24,7 +25,7 @@ export const DelTask = () => {
               taskId: modalData.taskId,
             })
           );
-          dispatch(setModal(''));
+          dispatch(setModal(modalTypes.NONE));
         }}
       >
         Yes
@@ -33,7 +34,7 @@ export const DelTask = () => {
         variant="outlined"
         style={{ backgroundColor: 'white', height: '3rem', width: '100%' }}
         sx={{ mt: 2 }}
-        onClick={() => dispatch(setModal(''))}
+        onClick={() => dispatch(setModal(modalTypes.NONE))}
       >
         Cancel
       </Button>

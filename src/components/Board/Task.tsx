@@ -4,16 +4,23 @@ import { styled } from '@mui/material/styles';
 import { IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { setModalDataTaskId, setModal, setModalDataColumnId } from 'store/board';
+import {
+  setModalDataTaskId,
+  setModal,
+  setModalDataColumnId,
+  setEditTask,
+  updateMoveTask,
+} from 'store/board';
+import type { Identifier } from 'dnd-core';
 import { useAppDispatch, useAppSelector } from 'store';
-import { ITaskService } from 'services/types/Tasks.types';
 import { useDrag, useDrop } from 'react-dnd';
+import { ItemTypes } from './ItemTypes';
+import { modalTypes } from 'components/Modal/modalTypes';
+import { IItemTaskDrop, ITaskComponent } from './types';
 
 const TaskStyle = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white',
   ...theme.typography.body2,
-  // marginBottom: theme.spacing(1),
-  // marginTop: theme.spacing(1),
   marginLeft: 'auto',
   marginRight: 'auto',
   width: '95%',
@@ -21,81 +28,79 @@ const TaskStyle = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export const Task = ({
-  task,
-  columnId,
-  moveTask,
-  index,
-  id,
-}: {
-  task: ITaskService;
-  columnId: string;
-}) => {
+export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
+  const id = task.id;
   const dispatch = useAppDispatch();
-  const { users } = useAppSelector((state) => state.board);
+  const { users, board } = useAppSelector((state) => state.board);
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [{ handlerId, isOver, canDrop }, drop] = useDrop({
+  const taskRef = useRef<HTMLDivElement>(null);
+  const [{ handlerId, isOver, canDrop }, drop] = useDrop<
+    IItemTaskDrop,
+    void,
+    { handlerId: Identifier | null; isOver: boolean; canDrop: boolean }
+  >({
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
       handlerId: monitor.getHandlerId(),
     }),
-    accept: 'task',
-    drop: (item, monitor) => {
-      const dragIndex = id;
-      console.log('drop', dragIndex, index);
-
-      return { id: dragIndex };
+    accept: ItemTypes.TASK,
+    drop: (item) => {
+      dispatch(
+        updateMoveTask({
+          boardId: board.id,
+          columnId: item.columnId,
+          taskId: item.taskId,
+          body: {
+            title: item.task.title,
+            description: item.task.description,
+            userId: item.task.userId,
+            columnId: columnId,
+            boardId: board.id,
+            order: index + 1,
+          },
+        })
+      );
     },
 
-    hover(item, monitor) {
+    hover(item) {
       moveTask(item, task.id);
-
       item.index = index;
     },
   });
 
-  const [{ isDragging }, drag] = useDrag({
-    type: 'task',
+  const [, drag] = useDrag({
+    type: ItemTypes.TASK,
     item: () => {
-      console.log('columnId', columnId);
       const taskId = task.id;
-      return { id, index, columnId, taskId };
+      return { id, index, columnId, taskId, task };
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-      // const colId = columns.find((column) => column.tasks.find((task) => task.id === item.id)).id;
-      // console.log("item", item, dropResult, task.id, colId);
-    },
-    isDragging(monitor) {
-      const columnId = monitor.getItem().columnId;
-      const taskId = monitor.getItem().taskId;
-      console.log('ii', monitor.getItem());
-
-      return monitor.getItem().id === id;
-    },
   });
 
   const opacity = canDrop && isOver ? 0 : 1;
-  drag(drop(ref));
+  drag(drop(taskRef));
 
   return (
     <TaskStyle
       key={task.id}
-      ref={ref}
+      ref={taskRef}
       style={{ opacity, marginBottom: '15px' }}
       data-handler-id={handlerId}
     >
       <Typography color="textPrimary" variant="h5" component="h2" sx={{ my: 0 }}>
         {task.title}
       </Typography>
-      <Typography color="textPrimary" variant="subtitle1" sx={{ my: 0 }}>
-        order: {task.order}
+      <Typography
+        color="textPrimary"
+        variant="subtitle1"
+        sx={{ my: 0, wordBreak: 'break-all', p: '5px' }}
+      >
+        {/* order: {task.order} */}
+        {task.description}
       </Typography>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ marginLeft: '1rem' }}>
@@ -105,9 +110,10 @@ export const Task = ({
           <IconButton
             aria-label="edit"
             onClick={() => {
-              dispatch(setModal('EditTask'));
+              dispatch(setModal(modalTypes.EDIT_TASK));
               dispatch(setModalDataColumnId(columnId));
               dispatch(setModalDataTaskId(task.id));
+              dispatch(setEditTask(task));
             }}
           >
             <EditIcon />
@@ -115,7 +121,7 @@ export const Task = ({
           <IconButton
             aria-label="delete"
             onClick={() => {
-              dispatch(setModal('DelTask'));
+              dispatch(setModal(modalTypes.DEL_TASK));
               dispatch(setModalDataColumnId(columnId));
               dispatch(setModalDataTaskId(task.id));
             }}

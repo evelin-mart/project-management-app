@@ -75,7 +75,7 @@ export const EditTask = () => {
         multiline
         maxRows={4}
       />
-      <FormControl sx={{ my: 1.2, minWidth: 335 }} size={'medium'}>
+      <FormControl sx={{ my: 1.2 }} fullWidth size={'medium'}>
         <InputLabel>User</InputLabel>
         <Select
           defaultValue={editTask?.userId}

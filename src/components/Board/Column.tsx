@@ -154,6 +154,7 @@ export const Column = ({
                       required: 'Title is require field!',
                     })}
                     label=""
+                    autoFocus
                     variant="outlined"
                     defaultValue={column.title}
                     size="small"
@@ -183,6 +184,7 @@ export const Column = ({
                   </Button>
                   <Button
                     variant="outlined"
+                    color="error"
                     sx={{ width: '45%', mt: 1, mr: 1.2, mb: 1 }}
                     onClick={() => dispatch(setEditTitleColumnId(''))}
                   >

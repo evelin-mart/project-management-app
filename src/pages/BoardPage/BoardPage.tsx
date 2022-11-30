@@ -158,7 +158,7 @@ export const BoardPage = () => {
             }}
           >
             <Grid sx={{ width: '100%', height: '40px', mt: '5px', display: 'flex' }}>
-              <Link to={`/${ROUTES.BOARDS}`}>
+              <Link to={`/${ROUTES.BOARDS}`} style={{ textDecoration: 'none' }}>
                 <Button variant="text" sx={{ width: '5%' }}>
                   Back
                 </Button>

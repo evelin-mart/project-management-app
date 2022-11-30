@@ -17,6 +17,7 @@ export const DelColumn = () => {
         variant="outlined"
         style={{ backgroundColor: 'white', height: '3rem', width: '100%' }}
         sx={{ mt: 2 }}
+        color="error"
         onClick={() => {
           dispatch(
             deleteColumn({

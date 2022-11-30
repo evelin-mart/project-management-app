@@ -144,65 +144,67 @@ export const BoardPage = () => {
 
   return (
     <Loader isLoading={isLoading}>
-      <DndProvider backend={HTML5Backend}>
-        <Box
-          component="div"
-          sx={{
-            mx: 'auto',
-            overflow: 'hidden',
-            overflowX: 'auto',
-            width: '100vw',
-            flexGrow: 1,
-            height: 'calc(100vh - 128px)',
-          }}
-        >
-          <Grid sx={{ width: '100%', height: '40px', mt: '5px', display: 'flex' }}>
-            <Link to={`/${ROUTES.BOARDS}`}>
-              <Button variant="text" sx={{ width: '5%' }}>
-                Back
-              </Button>
-            </Link>
-            <Typography color="textPrimary" variant="h4" component="h2" sx={{ ml: '15px' }}>
-              {board.title}
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="flex-start"
+      <div>
+        <DndProvider backend={HTML5Backend}>
+          <Box
             component="div"
             sx={{
-              minWidth: 'max-content',
+              mx: 'auto',
               overflow: 'hidden',
-              height: '81vh',
+              overflowX: 'auto',
+              width: '100vw',
+              flexGrow: 1,
+              height: 'calc(100vh - 128px)',
             }}
           >
-            {column?.map((column, i) => (
-              <Column
-                key={column.id}
-                index={i}
-                id={column.id}
-                column={column}
-                moveColumn={moveColumn}
-                moveTask={moveTask}
-                addTaskInEmptyColumn={addTaskInEmptyColumn}
-              />
-            ))}
-            <Button
-              variant="outlined"
-              style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
-              sx={{ m: 1 }}
-              onClick={() => {
-                dispatch(setModal(modalTypes.ADD_COLUMN));
+            <Grid sx={{ width: '100%', height: '40px', mt: '5px', display: 'flex' }}>
+              <Link to={`/${ROUTES.BOARDS}`}>
+                <Button variant="text" sx={{ width: '5%' }}>
+                  Back
+                </Button>
+              </Link>
+              <Typography color="textPrimary" variant="h4" component="h2" sx={{ ml: '15px' }}>
+                {board.title}
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-start"
+              alignItems="flex-start"
+              component="div"
+              sx={{
+                minWidth: 'max-content',
+                overflow: 'hidden',
+                height: '81vh',
               }}
             >
-              New column
-            </Button>
-          </Grid>
-        </Box>
-        {modal !== modalTypes.NONE && <ManagedModal />}
-      </DndProvider>
+              {column?.map((column, i) => (
+                <Column
+                  key={column.id}
+                  index={i}
+                  id={column.id}
+                  column={column}
+                  moveColumn={moveColumn}
+                  moveTask={moveTask}
+                  addTaskInEmptyColumn={addTaskInEmptyColumn}
+                />
+              ))}
+              <Button
+                variant="outlined"
+                style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
+                sx={{ m: 1 }}
+                onClick={() => {
+                  dispatch(setModal(modalTypes.ADD_COLUMN));
+                }}
+              >
+                New column
+              </Button>
+            </Grid>
+          </Box>
+          {modal !== modalTypes.NONE && <ManagedModal />}
+        </DndProvider>
+      </div>
     </Loader>
   );
 };

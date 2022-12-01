@@ -158,13 +158,15 @@ export const boardSlice = createSlice({
       .addCase(updateColumnTitle.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(updateMoveColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(updateMoveTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
       });
-    // .addCase(updateMoveColumn.fulfilled, (state, action) => {
-    // state.isLoading = false;
-    // })
-    // .addCase(updateMoveTask.fulfilled, (state, action) => {
-    // state.isLoading = false;
-    // });
   },
 });
 

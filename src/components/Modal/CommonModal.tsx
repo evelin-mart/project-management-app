@@ -13,6 +13,8 @@ import { EditTask } from './EditTask';
 import { EditTaskProps } from './EditTask/EditTask';
 import { AddColumn } from './AddColumn';
 import { AddTask } from './AddTask';
+import { ShowTask } from './ShowTask';
+import { TaskData } from 'services/types/Tasks.types';
 
 const style = {
   position: 'absolute',
@@ -61,6 +63,10 @@ export const CommonModal = () => {
     }
     case ModalTypes.ADD_TASK: {
       content = <AddTask {...(data.props as { columnId: string })} />;
+      break;
+    }
+    case ModalTypes.SHOW_TASK: {
+      content = <ShowTask {...(data.props as { task: TaskData; user: string })} />;
       break;
     }
     default: {

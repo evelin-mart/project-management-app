@@ -1,10 +1,11 @@
 import React, { MouseEventHandler, useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { IconButton, Typography } from '@mui/material';
+import { CardContent, CardHeader, IconButton, Stack, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { updateMoveTask } from 'store/board';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import type { Identifier } from 'dnd-core';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useDrag, useDrop } from 'react-dnd';
@@ -19,7 +20,6 @@ const TaskStyle = styled(Paper)(({ theme }) => ({
   marginLeft: 'auto',
   marginRight: 'auto',
   width: '95%',
-  textAlign: 'center',
   color: theme.palette.text.secondary,
 }));
 
@@ -27,6 +27,7 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
   const id = task.id;
   const dispatch = useAppDispatch();
   const { users, board } = useAppSelector((state) => state.board);
+  const user = task?.userId ? users.find((user) => user.id === task.userId)?.name : 'None';
 
   const taskRef = useRef<HTMLDivElement>(null);
   const [{ handlerId, isOver, canDrop }, drop] = useDrop<
@@ -96,6 +97,11 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     );
   };
 
+  const handleShowTask: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    dispatch(openModal({ type: ModalTypes.SHOW_TASK, props: { task, user } }));
+  };
+
   const opacity = canDrop && isOver ? 0 : 1;
   drag(drop(taskRef));
 
@@ -106,27 +112,46 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
       style={{ opacity, marginBottom: '15px' }}
       data-handler-id={handlerId}
     >
-      <Typography color="textPrimary" variant="h5" component="h2" sx={{ my: 0 }}>
-        {task.title}
-      </Typography>
-      <Typography
-        color="textPrimary"
-        variant="subtitle1"
-        sx={{
-          my: 0,
-          wordBreak: 'break-all',
-          p: '5px',
-          maxHeight: '100px',
-          overflow: 'hidden',
-          textOverflow: 'clip',
-        }}
-      >
-        {task.description}
-      </Typography>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ marginLeft: '1rem' }}>
-          User: {task?.userId ? users.find((user) => user.id === task.userId)?.name : 'None'}
-        </div>
+      <CardHeader
+        title={
+          <Typography
+            component="h2"
+            variant="h5"
+            color="textPrimary"
+            sx={{ my: 0, wordBreak: 'break-all' }}
+          >
+            {task.title}
+          </Typography>
+        }
+        disableTypography={true}
+        action={
+          <IconButton onClick={handleShowTask} title="Show details">
+            <ManageSearchIcon />
+          </IconButton>
+        }
+        sx={{ px: 2, py: 1 }}
+      />
+      <CardContent sx={{ px: 2, py: 0 }}>
+        <Typography
+          color="textPrimary"
+          variant="subtitle1"
+          sx={{
+            my: 0,
+            wordBreak: 'break-word',
+            // maxHeight: '100px',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            textAlign: 'start',
+          }}
+        >
+          {task.description}
+        </Typography>
+      </CardContent>
+      <Stack direction="row" justifyContent="space-between" sx={{ px: 2, py: 1, mt: 'auto' }}>
+        <Typography color="textPrimary" variant="subtitle1" sx={{ py: 1 }}>
+          User: {user}
+        </Typography>
         <div>
           <IconButton aria-label="edit" onClick={handleEditTask}>
             <EditIcon />
@@ -135,7 +160,7 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
             <DeleteIcon />
           </IconButton>
         </div>
-      </div>
+      </Stack>
     </TaskStyle>
   );
 };

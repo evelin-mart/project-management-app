@@ -22,6 +22,11 @@ export const BoardPage = () => {
     dispatch(loadBoard(String(idBoard)));
   }, [dispatch, idBoard]);
 
+  const column = board.columns.slice();
+  if (board.columns.length > 0) {
+    column.sort((a, b) => a.order - b.order);
+  }
+
   const moveColumn = (item: { id: string; index: number }) => {
     const column = board.columns.slice(0).sort((a, b) => a.order - b.order);
     const dragColumn = column.find((column) => column.id === item.id);
@@ -120,11 +125,6 @@ export const BoardPage = () => {
       dispatch(setColumnsInBoard(newColumnsArrOrder));
     }
   };
-
-  const column = board.columns.slice();
-  if (board.columns.length > 0) {
-    column.sort((a, b) => a.order - b.order);
-  }
 
   const handleNewColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();

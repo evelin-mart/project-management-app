@@ -62,6 +62,11 @@ export const Column = ({
   };
   const columnRef = useRef<HTMLDivElement>(null);
 
+  const task = column.tasks.length > 0 ? column.tasks.slice() : [];
+  if (column.tasks.length > 0) {
+    task.sort((a: { order: number }, b: { order: number }) => a.order - b.order);
+  }
+
   const [{ handlerId }, drop] = useDrop<
     IItemColumnDrop,
     { columnId: string },
@@ -105,11 +110,6 @@ export const Column = ({
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(columnRef));
-
-  const task = column.tasks.length > 0 ? column.tasks.slice() : [];
-  if (column.tasks.length > 0) {
-    task.sort((a: { order: number }, b: { order: number }) => a.order - b.order);
-  }
 
   const handleDeleteColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     e.preventDefault();

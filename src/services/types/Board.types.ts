@@ -60,5 +60,3 @@ export type updateBoardRequest = {
 };
 
 export type updateBoardAnswer = BoardData;
-
-export type deleteBoardRequest = { boardId: string };

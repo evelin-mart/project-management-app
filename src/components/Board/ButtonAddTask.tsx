@@ -16,9 +16,6 @@ export const ButtonAddTask = ({ columnId, addTaskInEmptyColumn }: IButtonAddTask
 
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<IItemButtonAddTask>({
-    collect: (monitor) => ({
-      handlerId: monitor.getHandlerId(),
-    }),
     accept: ItemTypes.TASK,
     hover(item) {
       addTaskInEmptyColumn(item, columnId);

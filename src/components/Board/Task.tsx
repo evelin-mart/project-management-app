@@ -65,7 +65,7 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     },
   });
 
-  const [, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TASK,
     item: () => {
       const taskId = task.id;
@@ -73,7 +73,6 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
-      handlerId: monitor.getHandlerId(),
     }),
   });
 
@@ -102,7 +101,7 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     dispatch(openModal({ type: ModalTypes.SHOW_TASK, props: { task, user } }));
   };
 
-  const opacity = canDrop && isOver ? 0 : 1;
+  const opacity = (canDrop && isOver) || isDragging ? 0 : 1;
   drag(drop(taskRef));
 
   return (
@@ -138,7 +137,6 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
           sx={{
             my: 0,
             wordBreak: 'break-word',
-            // maxHeight: '100px',
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',

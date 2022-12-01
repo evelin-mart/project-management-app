@@ -5,6 +5,11 @@ export enum ModalTypes {
   EDIT_BOARD = 'EditBoard',
   SHOW_BOARD = 'ShowBoard',
   DELETE = 'Delete',
+  ADD_TASK = 'AddTask',
+  EDIT_TASK = 'EditTask',
+  SHOW_TASK = 'ShowTask',
+  ADD_COLUMN = 'AddColumn',
+  EDIT_COLUMN = 'EditColumn',
 }
 
 const initialState = {

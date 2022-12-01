@@ -2,10 +2,9 @@ import { Button } from '@mui/material';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch } from 'store';
-import { setModal, setModalDataColumnId } from 'store/board';
 import { ItemTypes } from './ItemTypes';
-import { modalTypes } from 'components/Modal/modalTypes';
 import { IItemButtonAddTask } from './types';
+import { ModalTypes, openModal } from 'store/modal';
 
 interface IButtonAddTask {
   columnId: string;
@@ -26,6 +25,11 @@ export const ButtonAddTask = ({ columnId, addTaskInEmptyColumn }: IButtonAddTask
     },
   });
 
+  const handleAddTask: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    dispatch(openModal({ type: ModalTypes.ADD_TASK, props: { columnId } }));
+  };
+
   drop(ref);
 
   return (
@@ -35,10 +39,7 @@ export const ButtonAddTask = ({ columnId, addTaskInEmptyColumn }: IButtonAddTask
         style={{ backgroundColor: 'white', width: '96%' }}
         size="small"
         sx={{ my: 0.5, mx: 'auto' }}
-        onClick={() => {
-          dispatch(setModalDataColumnId(columnId));
-          dispatch(setModal(modalTypes.ADD_TASK));
-        }}
+        onClick={handleAddTask}
       >
         Add Task
       </Button>

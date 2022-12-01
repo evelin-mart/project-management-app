@@ -1,4 +1,4 @@
-import { Button, Card, Container, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Button, Card, Container, Stack, Typography, useTheme } from '@mui/material';
 import { BoardItem } from 'components/BoardItem';
 import { Loader } from 'components/Loader';
 import React, { useEffect } from 'react';

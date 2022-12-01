@@ -1,22 +1,17 @@
-import React, { useRef } from 'react';
+import React, { MouseEventHandler, useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  setModalDataTaskId,
-  setModal,
-  setModalDataColumnId,
-  setEditTask,
-  updateMoveTask,
-} from 'store/board';
+import { updateMoveTask } from 'store/board';
 import type { Identifier } from 'dnd-core';
 import { useAppDispatch, useAppSelector } from 'store';
 import { useDrag, useDrop } from 'react-dnd';
 import { ItemTypes } from './ItemTypes';
-import { modalTypes } from 'components/Modal/modalTypes';
 import { IItemTaskDrop, ITaskComponent } from './types';
+import { ModalTypes, openModal } from 'store/modal';
+import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
 
 const TaskStyle = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white',
@@ -81,6 +76,26 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     }),
   });
 
+  const handleDeleteTask: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    dispatch(
+      openModal({
+        type: ModalTypes.DELETE,
+        props: { id: board.id, type: DeleteItems.TASK, idColumn: columnId, idTask: task.id },
+      })
+    );
+  };
+
+  const handleEditTask: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    dispatch(
+      openModal({
+        type: ModalTypes.EDIT_TASK,
+        props: { task, columnId },
+      })
+    );
+  };
+
   const opacity = canDrop && isOver ? 0 : 1;
   drag(drop(taskRef));
 
@@ -97,9 +112,15 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
       <Typography
         color="textPrimary"
         variant="subtitle1"
-        sx={{ my: 0, wordBreak: 'break-all', p: '5px' }}
+        sx={{
+          my: 0,
+          wordBreak: 'break-all',
+          p: '5px',
+          maxHeight: '100px',
+          overflow: 'hidden',
+          textOverflow: 'clip',
+        }}
       >
-        {/* order: {task.order} */}
         {task.description}
       </Typography>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -107,25 +128,10 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
           User: {task?.userId ? users.find((user) => user.id === task.userId)?.name : 'None'}
         </div>
         <div>
-          <IconButton
-            aria-label="edit"
-            onClick={() => {
-              dispatch(setModal(modalTypes.EDIT_TASK));
-              dispatch(setModalDataColumnId(columnId));
-              dispatch(setModalDataTaskId(task.id));
-              dispatch(setEditTask(task));
-            }}
-          >
+          <IconButton aria-label="edit" onClick={handleEditTask}>
             <EditIcon />
           </IconButton>
-          <IconButton
-            aria-label="delete"
-            onClick={() => {
-              dispatch(setModal(modalTypes.DEL_TASK));
-              dispatch(setModalDataColumnId(columnId));
-              dispatch(setModalDataTaskId(task.id));
-            }}
-          >
+          <IconButton aria-label="delete" onClick={handleDeleteTask}>
             <DeleteIcon />
           </IconButton>
         </div>

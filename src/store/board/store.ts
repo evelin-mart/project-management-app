@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { unknownErrorMessage } from 'constants/ErrorMessages';
 import { Board, Tasks, Users, Columns } from 'services';
 import {
   createColumnRequest,
@@ -16,18 +17,7 @@ const initialState = {
   board: { columns: [] },
   users: [],
   isLoading: false,
-  modal: 'none',
-  modalData: {
-    columnId: '',
-    taskId: '',
-  },
-  dragTask: {},
   editTitleColumnId: '',
-  editTask: {
-    title: '',
-    description: '',
-    userId: '',
-  },
   error: '',
 } as unknown as BoardStore;
 
@@ -35,29 +25,11 @@ export const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
-    setModal: (state, action) => {
-      state.modal = action.payload;
-    },
-    setModalDataColumnId: (state, action) => {
-      state.modalData.columnId = action.payload;
-    },
-    setModalDataTaskId: (state, action) => {
-      state.modalData.taskId = action.payload;
-    },
     setEditTitleColumnId: (state, action) => {
       state.editTitleColumnId = action.payload;
     },
-    setIsLoading: (state, action) => {
-      state.isLoading = action.payload;
-    },
     setColumnsInBoard: (state, action) => {
       state.board.columns = action.payload;
-    },
-    setDragTask: (state, action) => {
-      state.board.columns = action.payload;
-    },
-    setEditTask: (state, action) => {
-      state.editTask = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -72,13 +44,19 @@ export const boardSlice = createSlice({
       })
       .addCase(loadBoard.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(createTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        const columnId = state.modalData.columnId;
+        const columnId = action.payload.columnId;
         const column = state.board.columns.find((column) => column.id === columnId);
-        const task = { ...action.payload, files: [], order: column!.tasks.length + 1 };
+        const task = {
+          ...action.payload,
+          files: [],
+          order: column!.tasks.length + 1,
+          boardId: state.board.id,
+          columnId: columnId,
+        };
         if (column) {
           column.tasks.push(task);
         }
@@ -88,7 +66,7 @@ export const boardSlice = createSlice({
       })
       .addCase(createTask.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(createColumn.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -99,12 +77,11 @@ export const boardSlice = createSlice({
       })
       .addCase(createColumn.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        const { columnId } = action.payload;
-        const id = state.modalData.taskId;
+        const { columnId, id } = action.payload;
         state.board.columns = state.board.columns.map((column) => {
           if (column.id === columnId) {
             return {
@@ -127,33 +104,35 @@ export const boardSlice = createSlice({
       })
       .addCase(updateTask.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       })
-      .addCase(deleteTask.fulfilled, (state) => {
+      .addCase(deleteTask.fulfilled, (state, action) => {
         state.isLoading = false;
-        const { columnId, taskId } = state.modalData;
-        state.board.columns = state.board.columns.map((column) => {
-          if (column.id === columnId) {
-            return {
-              ...column,
-              tasks: column.tasks.filter((task) => task.id !== taskId),
-            };
-          } else {
+        const { columnId, taskId } = action.payload;
+        state.board = {
+          ...state.board,
+          columns: state.board.columns.map((column) => {
+            if (column.id === columnId) {
+              return {
+                ...column,
+                tasks: column.tasks.filter((task) => task.id !== taskId),
+              };
+            }
             return column;
-          }
-        });
+          }),
+        };
       })
       .addCase(deleteTask.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(deleteTask.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       })
-      .addCase(deleteColumn.fulfilled, (state) => {
+      .addCase(deleteColumn.fulfilled, (state, action) => {
         state.isLoading = false;
         state.board.columns = state.board.columns.filter(
-          (column) => column.id !== state.modalData.columnId
+          (column) => column.id !== action.payload.columnId
         );
       })
       .addCase(deleteColumn.pending, (state) => {
@@ -161,7 +140,7 @@ export const boardSlice = createSlice({
       })
       .addCase(deleteColumn.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateColumnTitle.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -178,7 +157,7 @@ export const boardSlice = createSlice({
       })
       .addCase(updateColumnTitle.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Error';
+        state.error = action.error.message || unknownErrorMessage;
       });
     // .addCase(updateMoveColumn.fulfilled, (state, action) => {
     // state.isLoading = false;
@@ -189,15 +168,7 @@ export const boardSlice = createSlice({
   },
 });
 
-export const {
-  setIsLoading,
-  setModal,
-  setModalDataColumnId,
-  setModalDataTaskId,
-  setEditTitleColumnId,
-  setColumnsInBoard,
-  setEditTask,
-} = boardSlice.actions;
+export const { setEditTitleColumnId, setColumnsInBoard } = boardSlice.actions;
 export default boardSlice.reducer;
 
 export const loadBoard = createAsyncThunk('board/loadBoard', async (boardId: string) => {
@@ -214,7 +185,7 @@ export const createTask = createAsyncThunk(
       columnId: columnId,
       body: body,
     });
-    return response;
+    return { ...response, columnId };
   }
 );
 
@@ -250,6 +221,7 @@ export const deleteTask = createAsyncThunk(
       columnId: columnId,
       taskId: taskId,
     });
+    return { boardId, columnId, taskId };
   }
 );
 
@@ -260,7 +232,7 @@ export const deleteColumn = createAsyncThunk(
       boardId: boardId,
       columnId: columnId,
     });
-    // return response;
+    return { boardId, columnId };
   }
 );
 

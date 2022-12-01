@@ -54,6 +54,6 @@ export type getTaskAnswer = TaskData & { id: string } & TaskFile;
 
 export type updateTaskRequest = TaskPath & { body: TaskData };
 
-export type updateTaskAnswer = TaskData;
+export type updateTaskAnswer = TaskData & { id: string };
 
 export type deleteTaskRequest = TaskPath;

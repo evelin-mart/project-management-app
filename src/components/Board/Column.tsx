@@ -4,13 +4,7 @@ import React, { useRef } from 'react';
 import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import type { Identifier } from 'dnd-core';
 import { Task } from './Task';
-import {
-  updateColumnTitle,
-  setModal,
-  setModalDataColumnId,
-  setEditTitleColumnId,
-  updateMoveColumn,
-} from 'store/board';
+import { updateColumnTitle, setEditTitleColumnId, updateMoveColumn } from 'store/board';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ITaskService } from 'services/types/Tasks.types';
@@ -18,8 +12,9 @@ import { useAppDispatch, useAppSelector } from 'store';
 import { useDrag, useDrop } from 'react-dnd';
 import { ButtonAddTask } from './ButtonAddTask';
 import { ItemTypes } from './ItemTypes';
-import { modalTypes } from 'components/Modal/modalTypes';
 import { IColumnComponent, IItemColumnDrop } from './types';
+import { ModalTypes, openModal } from 'store/modal';
+import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
 
 const ColumnStyle = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#e7ebf0' : '#e7ebf0',
@@ -116,6 +111,16 @@ export const Column = ({
     task.sort((a: { order: number }, b: { order: number }) => a.order - b.order);
   }
 
+  const handleDeleteColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    dispatch(
+      openModal({
+        type: ModalTypes.DELETE,
+        props: { id: board.id, type: DeleteItems.COLUMN, idColumn: column.id },
+      })
+    );
+  };
+
   return (
     <div ref={columnRef} style={{ opacity, margin: '5px' }} data-handler-id={handlerId}>
       <ColumnStyle key={column.id}>
@@ -144,8 +149,6 @@ export const Column = ({
                     }}
                   >
                     {column.title}
-                    {/* order: {column.order} */}
-                    {/* id: {column.id.at(-2) + column.id.at(-1)} */}
                   </Typography>
                 )}
                 {column.id === editTitleColumnId && (
@@ -155,21 +158,15 @@ export const Column = ({
                     })}
                     label=""
                     autoFocus
+                    helperText={(errors.title?.message as string) || ''}
+                    error={!!errors.title}
                     variant="outlined"
                     defaultValue={column.title}
                     size="small"
                     sx={{ ml: 1.2, mt: 1, width: '270px' }}
                   />
                 )}
-                {errors?.title && <div style={{ color: 'red' }}>title is invalid</div>}
-                <IconButton
-                  aria-label="delete"
-                  sx={{ mt: 1 }}
-                  onClick={() => {
-                    dispatch(setModal(modalTypes.DEL_COLUMN));
-                    dispatch(setModalDataColumnId(column.id));
-                  }}
-                >
+                <IconButton aria-label="delete" sx={{ mt: 1 }} onClick={handleDeleteColumn}>
                   <DeleteIcon />
                 </IconButton>
               </Grid>

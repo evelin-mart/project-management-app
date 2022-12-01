@@ -6,6 +6,7 @@ import { deleteBoard } from 'store/boards';
 import { ROUTES } from 'constants/Routes';
 import { useNavigate } from 'react-router';
 import { deleteUser, logout } from 'store/user';
+import { deleteColumn, deleteTask } from 'store/board';
 
 export enum DeleteItems {
   BOARD = 'board',
@@ -16,10 +17,12 @@ export enum DeleteItems {
 
 export interface SubmitDeleteProps {
   id: string;
+  idColumn?: string;
+  idTask?: string;
   type: DeleteItems;
 }
 
-export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
+export const ConfirmDeletion = ({ id, type, idColumn, idTask }: SubmitDeleteProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -33,11 +36,28 @@ export const ConfirmDeletion = ({ id, type }: SubmitDeleteProps) => {
       break;
     }
     case DeleteItems.COLUMN: {
-      onSubmit = () => {};
+      onSubmit = () => {
+        dispatch(closeModal());
+        dispatch(
+          deleteColumn({
+            boardId: id,
+            columnId: idColumn!,
+          })
+        );
+      };
       break;
     }
     case DeleteItems.TASK: {
-      onSubmit = () => {};
+      onSubmit = () => {
+        dispatch(closeModal());
+        dispatch(
+          deleteTask({
+            boardId: id,
+            columnId: idColumn!,
+            taskId: idTask!,
+          })
+        );
+      };
       break;
     }
     case DeleteItems.USER: {

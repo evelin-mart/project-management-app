@@ -2,22 +2,22 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button, Typography } from '@mui/material';
-import { loadBoard, setColumnsInBoard, setModal } from 'store/board';
+import { loadBoard, setColumnsInBoard } from 'store/board';
 import { Column } from '../../components/Board/Column';
 import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
-import { ManagedModal } from 'components/Modal/ManagedModal';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { modalTypes } from 'components/Modal/modalTypes';
 import { Loader } from 'components/Loader';
 import { ROUTES } from 'constants/Routes';
 import { ITaskService } from 'services/types/Tasks.types';
+import { IItemButtonAddTask } from 'components/Board/types';
+import { ModalTypes, openModal } from 'store/modal';
 
 export const BoardPage = () => {
   const dispatch = useAppDispatch();
   const { idBoard } = useParams();
-  const { board, modal, isLoading } = useAppSelector((state) => state.board);
+  const { board, isLoading } = useAppSelector((state) => state.board);
   React.useEffect(() => {
     dispatch(loadBoard(String(idBoard)));
   }, [dispatch, idBoard]);
@@ -87,23 +87,7 @@ export const BoardPage = () => {
     }
   };
 
-  const addTaskInEmptyColumn = (
-    item: {
-      id: string;
-      index: number;
-      columnId: string;
-      taskId: string;
-      task: {
-        description: string;
-        id: string;
-        order: number;
-        title: string;
-        userId: string;
-        files: [];
-      };
-    },
-    columnId: string
-  ) => {
+  const addTaskInEmptyColumn = (item: IItemButtonAddTask, columnId: string) => {
     if (board.columns.find((column) => column.id === columnId)!.tasks.length === 0) {
       const columns = board.columns.slice(0);
       const dragColumn = columns.find((column) => column.id === item.columnId);
@@ -141,6 +125,16 @@ export const BoardPage = () => {
   if (board.columns.length > 0) {
     column.sort((a, b) => a.order - b.order);
   }
+
+  const handleNewColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    dispatch(
+      openModal({
+        type: ModalTypes.ADD_COLUMN,
+        props: null,
+      })
+    );
+  };
 
   return (
     <Loader isLoading={isLoading}>
@@ -194,15 +188,12 @@ export const BoardPage = () => {
                 variant="outlined"
                 style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
                 sx={{ m: 1 }}
-                onClick={() => {
-                  dispatch(setModal(modalTypes.ADD_COLUMN));
-                }}
+                onClick={handleNewColumn}
               >
                 New column
               </Button>
             </Grid>
           </Box>
-          {modal !== modalTypes.NONE && <ManagedModal />}
         </DndProvider>
       </div>
     </Loader>

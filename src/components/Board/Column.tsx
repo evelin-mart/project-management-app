@@ -21,7 +21,7 @@ const ColumnStyle = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   boxShadow: '30 30 30 30 rgba(9,30,66,.25)',
   height: 'content',
-  width: '350px',
+  width: '310px',
   textAlign: 'center',
   alignItems: 'center',
   color: theme.palette.text.secondary,
@@ -132,7 +132,7 @@ export const Column = ({
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-                sx={{ width: '345px' }}
+                sx={{ width: '300px' }}
               >
                 {!(column.id === editTitleColumnId) && (
                   <Typography
@@ -142,9 +142,9 @@ export const Column = ({
                     textAlign="start"
                     onClick={() => dispatch(setEditTitleColumnId(column.id))}
                     sx={{
-                      mx: 1.5,
+                      px: 1,
                       cursor: 'text',
-                      width: '280px',
+                      width: '255px',
                       wordBreak: 'break-all',
                     }}
                   >

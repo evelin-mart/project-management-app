@@ -19,12 +19,13 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate, Link, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'store';
 import { logout, selectUser } from 'store/user';
+import { useTranslation } from 'react-i18next';
+import { ModalTypes, openModal } from 'store/modal';
 
 export const Header = () => {
   const dispatch = useAppDispatch();
-  const {
-    data: { id: loggedUserId },
-  } = useAppSelector(selectUser);
+  const { t, i18n } = useTranslation();
+  const { id } = useAppSelector(selectUser).data;
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -52,19 +53,27 @@ export const Header = () => {
     dispatch(logout());
   };
 
+  const HandleAddBoard = () => {
+    dispatch(openModal({ type: ModalTypes.ADD_BOARD, props: null }));
+  };
+
+  const handleLangChange = (_: React.MouseEvent<HTMLElement>, lang: string) => {
+    i18n.changeLanguage(lang);
+  };
+
   const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;
   const colorTransition = { transition: 'all 0.5s ease', color };
 
-  const routes = loggedUserId
+  const routes = id
     ? {
-        'Go to Main Page': ROUTES.BOARDS,
-        'Create New Board': () => {},
-        'Edit Profile': ROUTES.PROFILE,
-        'Sign Out': handleLogOut,
+        gtmp: ROUTES.BOARDS,
+        cnb: HandleAddBoard,
+        epro: ROUTES.PROFILE,
+        signOut: handleLogOut,
       }
     : {
-        'Sign In': ROUTES.SIGN_IN,
-        'Sign Up': ROUTES.SIGN_UP,
+        signIn: ROUTES.SIGN_IN,
+        signUp: ROUTES.SIGN_UP,
       };
 
   return (
@@ -95,7 +104,13 @@ export const Header = () => {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box>
-              <ToggleButtonGroup value="ru" exclusive size="small" sx={{ mx: 2 }}>
+              <ToggleButtonGroup
+                value={i18n.resolvedLanguage}
+                onChange={handleLangChange}
+                exclusive
+                size="small"
+                sx={{ mx: 2 }}
+              >
                 <ToggleButton
                   value="en"
                   sx={{
@@ -136,7 +151,7 @@ export const Header = () => {
                         px: 1,
                       }}
                     >
-                      {name}
+                      {t(name)}
                     </Typography>
                   ) : (
                     <Typography
@@ -149,7 +164,7 @@ export const Header = () => {
                         px: 1,
                       }}
                     >
-                      {name}
+                      {t(name)}
                     </Typography>
                   )
                 )}
@@ -182,7 +197,7 @@ export const Header = () => {
                         typeof action === 'string' ? handleNavMenuClick(action) : action();
                       }}
                     >
-                      <Typography textAlign="center">{name}</Typography>
+                      <Typography textAlign="center">{t(name)}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>

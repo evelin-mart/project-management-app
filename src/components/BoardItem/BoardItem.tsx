@@ -15,11 +15,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAppDispatch } from 'store';
 import { ModalTypes, openModal } from 'store/modal';
-import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { DeleteItems } from 'components/Modal/ConfirmDeletion';
+import { useTranslation } from 'react-i18next';
 
 export const BoardItem = ({ board }: { board: BoardData }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const description =
     board.description.length > 50 ? `${board.description.slice(0, 47)}...` : board.description;
@@ -37,7 +39,10 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
   const handleDeleteBoard: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
     dispatch(
-      openModal({ type: ModalTypes.DELETE, props: { id: board.id, type: DeleteItems.BOARD } })
+      openModal({
+        type: ModalTypes.DELETE,
+        props: { type: DeleteItems.BOARD, args: { id: board.id } },
+      })
     );
   };
 
@@ -45,7 +50,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
     <Card
       onClick={() => navigate(`/boards/${board.id}`)}
       sx={{ cursor: 'pointer', width: '200px', display: 'flex', flexDirection: 'column' }}
-      title="Go to the board"
+      title={`${t('gtb')}`}
     >
       <CardHeader
         title={
@@ -55,7 +60,7 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
         }
         disableTypography={true}
         action={
-          <IconButton onClick={expandBoard} title="Show details">
+          <IconButton onClick={expandBoard} title={`${t('show')}`}>
             <ManageSearchIcon />
           </IconButton>
         }
@@ -66,17 +71,24 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
         </Typography>
       </CardContent>
       <Stack direction="row" gap={1} justifyContent="center" sx={{ p: 1, mt: 'auto' }}>
-        <Button size="small" variant="outlined" startIcon={<EditIcon />} onClick={editBoard}>
-          Edit
+        <Button
+          size="small"
+          variant="outlined"
+          title={`${t('edit')}`}
+          startIcon={i18n.resolvedLanguage === 'en' ? <EditIcon /> : undefined}
+          onClick={editBoard}
+        >
+          {t('edit')}
         </Button>
         <Button
           size="small"
           variant="outlined"
           color="error"
-          endIcon={<DeleteIcon />}
+          title={`${t('del')}`}
+          endIcon={i18n.resolvedLanguage === 'en' ? <DeleteIcon /> : undefined}
           onClick={handleDeleteBoard}
         >
-          Delete
+          {t('del')}
         </Button>
       </Stack>
     </Card>

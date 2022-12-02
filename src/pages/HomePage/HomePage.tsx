@@ -15,6 +15,7 @@ import MainImage from '../../assets/img/home-main-img.jpg';
 import DenisAvatar from '../../assets/img/denis-avatar.png';
 import EvelinAvatar from '../../assets/img/evelin-avatar.png';
 import TanyaAvatar from '../../assets/img/tanya-avatar.png';
+import { useTranslation } from 'react-i18next';
 
 const Image = styled('img')({
   maxWidth: '100%',
@@ -25,21 +26,22 @@ const Image = styled('img')({
 const developers = {
   Evelin: {
     image: EvelinAvatar,
-    text: 'Работала над таким-то функционалом. Еще над вот таким и немного над вот таким. Сделала это, то и сё.',
+    text: 'dev1',
   },
   Denis: {
     image: DenisAvatar,
-    text: 'Работал над таким-то функционалом. Еще над вот таким и немного над вот таким. Сделал это, то и сё.',
+    text: 'dev2',
   },
   Tanya: {
     image: TanyaAvatar,
-    text: 'Работала над таким-то функционалом. Еще над вот таким и немного над вот таким. Сделал это, то и сё.',
+    text: 'dev3',
   },
 };
 
 export const HomePage = () => {
   const theme = useTheme();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const { t } = useTranslation();
 
   return (
     <Container
@@ -71,20 +73,15 @@ export const HomePage = () => {
             component="h2"
             sx={{ my: 2 }}
           >
-            About EASYtoDO
+            {t('about')} EASYtoDO
           </Typography>
           <Typography component="div" color="textPrimary">
-            <p>
-              EASYtoDO will help you to organize and manage simple and complex tasks more
-              efficiently as well as always be aware of your tasks and keep in touch with your team.
-              You can also use this app to organize grocery lists, personal affairs, planning your
-              next vacation and everything else related to planning.
-            </p>
-            Our application has:
+            <p>{t('pro1')}</p>
+            {t('pro2')}
             <ul>
-              <li>Intuitive interface</li>
-              <li>Flexible Kanban Board</li>
-              <li>Easy drag and drop feature</li>
+              <li>{t('list1')}</li>
+              <li>{t('list2')}</li>
+              <li>{t('list3')}</li>
             </ul>
           </Typography>
         </Grid>
@@ -109,23 +106,23 @@ export const HomePage = () => {
           color="textPrimary"
           sx={{ my: 2 }}
         >
-          Team
+          {t('team')}
         </Typography>
         <Grid container spacing={6} justifyContent="center" alignItems="stretch">
           {Object.entries(developers).map(([developer, { image, text }]) => (
             <Grid item key={developer} xs={12} sm={6} md={4}>
-              <Card>
+              <Card sx={{ maxWidth: '350px', height: '100%' }}>
                 <CardMedia
                   component="img"
                   image={image}
-                  alt={developer}
+                  alt={t(developer)}
                   sx={{ height: '100px', width: 'auto', mt: 2, mx: 'auto' }}
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="div" align="center">
-                    {developer}
+                    {t(developer)}
                   </Typography>
-                  <Typography variant="body2">{text}</Typography>
+                  <Typography variant="body2">{t(text)}</Typography>
                 </CardContent>
               </Card>
             </Grid>

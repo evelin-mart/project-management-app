@@ -1,10 +1,11 @@
-import { Button } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch } from 'store';
 import { ItemTypes } from './ItemTypes';
 import { IItemButtonAddTask } from './types';
 import { ModalTypes, openModal } from 'store/modal';
+import { useTranslation } from 'react-i18next';
 
 interface IButtonAddTask {
   columnId: string;
@@ -13,6 +14,7 @@ interface IButtonAddTask {
 
 export const ButtonAddTask = ({ columnId, addTaskInEmptyColumn }: IButtonAddTask) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const ref = useRef<HTMLDivElement>(null);
   const [, drop] = useDrop<IItemButtonAddTask>({
@@ -22,24 +24,21 @@ export const ButtonAddTask = ({ columnId, addTaskInEmptyColumn }: IButtonAddTask
     },
   });
 
-  const handleAddTask: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
+  const handleAddTask = () =>
     dispatch(openModal({ type: ModalTypes.ADD_TASK, props: { columnId } }));
-  };
 
   drop(ref);
 
   return (
-    <div ref={ref} style={{ height: '50px' }}>
+    <Stack ref={ref} style={{ flex: '0 0 50px', justifyContent: 'center', alignItems: 'center' }}>
       <Button
         variant="outlined"
         style={{ backgroundColor: 'white', width: '96%' }}
         size="small"
-        sx={{ my: 0.5, mx: 'auto' }}
         onClick={handleAddTask}
       >
-        Add Task
+        {t('addTask')}
       </Button>
-    </div>
+    </Stack>
   );
 };

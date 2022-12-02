@@ -2,6 +2,7 @@ import { SERVER } from 'constants/Server';
 import {
   createBoardAnswer,
   createBoardRequest,
+  deleteBoardRequest,
   getAllBoardsAnswer,
   getBoardAnswer,
   getBoardRequest,
@@ -31,8 +32,8 @@ export class Board extends BaseService {
     return response.data;
   };
 
-  static deleteBoard = async (boardId: string) => {
-    const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
+  static deleteBoard = async ({ id }: deleteBoardRequest) => {
+    const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${id}`);
     return response;
   };
 }

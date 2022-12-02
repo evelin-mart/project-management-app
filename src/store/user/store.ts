@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { UpdateUserResponse } from 'services/types/Users.types';
+import { DeleteUserRequest, UpdateUserResponse } from 'services/types/Users.types';
 import { Auth, Users } from 'services';
 import { SignInQuery, SignUpQuery } from 'services/types/Auth.types';
 import { AsyncThunkConfig } from 'store';
@@ -13,9 +13,7 @@ export const getUserFromLocalStorage = () => {
   try {
     const persistedUserState = localStorage.getItem(userStateId);
     if (persistedUserState) return JSON.parse(persistedUserState);
-  } catch (e) {
-    // console.log(e);
-  }
+  } catch (e) {}
 };
 
 const initialState = {
@@ -54,11 +52,10 @@ export const updateUser = createAsyncThunk<UpdateUserResponse, UpdateUserRequest
   }
 );
 
-export const deleteUser = createAsyncThunk<void, undefined, AsyncThunkConfig>(
+export const deleteUser = createAsyncThunk<void, DeleteUserRequest, AsyncThunkConfig>(
   'user/deleteUser',
-  async (_, { getState }) => {
-    const { id } = getState().user.data;
-    await Users.deleteUserById({ id });
+  async (query) => {
+    await Users.deleteUserById(query);
   }
 );
 

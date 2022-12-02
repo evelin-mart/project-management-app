@@ -3,88 +3,73 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useAppDispatch } from 'store';
 import { closeModal } from 'store/modal';
 import { deleteBoard } from 'store/boards';
-import { ROUTES } from 'constants/Routes';
-import { useNavigate } from 'react-router';
-import { deleteUser, logout } from 'store/user';
+import { deleteUser } from 'store/user';
+import { useTranslation } from 'react-i18next';
 import { deleteColumn, deleteTask } from 'store/board';
+import { deleteBoardRequest } from 'services/types/Board.types';
+import { DeleteUserRequest } from 'services/types/Users.types';
+import { deleteColumnRequest } from 'services/types/Columns.types';
+import { deleteTaskRequest } from 'services/types/Tasks.types';
 
 export enum DeleteItems {
-  BOARD = 'board',
-  COLUMN = 'column',
-  TASK = 'task',
-  USER = 'user',
+  BOARD = 'board-del',
+  COLUMN = 'column-del',
+  TASK = 'task-del',
+  USER = 'user-del',
 }
 
 export interface SubmitDeleteProps {
-  id: string;
-  idColumn?: string;
-  idTask?: string;
   type: DeleteItems;
+  args: {
+    [x: string]: string;
+  };
 }
 
-export const ConfirmDeletion = ({ id, type, idColumn, idTask }: SubmitDeleteProps) => {
-  const navigate = useNavigate();
+export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const handleClose = () => dispatch(closeModal());
 
-  let onSubmit: () => void;
+  let onSubmit: () => Promise<unknown>;
 
   switch (type) {
     case DeleteItems.BOARD: {
-      onSubmit = () => dispatch(deleteBoard(id)).then(() => dispatch(closeModal()));
+      onSubmit = () => dispatch(deleteBoard({ ...args } as deleteBoardRequest));
       break;
     }
     case DeleteItems.COLUMN: {
-      onSubmit = () => {
-        dispatch(closeModal());
-        dispatch(
-          deleteColumn({
-            boardId: id,
-            columnId: idColumn!,
-          })
-        );
-      };
+      onSubmit = () => dispatch(deleteColumn({ ...args } as deleteColumnRequest));
       break;
     }
     case DeleteItems.TASK: {
-      onSubmit = () => {
-        dispatch(closeModal());
-        dispatch(
-          deleteTask({
-            boardId: id,
-            columnId: idColumn!,
-            taskId: idTask!,
-          })
-        );
-      };
+      onSubmit = () => dispatch(deleteTask({ ...args } as deleteTaskRequest));
       break;
     }
     case DeleteItems.USER: {
-      onSubmit = async () => {
-        await dispatch(deleteUser());
-        dispatch(closeModal());
-        logout();
-        navigate(`/${ROUTES.SIGN_UP}`);
-      };
+      onSubmit = () => dispatch(deleteUser({ ...args } as DeleteUserRequest));
       break;
     }
     default: {
-      onSubmit = () => {};
+      onSubmit = () => new Promise((res) => res(null));
     }
   }
+
+  const handleSubmit = () => {
+    onSubmit().then(() => dispatch(closeModal()));
+  };
 
   return (
     <>
       <Typography variant="h5" component="h2" align="center">
-        Are you sure want to delete {type}?
+        {t('confirmation')} {t(type)}?
       </Typography>
       <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
         <Button variant="outlined" onClick={handleClose}>
-          Cancel
+          {t('cancel')}
         </Button>
-        <Button variant="outlined" color="error" onClick={onSubmit}>
-          Delete
+        <Button variant="outlined" color="error" onClick={handleSubmit}>
+          {t('del')}
         </Button>
       </Stack>
     </>

@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useAppDispatch } from 'store';
 import { addBoard } from 'store/boards';
 import { closeModal } from 'store/modal';
+import { useTranslation } from 'react-i18next';
 
 interface FormValues {
   title: string;
@@ -12,6 +13,7 @@ interface FormValues {
 
 export const AddBoard = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const handleClose = () => dispatch(closeModal());
 
@@ -32,16 +34,17 @@ export const AddBoard = () => {
   return (
     <form onSubmit={handleSubmit(handleAddBoard)}>
       <Typography variant="h5" component="h2" align="center">
-        Add Board
+        {t('addBoard')}
       </Typography>
       <TextField
         {...register('title', {
           required: 'Title is required!',
         })}
         fullWidth
-        label="Title"
+        label={t('title')}
         variant="outlined"
         margin="normal"
+        sx={{ mb: 2 }}
       />
       {errors?.title && (
         <Typography variant="body2" sx={{ color: 'red' }}>
@@ -54,7 +57,7 @@ export const AddBoard = () => {
           required: 'Description is required!',
         })}
         fullWidth
-        label="Description"
+        label={t('desc')}
         multiline
         maxRows={4}
       />
@@ -66,10 +69,10 @@ export const AddBoard = () => {
 
       <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
         <Button variant="outlined" type="submit">
-          Submit
+          {t('save')}
         </Button>
         <Button variant="outlined" color="error" onClick={handleClose}>
-          Cancel
+          {t('cancel')}
         </Button>
       </Stack>
     </form>

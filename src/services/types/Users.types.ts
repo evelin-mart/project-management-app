@@ -14,6 +14,6 @@ export type UpdateUserRequest = Extract<User & { password: string }, BaseUserReq
 
 export type UpdateUserResponse = User;
 
-export type DeteleUserRequest = BaseUserRequest;
+export type DeleteUserRequest = BaseUserRequest;
 
 export type GetAllUsersAnswer = User[];

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import React, { useRef } from 'react';
-import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import type { Identifier } from 'dnd-core';
 import { Task } from './Task';
 import { updateColumnTitle, setEditTitleColumnId, updateMoveColumn } from 'store/board';
@@ -15,6 +15,7 @@ import { ItemTypes } from './ItemTypes';
 import { IColumnComponent, IItemColumnDrop } from './types';
 import { ModalTypes, openModal } from 'store/modal';
 import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { useTranslation } from 'react-i18next';
 
 const ColumnStyle = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#e7ebf0' : '#e7ebf0',
@@ -42,6 +43,7 @@ export const Column = ({
 }: IColumnComponent) => {
   const dispatch = useAppDispatch();
   const { editTitleColumnId, board } = useAppSelector((state) => state.board);
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -111,22 +113,24 @@ export const Column = ({
   const opacity = isDragging ? 0 : 1;
   drag(drop(columnRef));
 
-  const handleDeleteColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
+  const handleDeleteColumn = () =>
     dispatch(
       openModal({
         type: ModalTypes.DELETE,
-        props: { id: board.id, type: DeleteItems.COLUMN, idColumn: column.id },
+        props: { type: DeleteItems.COLUMN, args: { boardId: board.id, columnId: column.id } },
       })
     );
-  };
 
   return (
-    <div ref={columnRef} style={{ opacity, margin: '5px' }} data-handler-id={handlerId}>
+    <Box ref={columnRef} style={{ opacity, margin: '5px' }} data-handler-id={handlerId}>
       <ColumnStyle key={column.id}>
-        <Grid container sx={{ overflowY: 'auto', maxHeight: '80vh', overflowX: 'hidden' }}>
+        <Grid container sx={{ overflowX: 'hidden' }}>
           <Grid container direction="row" justifyContent="space-between" alignItems="center">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <Paper
+              component="form"
+              sx={{ width: '100%', mb: '5px' }}
+              onSubmit={handleSubmit(onSubmit)}
+            >
               <Grid
                 container
                 direction="row"
@@ -177,7 +181,7 @@ export const Column = ({
                     variant="outlined"
                     sx={{ width: '45%', mt: 1, ml: 1.2, mr: 1, mb: 1 }}
                   >
-                    Save
+                    {t('save')}
                   </Button>
                   <Button
                     variant="outlined"
@@ -185,20 +189,22 @@ export const Column = ({
                     sx={{ width: '45%', mt: 1, mr: 1.2, mb: 1 }}
                     onClick={() => dispatch(setEditTitleColumnId(''))}
                   >
-                    Cancel
+                    {t('cancel')}
                   </Button>
                 </>
               )}
-            </form>
+            </Paper>
           </Grid>
           <Grid
             container
             component="div"
+            direction="column"
             sx={{
-              height: 'content',
-              overflow: 'hidden',
+              maxHeight: '65vh',
+              overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',
+              flexWrap: 'nowrap',
             }}
           >
             {task.map((task: ITaskService, i: number) => (
@@ -208,6 +214,6 @@ export const Column = ({
           </Grid>
         </Grid>
       </ColumnStyle>
-    </div>
+    </Box>
   );
 };

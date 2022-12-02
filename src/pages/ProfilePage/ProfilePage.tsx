@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, MouseEventHandler } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Box, Button, Container, Paper, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Paper, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ERRORS } from 'constants/ValidationErrors';
 import { selectUser, updateUser } from 'store/user';
@@ -10,11 +10,13 @@ import { UpdateUserRequest } from 'services/types/Users.types';
 import { UserProfileFields, userForm } from 'constants/UserForm';
 import { ModalTypes, openModal } from 'store/modal';
 import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { useTranslation } from 'react-i18next';
 
 export const ProfilePage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const theme = useTheme();
+  const { t } = useTranslation();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   const {
@@ -37,87 +39,88 @@ export const ProfilePage = () => {
     reset();
   };
 
-  const handleDeleteUser: MouseEventHandler<HTMLButtonElement> = () => {
-    dispatch(openModal({ type: ModalTypes.DELETE, props: { type: DeleteItems.USER } }));
-  };
+  const handleDeleteUser = () =>
+    dispatch(
+      openModal({
+        type: ModalTypes.DELETE,
+        props: { type: DeleteItems.USER, args: { id: data.id } },
+      })
+    );
 
   return (
     <Loader isLoading={isLoading}>
-      <Container
-        sx={{ flex: '1 1 auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      <Paper
+        id="form"
+        component="form"
+        sx={{
+          p: 3,
+          m: 'auto',
+          maxWidth: '500px',
+          width: 'inherit',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          backgroundColor: theme.palette.grey[100],
+        }}
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit(onUpdateSubmit)}
       >
-        <Paper
-          id="form"
-          component="form"
-          sx={{
-            p: 3,
-            maxWidth: '500px',
-            width: 'inherit',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            backgroundColor: theme.palette.grey[100],
-          }}
-          noValidate
-          autoComplete="off"
-          onSubmit={handleSubmit(onUpdateSubmit)}
+        <Typography
+          variant={smUp ? 'h5' : 'h6'}
+          align="center"
+          sx={{ mb: '1rem', wordBreak: 'break-word' }}
         >
-          <Typography
-            variant={smUp ? 'h5' : 'h6'}
-            align="center"
-            sx={{ mb: '1rem', wordBreak: 'break-word' }}
+          {t('profile')}
+        </Typography>
+        {Object.values(UserProfileFields).map((key) => (
+          <TextField
+            key={key}
+            {...register(key, {
+              required: userForm[key].required ? ERRORS.required : false,
+              minLength: {
+                value: userForm[key].minLength,
+                message: ERRORS.minLength(userForm[key].title, userForm[key].minLength),
+              },
+            })}
+            fullWidth
+            error={!!errors[key]}
+            helperText={(errors[key]?.message as string) || ''}
+            label={t(UserProfileFields[key])}
+            margin="normal"
+            type={key === UserProfileFields.password ? 'password' : 'text'}
+            autoComplete={key === UserProfileFields.password ? 'current-password' : 'text'}
+          />
+        ))}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap-reverse',
+          }}
+        >
+          <Button
+            sx={{ mt: 2, mx: 1 }}
+            form="form"
+            variant="contained"
+            color="error"
+            onClick={handleDeleteUser}
           >
-            My profile
-          </Typography>
-          {Object.values(UserProfileFields).map((key) => (
-            <TextField
-              key={key}
-              {...register(key, {
-                required: userForm[key].required ? ERRORS.required : false,
-                minLength: {
-                  value: userForm[key].minLength,
-                  message: ERRORS.minLength(userForm[key].title, userForm[key].minLength),
-                },
-              })}
-              fullWidth
-              error={!!errors[key]}
-              helperText={(errors[key]?.message as string) || ''}
-              label={userForm[key].title}
-              margin="normal"
-              type={key === UserProfileFields.password ? 'password' : 'text'}
-              autoComplete={key === UserProfileFields.password ? 'current-password' : 'text'}
-            />
-          ))}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexWrap: 'wrap-reverse',
-            }}
+            {t('del')} {t('user-del')}
+          </Button>
+          <Button
+            sx={{ mt: 2, mx: 1 }}
+            type="submit"
+            form="form"
+            variant="contained"
+            color="secondary"
+            disabled={isDirty && !!Object.keys(errors).length}
           >
-            <Button
-              sx={{ mt: 2, mx: 1 }}
-              form="form"
-              variant="contained"
-              color="error"
-              onClick={handleDeleteUser}
-            >
-              Delete user
-            </Button>
-            <Button
-              sx={{ mt: 2, mx: 1 }}
-              type="submit"
-              form="form"
-              variant="contained"
-              color="secondary"
-              disabled={isDirty && !!Object.keys(errors).length}
-            >
-              Save
-            </Button>
-          </Box>
-        </Paper>
-      </Container>
+            {t('save')}
+          </Button>
+        </Box>
+      </Paper>
     </Loader>
   );
 };

@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { updateTask } from 'store/board';
 import { User } from 'services/types/Users.types';
 import { useAppDispatch, useAppSelector } from 'store';
 import { closeModal } from 'store/modal';
+import { useTranslation } from 'react-i18next';
 
 interface FormValues {
   title: string;
@@ -28,6 +29,9 @@ export interface EditTaskProps {
 export const EditTask = ({ task, columnId }: EditTaskProps) => {
   const dispatch = useAppDispatch();
   const { users, board } = useAppSelector((state) => state.board);
+  const { t } = useTranslation();
+
+  const handleClose = () => dispatch(closeModal());
 
   const {
     handleSubmit,
@@ -35,6 +39,7 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
     register,
     reset,
   } = useForm<FormValues>();
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     dispatch(closeModal());
     dispatch(
@@ -52,10 +57,11 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
     );
     reset();
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h5" component="h2" align="center">
-        Edit task
+        {t('edit')} {t('task-del')}
       </Typography>
       <TextField
         {...register('title', {
@@ -65,7 +71,7 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
         error={!!errors.title}
         helperText={(errors.title?.message as string) || ''}
         defaultValue={task?.title}
-        label="Title"
+        label={t('title')}
         variant="outlined"
         margin="normal"
       />
@@ -76,7 +82,7 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
         fullWidth
         error={!!errors.description}
         helperText={(errors.description?.message as string) || ''}
-        label="Description"
+        label={t('desc')}
         defaultValue={task?.description}
         multiline
         maxRows={4}
@@ -86,7 +92,7 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
         <Select
           defaultValue={task?.userId}
           error={!!errors.userId}
-          label="User"
+          label={t('user')}
           {...register('userId', {
             required: 'userId is require field!',
           })}
@@ -104,14 +110,14 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
           <div style={{ color: '#fe6b61', margin: '3px 15px' }}>{errors.userId.message}</div>
         )}
       </FormControl>
-      <Button
-        variant="outlined"
-        type="submit"
-        style={{ backgroundColor: 'white', height: '3rem', width: '100%' }}
-        sx={{ mt: 2 }}
-      >
-        Edit
-      </Button>
+      <Stack direction="row" justifyContent="space-evenly" sx={{ pt: 3 }}>
+        <Button variant="outlined" type="submit">
+          {t('save')}
+        </Button>
+        <Button variant="outlined" color="error" onClick={handleClose}>
+          {t('cancel')}
+        </Button>
+      </Stack>
     </form>
   );
 };

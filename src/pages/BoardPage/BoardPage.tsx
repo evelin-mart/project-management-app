@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { Button, Typography } from '@mui/material';
@@ -13,12 +13,15 @@ import { ROUTES } from 'constants/Routes';
 import { ITaskService } from 'services/types/Tasks.types';
 import { IItemButtonAddTask } from 'components/Board/types';
 import { ModalTypes, openModal } from 'store/modal';
+import { useTranslation } from 'react-i18next';
 
 export const BoardPage = () => {
   const dispatch = useAppDispatch();
   const { idBoard } = useParams();
   const { board, isLoading } = useAppSelector((state) => state.board);
-  React.useEffect(() => {
+  const { t } = useTranslation();
+
+  useEffect(() => {
     dispatch(loadBoard(String(idBoard)));
   }, [dispatch, idBoard]);
 
@@ -126,76 +129,72 @@ export const BoardPage = () => {
     }
   };
 
-  const handleNewColumn: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.preventDefault();
+  const handleNewColumn = () =>
     dispatch(
       openModal({
         type: ModalTypes.ADD_COLUMN,
         props: null,
       })
     );
-  };
 
   return (
     <Loader isLoading={isLoading}>
-      <div>
-        <DndProvider backend={HTML5Backend}>
-          <Box
+      <DndProvider backend={HTML5Backend}>
+        <Box
+          component="div"
+          sx={{
+            p: '0 20px',
+            overflowY: 'hidden',
+            overflowX: 'auto',
+            width: '100vw',
+            flexGrow: 1,
+            height: 'calc(100vh - 148px)',
+          }}
+        >
+          <Grid sx={{ width: '100%', height: '40px', mt: '5px', display: 'flex' }}>
+            <Link to={`/${ROUTES.BOARDS}`} style={{ textDecoration: 'none' }}>
+              <Button variant="text" sx={{ width: '5%' }}>
+                {t('back')}
+              </Button>
+            </Link>
+            <Typography color="textPrimary" variant="h4" component="h2" sx={{ ml: '15px' }}>
+              {board.title}
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            justifyContent="flex-start"
+            alignItems="flex-start"
             component="div"
             sx={{
-              mx: 'auto',
+              minWidth: 'max-content',
               overflow: 'hidden',
-              overflowX: 'auto',
-              width: '100vw',
-              flexGrow: 1,
-              height: 'calc(100vh - 128px)',
+              height: '81vh',
             }}
           >
-            <Grid sx={{ width: '100%', height: '40px', mt: '5px', display: 'flex' }}>
-              <Link to={`/${ROUTES.BOARDS}`} style={{ textDecoration: 'none' }}>
-                <Button variant="text" sx={{ width: '5%' }}>
-                  Back
-                </Button>
-              </Link>
-              <Typography color="textPrimary" variant="h4" component="h2" sx={{ ml: '15px' }}>
-                {board.title}
-              </Typography>
-            </Grid>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-start"
-              alignItems="flex-start"
-              component="div"
-              sx={{
-                minWidth: 'max-content',
-                overflow: 'hidden',
-                height: '81vh',
-              }}
+            {column?.map((column, i) => (
+              <Column
+                key={column.id}
+                index={i}
+                id={column.id}
+                column={column}
+                moveColumn={moveColumn}
+                moveTask={moveTask}
+                addTaskInEmptyColumn={addTaskInEmptyColumn}
+              />
+            ))}
+            <Button
+              variant="outlined"
+              style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
+              sx={{ m: 1 }}
+              onClick={handleNewColumn}
             >
-              {column?.map((column, i) => (
-                <Column
-                  key={column.id}
-                  index={i}
-                  id={column.id}
-                  column={column}
-                  moveColumn={moveColumn}
-                  moveTask={moveTask}
-                  addTaskInEmptyColumn={addTaskInEmptyColumn}
-                />
-              ))}
-              <Button
-                variant="outlined"
-                style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
-                sx={{ m: 1 }}
-                onClick={handleNewColumn}
-              >
-                New column
-              </Button>
-            </Grid>
-          </Box>
-        </DndProvider>
-      </div>
+              {t('new-col')}
+            </Button>
+          </Grid>
+        </Box>
+      </DndProvider>
     </Loader>
   );
 };

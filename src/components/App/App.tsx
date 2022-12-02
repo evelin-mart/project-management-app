@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { store } from '../../store';
 import { theme } from './theme';
 import { Router } from 'components/Router';
+import '../../i18n';
 import { getUserFromLocalStorage, hydrate } from 'store/user';
 
 export const App = () => {

@@ -11,12 +11,15 @@ import { useNavigate } from 'react-router';
 import { SignUpQuery } from 'services/types/Auth.types';
 import { Link } from 'react-router-dom';
 import { UserProfileFields, userForm } from 'constants/UserForm';
+import { useTranslation } from 'react-i18next';
 
 export const SignUpPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const theme = useTheme();
+  const { t } = useTranslation();
+
   const {
     register,
     formState: { errors, isDirty },
@@ -67,7 +70,7 @@ export const SignUpPage = () => {
             fullWidth
             error={!!errors[key]}
             helperText={(errors[key]?.message as string) || ''}
-            label={userForm[key].title}
+            label={t(UserProfileFields[key])}
             margin="normal"
             type={key === UserProfileFields.password ? 'password' : 'text'}
             autoComplete={key === UserProfileFields.password ? 'current-password' : 'text'}
@@ -82,11 +85,13 @@ export const SignUpPage = () => {
             color="secondary"
             disabled={isDirty && !!Object.keys(errors).length}
           >
-            Sign up
+            {t('signUp')}
           </Button>
         </Box>
         <Box sx={{ my: 2 }}>
-          <Link to={`/${ROUTES.SIGN_IN}`}>Already have an account? Sign In</Link>
+          <Link to={`/${ROUTES.SIGN_IN}`}>
+            {t('aha')} {t('signIn')}
+          </Link>
         </Box>
       </Paper>
     </Loader>

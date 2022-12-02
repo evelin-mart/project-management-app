@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { unknownErrorMessage } from 'constants/ErrorMessages';
 import { Board, Tasks, Users, Columns } from 'services';
 import {
   createColumnRequest,
@@ -13,35 +14,22 @@ import {
 import { BoardStore } from './interface';
 
 const initialState = {
-  board: {},
+  board: { columns: [] },
   users: [],
   isLoading: false,
-  modal: '',
-  modalData: {
-    columnId: '',
-    taskId: '',
-  },
   editTitleColumnId: '',
+  error: '',
 } as unknown as BoardStore;
 
 export const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
-    setModal: (state, action) => {
-      state.modal = action.payload;
-    },
-    setModalDataColumnId: (state, action) => {
-      state.modalData.columnId = action.payload;
-    },
-    setModalDataTaskId: (state, action) => {
-      state.modalData.taskId = action.payload;
-    },
     setEditTitleColumnId: (state, action) => {
       state.editTitleColumnId = action.payload;
     },
-    setIsLoading: (state, action) => {
-      state.isLoading = action.payload;
+    setColumnsInBoard: (state, action) => {
+      state.board.columns = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -54,25 +42,135 @@ export const boardSlice = createSlice({
         state.board = action.payload.board;
         state.users = action.payload.users;
       })
-      // .addCase(createTask.fulfilled, (state, action) => {})
-      // .addCase(createColumn.fulfilled, (state, action) => {})
-      // .addCase(updateTask.fulfilled, (state, action) => {})
-      // .addCase(deleteTask.fulfilled, (state, action) => {})
-      // .addCase(deleteColumn.fulfilled, (state, action) => {})
-      // .addCase(updateColumnTitle.fulfilled, (state, action) => {})
-      .addCase(loadBoard.rejected, (state) => {
+      .addCase(loadBoard.rejected, (state, action) => {
         state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(createTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const columnId = action.payload.columnId;
+        const column = state.board.columns.find((column) => column.id === columnId);
+        const task = {
+          ...action.payload,
+          files: [],
+          order: column!.tasks.length + 1,
+          boardId: state.board.id,
+          columnId: columnId,
+        };
+        if (column) {
+          column.tasks.push(task);
+        }
+      })
+      .addCase(createTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(createColumn.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.board.columns = [...state.board.columns, { ...action.payload, tasks: [] }];
+      })
+      .addCase(createColumn.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(createColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(updateTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { columnId, id } = action.payload;
+        state.board.columns = state.board.columns.map((column) => {
+          if (column.id === columnId) {
+            return {
+              ...column,
+              tasks: column.tasks.map((task) => {
+                if (task.id === id) {
+                  return { ...task, ...action.payload, files: [] };
+                } else {
+                  return task;
+                }
+              }),
+            };
+          } else {
+            return column;
+          }
+        });
+      })
+      .addCase(updateTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        const { columnId, taskId } = action.payload;
+        state.board = {
+          ...state.board,
+          columns: state.board.columns.map((column) => {
+            if (column.id === columnId) {
+              return {
+                ...column,
+                tasks: column.tasks.filter((task) => task.id !== taskId),
+              };
+            }
+            return column;
+          }),
+        };
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(deleteColumn.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.board.columns = state.board.columns.filter(
+          (column) => column.id !== action.payload.columnId
+        );
+      })
+      .addCase(deleteColumn.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(updateColumnTitle.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.board.columns = state.board.columns.map((column) => {
+          if (column.id === action.payload.id) {
+            return { ...action.payload, tasks: column.tasks };
+          } else {
+            return column;
+          }
+        });
+      })
+      .addCase(updateColumnTitle.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateColumnTitle.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(updateMoveColumn.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
+      })
+      .addCase(updateMoveTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || unknownErrorMessage;
       });
   },
 });
 
-export const {
-  setIsLoading,
-  setModal,
-  setModalDataColumnId,
-  setModalDataTaskId,
-  setEditTitleColumnId,
-} = boardSlice.actions;
+export const { setEditTitleColumnId, setColumnsInBoard } = boardSlice.actions;
 export default boardSlice.reducer;
 
 export const loadBoard = createAsyncThunk('board/loadBoard', async (boardId: string) => {
@@ -89,7 +187,7 @@ export const createTask = createAsyncThunk(
       columnId: columnId,
       body: body,
     });
-    return response;
+    return { ...response, columnId };
   }
 );
 
@@ -120,23 +218,23 @@ export const updateTask = createAsyncThunk(
 export const deleteTask = createAsyncThunk(
   'board/deleteTask',
   async ({ boardId, columnId, taskId }: deleteTaskRequest) => {
-    const response = await Tasks.deleteTask({
+    await Tasks.deleteTask({
       boardId: boardId,
       columnId: columnId,
       taskId: taskId,
     });
-    return response;
+    return { boardId, columnId, taskId };
   }
 );
 
 export const deleteColumn = createAsyncThunk(
   'board/deleteColumn',
   async ({ boardId, columnId }: deleteColumnRequest) => {
-    const response = await Columns.deleteColumn({
+    await Columns.deleteColumn({
       boardId: boardId,
       columnId: columnId,
     });
-    return response;
+    return { boardId, columnId };
   }
 );
 
@@ -146,6 +244,31 @@ export const updateColumnTitle = createAsyncThunk(
     const response = await Columns.updateColumn({
       boardId: boardId,
       columnId: columnId,
+      body: body,
+    });
+    return response;
+  }
+);
+
+export const updateMoveColumn = createAsyncThunk(
+  'board/updateMoveColumn',
+  async ({ boardId, columnId, body }: updateColumnRequest) => {
+    const response = await Columns.updateColumn({
+      boardId: boardId,
+      columnId: columnId,
+      body: body,
+    });
+    return response;
+  }
+);
+
+export const updateMoveTask = createAsyncThunk(
+  'board/updateMoveTask',
+  async ({ boardId, columnId, taskId, body }: updateTaskRequest) => {
+    const response = await Tasks.updateTask({
+      boardId: boardId,
+      columnId: columnId,
+      taskId: taskId,
       body: body,
     });
     return response;

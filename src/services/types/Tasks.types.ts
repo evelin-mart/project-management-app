@@ -15,7 +15,7 @@ export interface ITaskService {
   order: number;
   description: string;
   userId: string;
-  files: { filename: string; fileSize: number }[];
+  files?: { filename?: string; fileSize?: number }[];
 }
 
 export type TaskFile = { files: { filename: string; fileSize: number }[] };
@@ -54,6 +54,6 @@ export type getTaskAnswer = TaskData & { id: string } & TaskFile;
 
 export type updateTaskRequest = TaskPath & { body: TaskData };
 
-export type updateTaskAnswer = TaskData;
+export type updateTaskAnswer = TaskData & { id: string };
 
 export type deleteTaskRequest = TaskPath;

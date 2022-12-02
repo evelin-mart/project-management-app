@@ -3,11 +3,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Box, Button, Paper, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ERRORS } from 'constants/ValidationErrors';
-import { ROUTES } from 'constants/Routes';
 import { selectUser, updateUser } from 'store/user';
 import { useAppDispatch, useAppSelector } from 'store';
 import { Loader } from 'components/Loader';
-import { useNavigate } from 'react-router';
 import { UpdateUserRequest } from 'services/types/Users.types';
 import { UserProfileFields, userForm } from 'constants/UserForm';
 import { ModalTypes, openModal } from 'store/modal';
@@ -17,7 +15,6 @@ import { useTranslation } from 'react-i18next';
 export const ProfilePage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const theme = useTheme();
   const { t } = useTranslation();
   const smUp = useMediaQuery(theme.breakpoints.up('sm'));
@@ -36,12 +33,6 @@ export const ProfilePage = () => {
   useEffect(() => {
     reset({ name: data.name, login: data.login });
   }, [data, reset]);
-
-  useEffect(() => {
-    if (!isLoading && !data.id) {
-      navigate(`/${ROUTES.HOME}`);
-    }
-  }, [data.id, isLoading, navigate]);
 
   const onUpdateSubmit: SubmitHandler<UpdateUserRequest> = (data) => {
     dispatch(updateUser(data));

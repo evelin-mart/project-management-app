@@ -6,12 +6,22 @@ import { store } from '../../store';
 import { theme } from './theme';
 import { Router } from 'components/Router';
 import '../../i18n';
+import { getUserFromLocalStorage, hydrate } from 'store/user';
 
-export const App = () => (
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router />
-    </ThemeProvider>
-  </Provider>
-);
+export const App = () => {
+  const user = getUserFromLocalStorage();
+  if (user) {
+    store.dispatch(hydrate(user));
+  }
+
+  return (
+    <>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router />
+        </ThemeProvider>
+      </Provider>
+    </>
+  );
+};

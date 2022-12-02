@@ -11,6 +11,7 @@ import { SignInPage } from 'pages/SignIn';
 import { SignUpPage } from 'pages/SignUp';
 import { BoardPage } from 'pages/BoardPage/BoardPage';
 import { CommonModal } from 'components/Modal';
+import { ProtectedRoute } from './ProtectedRoute';
 
 export const Router = () => {
   return (
@@ -28,11 +29,32 @@ export const Router = () => {
           }
         >
           <Route index element={<HomePage />} />
-          <Route path={ROUTES.BOARDS} element={<BoardsPage />} />
+          <Route
+            path={ROUTES.BOARDS}
+            element={
+              <ProtectedRoute>
+                <BoardsPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
           <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
-          <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-          <Route path={`${ROUTES.BOARDS}/:idBoard`} element={<BoardPage />} />
+          <Route
+            path={ROUTES.PROFILE}
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={`${ROUTES.BOARDS}/:idBoard`}
+            element={
+              <ProtectedRoute>
+                <BoardPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

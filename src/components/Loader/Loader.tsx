@@ -18,8 +18,6 @@ export const Loader = ({
         flexDirection: 'column',
         alignItems: 'center',
         height: '100%',
-        pb: 2,
-        pt: 2,
       }}
     >
       {isLoading ? (

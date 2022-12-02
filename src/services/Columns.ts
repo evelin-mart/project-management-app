@@ -14,59 +14,39 @@ import {
 
 export class Columns extends BaseService {
   static async getAllColumns({ boardId }: getAllColumnsRequest) {
-    try {
-      const response = await this.api.get<getAllColumnsAnswer>(
-        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while getting all columns');
-    }
+    const response = await this.api.get<getAllColumnsAnswer>(
+      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`
+    );
+    return response.data;
   }
 
   static async createColumn({ boardId, body }: createColumnRequest) {
-    try {
-      const response = await this.api.post<createColumnAnswer>(
-        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`,
-        body
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while creating column');
-    }
+    const response = await this.api.post<createColumnAnswer>(
+      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}`,
+      body
+    );
+    return response.data;
   }
 
   static getColumn = async ({ boardId, columnId }: getColumnRequest) => {
-    try {
-      const response = await this.api.get<getBoardAnswer>(
-        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while getting column');
-    }
+    const response = await this.api.get<getBoardAnswer>(
+      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
+    );
+    return response.data;
   };
 
   static async updateColumn({ boardId, columnId, body }: updateColumnRequest) {
-    try {
-      const response = await this.api.put<updateColumnAnswer>(
-        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`,
-        body
-      );
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while updating column');
-    }
+    const response = await this.api.put<updateColumnAnswer>(
+      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`,
+      body
+    );
+    return response.data;
   }
 
   static async deleteColumn({ boardId, columnId }: deleteColumnRequest) {
-    try {
-      const response = await this.api.delete<undefined>(
-        `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
-      );
-      return response;
-    } catch (error) {
-      throw new Error('Error while deleting column');
-    }
+    const response = await this.api.delete<undefined>(
+      `${SERVER.BOARDS}/${boardId}/${SERVER.COLUMNS}/${columnId}`
+    );
+    return response;
   }
 }

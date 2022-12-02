@@ -7,6 +7,17 @@ import { UserData } from './interface';
 import { UpdateUserRequest } from 'services/types/Users.types';
 import { unknownErrorMessage } from '../../constants';
 
+export const userStateId = 'user';
+
+export const getUserFromLocalStorage = () => {
+  try {
+    const persistedUserState = localStorage.getItem(userStateId);
+    if (persistedUserState) return JSON.parse(persistedUserState);
+  } catch (e) {
+    // console.log(e);
+  }
+};
+
 const initialState = {
   data: {
     id: '',
@@ -56,6 +67,9 @@ export const userSlice = createSlice({
   reducers: {
     logout() {
       return initialState;
+    },
+    hydrate: (_, action) => {
+      return action.payload;
     },
   },
   extraReducers(builder) {
@@ -115,4 +129,4 @@ export const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, hydrate } = userSlice.actions;

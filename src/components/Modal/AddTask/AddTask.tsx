@@ -3,8 +3,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { createTask, setModal } from 'store/board';
+import { createTask } from 'store/board';
 import { useAppDispatch, useAppSelector } from 'store';
+import { closeModal } from 'store/modal';
 
 type FormValues = {
   title: string;
@@ -12,9 +13,9 @@ type FormValues = {
   userId: string;
 };
 
-export const AddTask = () => {
+export const AddTask = ({ columnId }: { columnId: string }) => {
   const dispatch = useAppDispatch();
-  const { users, modalData, board } = useAppSelector((state) => state.board);
+  const { users, board } = useAppSelector((state) => state.board);
 
   const {
     register,
@@ -24,15 +25,15 @@ export const AddTask = () => {
   } = useForm<FormValues>();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    dispatch(closeModal());
     dispatch(
       createTask({
         boardId: board.id,
-        columnId: modalData.columnId,
+        columnId: columnId,
         body: data,
       })
     );
     reset();
-    dispatch(setModal(''));
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -44,30 +45,38 @@ export const AddTask = () => {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.title}
+        helperText={(errors.title?.message as string) || ''}
         label="Title"
         variant="outlined"
         margin="normal"
       />
-      {errors?.title && <div style={{ color: 'red' }}>Title is invalid</div>}
       <TextField
         {...register('description', {
           required: 'Description is require field!',
         })}
         fullWidth
+        error={!!errors.description}
+        helperText={(errors.description?.message as string) || ''}
         label="Description"
         multiline
         maxRows={4}
       />
-      {errors?.description && <div style={{ color: 'red' }}>Description is invalid</div>}
-      <FormControl fullWidth sx={{ my: 1.2 }} size={'medium'}>
+      <FormControl sx={{ my: 1.2 }} fullWidth size={'medium'}>
         <InputLabel>User</InputLabel>
         <Select
+          defaultValue={'none'}
           label="User"
+          error={!!errors.userId}
           {...register('userId', {
-            required: 'userId is require field!',
+            required: 'User is require field!',
+            pattern: {
+              value: /[^none]/,
+              message: 'User is require field!',
+            },
           })}
         >
-          <MenuItem value="">
+          <MenuItem value="none">
             <em>None</em>
           </MenuItem>
           {users.map((user) => (
@@ -76,7 +85,9 @@ export const AddTask = () => {
             </MenuItem>
           ))}
         </Select>
-        {errors?.userId && <div style={{ color: 'red' }}>userId is invalid</div>}
+        {errors?.userId && (
+          <div style={{ color: '#fe6b61', margin: '3px 15px' }}>{errors.userId.message}</div>
+        )}
       </FormControl>
 
       <Button

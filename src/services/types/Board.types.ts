@@ -26,7 +26,7 @@ export type getBoardAnswer = {
       order: number;
       description: string;
       userId: string;
-      files: { filename: string; fileSize: number }[];
+      files?: { filename?: string; fileSize?: number }[];
     }[];
   }[];
 };
@@ -60,5 +60,3 @@ export type updateBoardRequest = {
 };
 
 export type updateBoardAnswer = BoardData;
-
-export type deleteBoardRequest = { boardId: string };

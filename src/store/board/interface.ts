@@ -5,12 +5,8 @@ export interface BoardStore {
   board: getBoardAnswer;
   users: User[];
   isLoading: boolean;
-  modal: string;
-  modalData: {
-    columnId: string;
-    taskId: string;
-  };
   editTitleColumnId: string;
+  error: string;
 }
 
 export type BoardsState = Array<BoardStore>;

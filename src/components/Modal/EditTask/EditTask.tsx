@@ -3,9 +3,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { updateTask, setModal } from 'store/board';
+import { updateTask } from 'store/board';
 import { User } from 'services/types/Users.types';
 import { useAppDispatch, useAppSelector } from 'store';
+import { closeModal } from 'store/modal';
 
 interface FormValues {
   title: string;
@@ -13,9 +14,20 @@ interface FormValues {
   userId: string;
 }
 
-export const EditTask = () => {
+export interface EditTaskProps {
+  columnId: string;
+  task: {
+    id: string;
+    title: string;
+    description: string;
+    userId: string;
+    order: number;
+  };
+}
+
+export const EditTask = ({ task, columnId }: EditTaskProps) => {
   const dispatch = useAppDispatch();
-  const { users, modalData, board } = useAppSelector((state) => state.board);
+  const { users, board } = useAppSelector((state) => state.board);
 
   const {
     handleSubmit,
@@ -24,26 +36,21 @@ export const EditTask = () => {
     reset,
   } = useForm<FormValues>();
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    const task = board.columns
-      .find((item) => item.id === modalData.columnId)
-      ?.tasks.find((item) => item.id === modalData.taskId);
-
+    dispatch(closeModal());
     dispatch(
       updateTask({
         boardId: board.id,
-        columnId: modalData.columnId,
-        taskId: modalData.taskId,
+        columnId: columnId,
+        taskId: task.id,
         body: {
           boardId: board.id,
-          columnId: modalData.columnId,
+          columnId: columnId,
           order: task?.order || 1,
-          // order: 1,
           ...data,
         },
       })
     );
     reset();
-    dispatch(setModal(''));
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -55,25 +62,30 @@ export const EditTask = () => {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.title}
+        helperText={(errors.title?.message as string) || ''}
+        defaultValue={task?.title}
         label="Title"
         variant="outlined"
         margin="normal"
       />
-      {errors?.title && <div style={{ color: 'red' }}>title is invalid</div>}
       <TextField
         {...register('description', {
           required: 'Title is require field!',
         })}
         fullWidth
+        error={!!errors.description}
+        helperText={(errors.description?.message as string) || ''}
         label="Description"
+        defaultValue={task?.description}
         multiline
         maxRows={4}
       />
-      {errors?.description && <div style={{ color: 'red' }}>description is invalid</div>}
-
-      <FormControl fullWidth sx={{ my: 1.2 }} size={'medium'}>
+      <FormControl sx={{ my: 1.2 }} fullWidth size={'medium'}>
         <InputLabel>User</InputLabel>
         <Select
+          defaultValue={task?.userId}
+          error={!!errors.userId}
           label="User"
           {...register('userId', {
             required: 'userId is require field!',
@@ -88,7 +100,9 @@ export const EditTask = () => {
             </MenuItem>
           ))}
         </Select>
-        {errors?.userId && <div style={{ color: 'red' }}>userId is invalid</div>}
+        {errors?.userId && (
+          <div style={{ color: '#fe6b61', margin: '3px 15px' }}>{errors.userId.message}</div>
+        )}
       </FormControl>
       <Button
         variant="outlined"

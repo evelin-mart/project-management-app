@@ -9,6 +9,12 @@ import { ConfirmDeletion } from './ConfirmDeletion';
 import { ShowBoard } from './ShowBoard';
 import { BoardData } from 'store/boards';
 import { SubmitDeleteProps } from './ConfirmDeletion/ConfirmDeletion';
+import { EditTask } from './EditTask';
+import { EditTaskProps } from './EditTask/EditTask';
+import { AddColumn } from './AddColumn';
+import { AddTask } from './AddTask';
+import { ShowTask } from './ShowTask';
+import { TaskData } from 'services/types/Tasks.types';
 
 const style = {
   position: 'absolute',
@@ -45,6 +51,22 @@ export const CommonModal = () => {
     }
     case ModalTypes.DELETE: {
       content = <ConfirmDeletion {...(data.props as SubmitDeleteProps)} />;
+      break;
+    }
+    case ModalTypes.EDIT_TASK: {
+      content = <EditTask {...(data.props as EditTaskProps)} />;
+      break;
+    }
+    case ModalTypes.ADD_COLUMN: {
+      content = <AddColumn />;
+      break;
+    }
+    case ModalTypes.ADD_TASK: {
+      content = <AddTask {...(data.props as { columnId: string })} />;
+      break;
+    }
+    case ModalTypes.SHOW_TASK: {
+      content = <ShowTask {...(data.props as { task: TaskData; user: string })} />;
       break;
     }
     default: {

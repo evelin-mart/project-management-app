@@ -2,7 +2,6 @@ import { SERVER } from 'constants/Server';
 import {
   createBoardAnswer,
   createBoardRequest,
-  deleteBoardRequest,
   getAllBoardsAnswer,
   getBoardAnswer,
   getBoardRequest,
@@ -13,47 +12,27 @@ import { BaseService } from './BaseService';
 
 export class Board extends BaseService {
   static getAllBoards = async () => {
-    try {
-      const response = await this.api.get<getAllBoardsAnswer>(SERVER.BOARDS);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while getting all boards');
-    }
+    const response = await this.api.get<getAllBoardsAnswer>(SERVER.BOARDS);
+    return response.data;
   };
 
   static createBoard = async ({ body }: createBoardRequest) => {
-    try {
-      const response = await this.api.post<createBoardAnswer>(SERVER.BOARDS, body);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while creating board');
-    }
+    const response = await this.api.post<createBoardAnswer>(SERVER.BOARDS, body);
+    return response.data;
   };
 
   static getBoard = async ({ boardId }: getBoardRequest) => {
-    try {
-      const response = await this.api.get<getBoardAnswer>(`${SERVER.BOARDS}/${boardId}`);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while getting board');
-    }
+    const response = await this.api.get<getBoardAnswer>(`${SERVER.BOARDS}/${boardId}`);
+    return response.data;
   };
 
   static updateBoard = async ({ boardId, body }: updateBoardRequest) => {
-    try {
-      const response = await this.api.put<updateBoardAnswer>(`${SERVER.BOARDS}/${boardId}`, body);
-      return response.data;
-    } catch (error) {
-      throw new Error('Error while updating board');
-    }
+    const response = await this.api.put<updateBoardAnswer>(`${SERVER.BOARDS}/${boardId}`, body);
+    return response.data;
   };
 
   static deleteBoard = async (boardId: string) => {
-    try {
-      const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
-      return response;
-    } catch (error) {
-      throw new Error('Error while deleting board');
-    }
+    const response = await this.api.delete<undefined>(`${SERVER.BOARDS}/${boardId}`);
+    return response;
   };
 }

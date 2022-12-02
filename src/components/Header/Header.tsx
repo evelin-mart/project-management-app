@@ -25,9 +25,7 @@ import { ModalTypes, openModal } from 'store/modal';
 export const Header = () => {
   const dispatch = useAppDispatch();
   const { t, i18n } = useTranslation();
-  const {
-    data: { id: loggedUserId },
-  } = useAppSelector(selectUser);
+  const { id } = useAppSelector(selectUser).data;
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
   const theme = useTheme();
@@ -66,7 +64,7 @@ export const Header = () => {
   const color = trigger ? theme.palette.text.secondary : theme.palette.common.white;
   const colorTransition = { transition: 'all 0.5s ease', color };
 
-  const routes = loggedUserId
+  const routes = id
     ? {
         gtmp: ROUTES.BOARDS,
         cnb: HandleAddBoard,

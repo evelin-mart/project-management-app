@@ -29,7 +29,6 @@
   "edit": "edit",
   "show": "Show details",
   "gtb": "Go to the board",
-  "newClmn": "New column",
   "addTask": "Add task",
   "save": "Save",
   "cancel": "Cancel",
@@ -41,5 +40,7 @@
   "column-del": "column",
   "task-del": "task",
   "user-del": "user",
-  "profile": "My profile"
+  "profile": "My profile",
+  "back": "Back",
+  "new-col": "New column"
 }

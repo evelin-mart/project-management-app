@@ -1,8 +1,11 @@
 import { Typography } from '@mui/material';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { TaskData } from 'services/types/Tasks.types';
 
 export const ShowTask = ({ task, user }: { task: TaskData; user: string }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Typography variant="h5" align="center">
@@ -14,7 +17,9 @@ export const ShowTask = ({ task, user }: { task: TaskData; user: string }) => {
       >
         {task.description}
       </Typography>
-      <Typography variant="h6">User: {user}</Typography>
+      <Typography variant="h6">
+        {t('user')}: {user}
+      </Typography>
     </>
   );
 };

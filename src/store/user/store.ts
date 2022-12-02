@@ -13,9 +13,7 @@ export const getUserFromLocalStorage = () => {
   try {
     const persistedUserState = localStorage.getItem(userStateId);
     if (persistedUserState) return JSON.parse(persistedUserState);
-  } catch (e) {
-    // console.log(e);
-  }
+  } catch (e) {}
 };
 
 const initialState = {

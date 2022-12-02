@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, useRef } from 'react';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { CardContent, CardHeader, IconButton, Stack, Typography } from '@mui/material';
+import { Box, CardContent, CardHeader, IconButton, Stack, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { updateMoveTask } from 'store/board';
@@ -13,6 +13,7 @@ import { ItemTypes } from './ItemTypes';
 import { IItemTaskDrop, ITaskComponent } from './types';
 import { ModalTypes, openModal } from 'store/modal';
 import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
+import { useTranslation } from 'react-i18next';
 
 const TaskStyle = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white',
@@ -27,6 +28,8 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
   const id = task.id;
   const dispatch = useAppDispatch();
   const { users, board } = useAppSelector((state) => state.board);
+  const { t } = useTranslation();
+
   const user = task?.userId ? users.find((user) => user.id === task.userId)?.name : 'None';
 
   const taskRef = useRef<HTMLDivElement>(null);
@@ -76,15 +79,13 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     }),
   });
 
-  const handleDeleteTask: MouseEventHandler<HTMLButtonElement> = (e) => {
-    e.stopPropagation();
+  const handleDeleteTask = () =>
     dispatch(
       openModal({
         type: ModalTypes.DELETE,
-        props: { id: board.id, type: DeleteItems.TASK, idColumn: columnId, idTask: task.id },
+        props: { type: DeleteItems.TASK, args: { boardId: board.id, columnId, taskId: id } },
       })
     );
-  };
 
   const handleEditTask: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
@@ -108,7 +109,7 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
     <TaskStyle
       key={task.id}
       ref={taskRef}
-      style={{ opacity, marginBottom: '15px' }}
+      style={{ opacity, margin: '5px auto' }}
       data-handler-id={handlerId}
     >
       <CardHeader
@@ -148,16 +149,16 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
       </CardContent>
       <Stack direction="row" justifyContent="space-between" sx={{ px: 2, py: 1, mt: 'auto' }}>
         <Typography color="textPrimary" variant="subtitle1" sx={{ py: 1 }}>
-          User: {user}
+          {t('user')}: {user}
         </Typography>
-        <div>
+        <Box>
           <IconButton aria-label="edit" onClick={handleEditTask}>
             <EditIcon />
           </IconButton>
           <IconButton aria-label="delete" onClick={handleDeleteTask}>
             <DeleteIcon />
           </IconButton>
-        </div>
+        </Box>
       </Stack>
     </TaskStyle>
   );

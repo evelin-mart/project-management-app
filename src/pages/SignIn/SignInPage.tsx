@@ -12,6 +12,7 @@ import { SignInQuery } from 'services/types/Auth.types';
 import { Link } from 'react-router-dom';
 import { UserProfileFields, userForm } from 'constants/UserForm';
 import { useTranslation } from 'react-i18next';
+import { isFulfilled } from '@reduxjs/toolkit';
 
 export const SignInPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
@@ -34,8 +35,11 @@ export const SignInPage = () => {
   }, [data.id, isLoading, navigate]);
 
   const onSubmit: SubmitHandler<SignInQuery> = (data) => {
-    dispatch(authorizeUser(data));
-    reset();
+    dispatch(authorizeUser(data)).then((result) => {
+      if (isFulfilled(result)) {
+        reset();
+      }
+    });
   };
 
   return (

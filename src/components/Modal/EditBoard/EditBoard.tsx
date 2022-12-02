@@ -5,6 +5,8 @@ import { useAppDispatch } from 'store';
 import { BoardData, updateBoard } from 'store/boards';
 import { closeModal } from 'store/modal';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
+import { isFulfilled } from '@reduxjs/toolkit';
 
 interface FormValues {
   title: string;
@@ -16,6 +18,7 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
   const { t } = useTranslation();
 
   const handleClose = () => dispatch(closeModal());
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     handleSubmit,
@@ -24,12 +27,12 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
   } = useForm<FormValues>();
 
   const handleBoardUpdate: SubmitHandler<FormValues> = (data) => {
-    dispatch(
-      updateBoard({
-        boardId: board.id,
-        body: data,
-      })
-    ).then(() => handleClose());
+    dispatch(updateBoard({ boardId: board.id, body: data })).then((result) => {
+      if (isFulfilled(result)) {
+        enqueueSnackbar('Board has been changed successfully', { variant: 'success' });
+        handleClose();
+      }
+    });
   };
 
   return (
@@ -49,7 +52,7 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
         sx={{ mb: 2 }}
       />
       {errors?.title && (
-        <Typography variant="body2" sx={{ color: 'red' }}>
+        <Typography variant="body2" color="error">
           {errors.title.message}
         </Typography>
       )}
@@ -62,10 +65,11 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
         label={t('desc')}
         multiline
         maxRows={4}
+        margin="normal"
         defaultValue={board.description}
       />
       {errors?.description && (
-        <Typography variant="body2" sx={{ color: 'red' }}>
+        <Typography variant="body2" color="error">
           {errors.description.message}
         </Typography>
       )}

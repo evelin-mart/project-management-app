@@ -7,6 +7,7 @@ import { theme } from './theme';
 import { Router } from 'components/Router';
 import '../../i18n';
 import { getUserFromLocalStorage, hydrate } from 'store/user';
+import { Snackbar } from 'components/Snackbar';
 
 export const App = () => {
   const user = getUserFromLocalStorage();
@@ -18,8 +19,10 @@ export const App = () => {
     <>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Router />
+          <Snackbar>
+            <CssBaseline />
+            <Router />
+          </Snackbar>
         </ThemeProvider>
       </Provider>
     </>

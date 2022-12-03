@@ -12,11 +12,14 @@ import { SignUpQuery } from 'services/types/Auth.types';
 import { Link } from 'react-router-dom';
 import { UserProfileFields, userForm } from 'constants/UserForm';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
+import { isFulfilled } from '@reduxjs/toolkit';
 
 export const SignUpPage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -34,8 +37,12 @@ export const SignUpPage = () => {
   }, [data.id, isLoading, navigate]);
 
   const onSubmit: SubmitHandler<SignUpQuery> = (data) => {
-    dispatch(createUser(data));
-    reset();
+    dispatch(createUser(data)).then((result) => {
+      if (isFulfilled(result)) {
+        enqueueSnackbar('User has been created successfully', { variant: 'success' });
+        reset();
+      }
+    });
   };
 
   return (

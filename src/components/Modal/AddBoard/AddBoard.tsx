@@ -5,6 +5,8 @@ import { useAppDispatch } from 'store';
 import { addBoard } from 'store/boards';
 import { closeModal } from 'store/modal';
 import { useTranslation } from 'react-i18next';
+import { useSnackbar } from 'notistack';
+import { isFulfilled } from '@reduxjs/toolkit';
 
 interface FormValues {
   title: string;
@@ -16,6 +18,7 @@ export const AddBoard = () => {
   const { t } = useTranslation();
 
   const handleClose = () => dispatch(closeModal());
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
     handleSubmit,
@@ -24,11 +27,12 @@ export const AddBoard = () => {
   } = useForm<FormValues>();
 
   const handleAddBoard: SubmitHandler<FormValues> = (data) => {
-    dispatch(
-      addBoard({
-        body: data,
-      })
-    ).then(() => handleClose());
+    dispatch(addBoard({ body: data })).then((result) => {
+      if (isFulfilled(result)) {
+        enqueueSnackbar('Board has been created successfully', { variant: 'success' });
+        handleClose();
+      }
+    });
   };
 
   return (
@@ -47,7 +51,7 @@ export const AddBoard = () => {
         sx={{ mb: 2 }}
       />
       {errors?.title && (
-        <Typography variant="body2" sx={{ color: 'red' }}>
+        <Typography variant="body2" color="error">
           {errors.title.message}
         </Typography>
       )}
@@ -60,9 +64,10 @@ export const AddBoard = () => {
         label={t('desc')}
         multiline
         maxRows={4}
+        margin="normal"
       />
       {errors?.description && (
-        <Typography variant="body2" sx={{ color: 'red' }}>
+        <Typography variant="body2" color="error">
           {errors.description.message}
         </Typography>
       )}

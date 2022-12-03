@@ -11,9 +11,12 @@ import { UserProfileFields, userForm } from 'constants/UserForm';
 import { ModalTypes, openModal } from 'store/modal';
 import { DeleteItems } from 'components/Modal/ConfirmDeletion/ConfirmDeletion';
 import { useTranslation } from 'react-i18next';
+import { isFulfilled } from '@reduxjs/toolkit';
+import { useSnackbar } from 'notistack';
 
 export const ProfilePage = () => {
   const { data, isLoading } = useAppSelector(selectUser);
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const { t } = useTranslation();
@@ -35,8 +38,12 @@ export const ProfilePage = () => {
   }, [data, reset]);
 
   const onUpdateSubmit: SubmitHandler<UpdateUserRequest> = (data) => {
-    dispatch(updateUser(data));
-    reset();
+    dispatch(updateUser(data)).then((result) => {
+      if (isFulfilled(result)) {
+        enqueueSnackbar('User has been changed successfully', { variant: 'success' });
+        reset();
+      }
+    });
   };
 
   const handleDeleteUser = () =>

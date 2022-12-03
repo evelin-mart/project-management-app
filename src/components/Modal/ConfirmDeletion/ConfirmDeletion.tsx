@@ -3,19 +3,21 @@ import { Button, Stack, Typography } from '@mui/material';
 import { useAppDispatch } from 'store';
 import { closeModal } from 'store/modal';
 import { deleteBoard } from 'store/boards';
-import { deleteUser } from 'store/user';
 import { useTranslation } from 'react-i18next';
 import { deleteColumn, deleteTask } from 'store/board';
 import { deleteBoardRequest } from 'services/types/Board.types';
 import { DeleteUserRequest } from 'services/types/Users.types';
 import { deleteColumnRequest } from 'services/types/Columns.types';
 import { deleteTaskRequest } from 'services/types/Tasks.types';
+import { deleteUser, logout } from 'store/user';
+import { useSnackbar } from 'notistack';
+import { isFulfilled } from '@reduxjs/toolkit';
 
 export enum DeleteItems {
-  BOARD = 'board-del',
-  COLUMN = 'column-del',
-  TASK = 'task-del',
-  USER = 'user-del',
+  BOARD = 'board',
+  COLUMN = 'column',
+  TASK = 'task',
+  USER = 'user',
 }
 
 export interface SubmitDeleteProps {
@@ -30,30 +32,46 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
   const { t } = useTranslation();
 
   const handleClose = () => dispatch(closeModal());
+  const { enqueueSnackbar } = useSnackbar();
 
-  let onSubmit: () => Promise<unknown>;
-
-  switch (type) {
-    case DeleteItems.BOARD: {
-      onSubmit = () => dispatch(deleteBoard({ ...args } as deleteBoardRequest));
-      break;
+  const onSubmit = () => {
+    let apiAction: () => Promise<unknown>;
+    switch (type) {
+      case DeleteItems.BOARD: {
+        apiAction = () => dispatch(deleteBoard({ ...args } as deleteBoardRequest));
+        break;
+      }
+      case DeleteItems.COLUMN: {
+        apiAction = () => dispatch(deleteColumn({ ...args } as deleteColumnRequest));
+        break;
+      }
+      case DeleteItems.TASK: {
+        apiAction = () => dispatch(deleteTask({ ...args } as deleteTaskRequest));
+        break;
+      }
+      case DeleteItems.USER: {
+        apiAction = async () => {
+          return dispatch(deleteUser({ ...args } as DeleteUserRequest)).then((result) => {
+            if (isFulfilled(result)) {
+              dispatch(logout());
+            }
+            return result;
+          });
+        };
+        break;
+      }
+      default: {
+        apiAction = () => Promise.resolve();
+      }
     }
-    case DeleteItems.COLUMN: {
-      onSubmit = () => dispatch(deleteColumn({ ...args } as deleteColumnRequest));
-      break;
-    }
-    case DeleteItems.TASK: {
-      onSubmit = () => dispatch(deleteTask({ ...args } as deleteTaskRequest));
-      break;
-    }
-    case DeleteItems.USER: {
-      onSubmit = () => dispatch(deleteUser({ ...args } as DeleteUserRequest));
-      break;
-    }
-    default: {
-      onSubmit = () => new Promise((res) => res(null));
-    }
-  }
+    return apiAction().then((result) => {
+      if (isFulfilled(result)) {
+        dispatch(closeModal());
+        const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+        enqueueSnackbar(`${capitalizedType} has been deleted successfully`, { variant: 'info' });
+      }
+    });
+  };
 
   const handleSubmit = () => {
     onSubmit().then(() => dispatch(closeModal()));

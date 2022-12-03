@@ -34,13 +34,20 @@
   "cancel": "Cancel",
   "title": "Title",
   "desc": "Description",
-  "user": "User",
   "confirmation": "Are you sure want to delete",
+  "user": "User",
+  "board": "Board",
+  "column": "Column",
+  "task": "Task",
   "board-del": "board",
   "column-del": "column",
   "task-del": "task",
   "user-del": "user",
   "profile": "My profile",
   "back": "Back",
-  "new-col": "New column"
+  "new-col": "New column",
+  "user-del-success": "User has been deleted successfully",
+  "board-del-success": "Board has been deleted successfully",
+  "column-del-success": "Column has been deleted successfully",
+  "task-del-success": "Task has been deleted successfully"
 }

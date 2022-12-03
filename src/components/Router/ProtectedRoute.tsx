@@ -8,7 +8,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { data, isLoading } = useAppSelector(selectUser);
 
   if (!isLoading && !data.id) {
-    return <Navigate to={`/${ROUTES.SIGN_IN}`} />;
+    return <Navigate to={`/${ROUTES.HOME}`} />;
   }
 
   return <>{children}</>;

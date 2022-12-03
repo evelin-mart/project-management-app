@@ -42,5 +42,16 @@
   "user-del": "user",
   "profile": "My profile",
   "back": "Back",
-  "new-col": "New column"
+  "new-col": "New column",
+  "snackbar-user-del": "User has been deleted successfully",
+  "snackbar-column-del": "Column has been deleted successfully",
+  "snackbar-board-del": "Board has been deleted successfully",
+  "snackbar-task-del": "Task has been deleted successfully",
+  "snackbar-user-create": "User has been created successfully",
+  "snackbar-board-create": "Board has been created successfully",
+  "snackbar-user-change": "User has been changed successfully",
+  "snackbar-board-change": "Board has been changed successfully",
+  "User was not founded!": "User was not found",
+  "User login already exists!": "User login already exists",
+  "Unauthorized": "Unauthorized"
 }

@@ -29,7 +29,7 @@ export const AddBoard = () => {
   const handleAddBoard: SubmitHandler<FormValues> = (data) => {
     dispatch(addBoard({ body: data })).then((result) => {
       if (isFulfilled(result)) {
-        enqueueSnackbar('Board has been created successfully', { variant: 'success' });
+        enqueueSnackbar(t('snackbar-board-create'), { variant: 'success' });
         handleClose();
       }
     });

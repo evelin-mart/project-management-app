@@ -42,5 +42,16 @@
   "user-del": "пользователя",
   "profile": "Мой профиль",
   "back": "Назад",
-  "new-col": "Новая колонка"
+  "new-col": "Новая колонка",
+  "snackbar-user-del": "Пользователь успешно удален",
+  "snackbar-column-del": "Колонка успешно удалена",
+  "snackbar-board-del": "Доска успешно удалена",
+  "snackbar-task-del": "Задача успешно удалена",
+  "snackbar-user-create": "Пользователь успешно создан",
+  "snackbar-board-create": "Доска успешно создана",
+  "snackbar-user-change": "Пользователь успешно обновлен",
+  "snackbar-board-change": "Доска успешно обновлена",
+  "User was not founded!": "Пользователь не найден",
+  "User login already exists!": "Пользователь с введенным логином уже существует",
+  "Unauthorized": "Ошибка авторизации"
 }

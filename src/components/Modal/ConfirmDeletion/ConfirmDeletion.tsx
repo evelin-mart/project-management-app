@@ -14,10 +14,10 @@ import { useSnackbar } from 'notistack';
 import { isFulfilled } from '@reduxjs/toolkit';
 
 export enum DeleteItems {
-  BOARD = 'board',
-  COLUMN = 'column',
-  TASK = 'task',
-  USER = 'user',
+  BOARD = 'board-del',
+  COLUMN = 'column-del',
+  TASK = 'task-del',
+  USER = 'user-del',
 }
 
 export interface SubmitDeleteProps {
@@ -67,8 +67,7 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
     return apiAction().then((result) => {
       if (isFulfilled(result)) {
         dispatch(closeModal());
-        const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
-        enqueueSnackbar(`${capitalizedType} has been deleted successfully`, { variant: 'info' });
+        enqueueSnackbar(t(`snackbar-${type}`), { variant: 'info' });
       }
     });
   };

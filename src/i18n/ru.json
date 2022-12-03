@@ -44,7 +44,7 @@
   "back": "Назад",
   "new-col": "Новая колонка",
   "snackbar-user-del": "Пользователь успешно удален",
-  "snackbar-col-del": "Колонка успешно удалена",
+  "snackbar-column-del": "Колонка успешно удалена",
   "snackbar-board-del": "Доска успешно удалена",
   "snackbar-task-del": "Колонка успешно удалена",
   "snackbar-user-create": "Пользователь успешно создан",

@@ -167,7 +167,7 @@ export const Column = ({
                     variant="outlined"
                     defaultValue={column.title}
                     size="small"
-                    sx={{ ml: 1.2, mt: 1, width: '270px' }}
+                    sx={{ ml: 1.2, mt: 1, width: '245px' }}
                   />
                 )}
                 <IconButton aria-label="delete" sx={{ mt: 1 }} onClick={handleDeleteColumn}>

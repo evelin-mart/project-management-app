@@ -40,7 +40,7 @@ export const ProfilePage = () => {
   const onUpdateSubmit: SubmitHandler<UpdateUserRequest> = (data) => {
     dispatch(updateUser(data)).then((result) => {
       if (isFulfilled(result)) {
-        enqueueSnackbar('User has been changed successfully', { variant: 'success' });
+        enqueueSnackbar(t('snackbar-user-change'), { variant: 'success' });
         reset();
       }
     });

@@ -46,7 +46,7 @@
   "snackbar-user-del": "Пользователь успешно удален",
   "snackbar-column-del": "Колонка успешно удалена",
   "snackbar-board-del": "Доска успешно удалена",
-  "snackbar-task-del": "Колонка успешно удалена",
+  "snackbar-task-del": "Задача успешно удалена",
   "snackbar-user-create": "Пользователь успешно создан",
   "snackbar-board-create": "Доска успешно создана",
   "snackbar-user-change": "Пользователь успешно обновлен",

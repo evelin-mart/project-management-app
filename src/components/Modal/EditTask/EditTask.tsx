@@ -73,7 +73,7 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
         defaultValue={task?.title}
         label={t('title')}
         variant="outlined"
-        margin="normal"
+        margin="dense"
       />
       <TextField
         {...register('description', {
@@ -86,6 +86,7 @@ export const EditTask = ({ task, columnId }: EditTaskProps) => {
         defaultValue={task?.description}
         multiline
         maxRows={4}
+        margin="dense"
       />
       <FormControl sx={{ my: 1.2 }} fullWidth size={'medium'}>
         <InputLabel>User</InputLabel>

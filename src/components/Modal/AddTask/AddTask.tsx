@@ -54,7 +54,7 @@ export const AddTask = ({ columnId }: { columnId: string }) => {
         helperText={(errors.title?.message as string) || ''}
         label={t('title')}
         variant="outlined"
-        margin="normal"
+        margin="dense"
       />
       <TextField
         {...register('description', {
@@ -66,6 +66,7 @@ export const AddTask = ({ columnId }: { columnId: string }) => {
         label={t('desc')}
         multiline
         maxRows={4}
+        margin="dense"
       />
       <FormControl sx={{ my: 1.2 }} fullWidth size={'medium'}>
         <InputLabel>User</InputLabel>

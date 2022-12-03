@@ -11,7 +11,8 @@ import { SignInPage } from 'pages/SignIn';
 import { SignUpPage } from 'pages/SignUp';
 import { BoardPage } from 'pages/BoardPage/BoardPage';
 import { CommonModal } from 'components/Modal';
-import { ProtectedRoute } from './ProtectedRoute';
+import { ProtectedUnauthorizedRoute } from './ProtectedUnauthorizedRoute';
+import { ProtectedAuthorizedRoute } from './ProtectedAuthorizedRoute';
 
 export const Router = () => {
   return (
@@ -32,27 +33,41 @@ export const Router = () => {
           <Route
             path={ROUTES.BOARDS}
             element={
-              <ProtectedRoute>
+              <ProtectedUnauthorizedRoute>
                 <BoardsPage />
-              </ProtectedRoute>
+              </ProtectedUnauthorizedRoute>
             }
           />
-          <Route path={ROUTES.SIGN_UP} element={<SignUpPage />} />
-          <Route path={ROUTES.SIGN_IN} element={<SignInPage />} />
+          <Route
+            path={ROUTES.SIGN_UP}
+            element={
+              <ProtectedAuthorizedRoute>
+                <SignUpPage />
+              </ProtectedAuthorizedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.SIGN_IN}
+            element={
+              <ProtectedAuthorizedRoute>
+                <SignInPage />
+              </ProtectedAuthorizedRoute>
+            }
+          />
           <Route
             path={ROUTES.PROFILE}
             element={
-              <ProtectedRoute>
+              <ProtectedUnauthorizedRoute>
                 <ProfilePage />
-              </ProtectedRoute>
+              </ProtectedUnauthorizedRoute>
             }
           />
           <Route
             path={`${ROUTES.BOARDS}/:idBoard`}
             element={
-              <ProtectedRoute>
+              <ProtectedUnauthorizedRoute>
                 <BoardPage />
-              </ProtectedRoute>
+              </ProtectedUnauthorizedRoute>
             }
           />
           <Route path="*" element={<NotFoundPage />} />

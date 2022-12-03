@@ -47,9 +47,8 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
         fullWidth
         label={t('title')}
         variant="outlined"
-        margin="normal"
+        margin="dense"
         defaultValue={board.title}
-        sx={{ mb: 2 }}
       />
       {errors?.title && (
         <Typography variant="body2" color="error">
@@ -65,7 +64,7 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
         label={t('desc')}
         multiline
         maxRows={4}
-        margin="normal"
+        margin="dense"
         defaultValue={board.description}
       />
       {errors?.description && (

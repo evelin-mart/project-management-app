@@ -29,7 +29,7 @@ export const EditBoard = ({ board }: { board: BoardData }) => {
   const handleBoardUpdate: SubmitHandler<FormValues> = (data) => {
     dispatch(updateBoard({ boardId: board.id, body: data })).then((result) => {
       if (isFulfilled(result)) {
-        enqueueSnackbar('Board has been changed successfully', { variant: 'success' });
+        enqueueSnackbar(t('snackbar-board-change'), { variant: 'success' });
         handleClose();
       }
     });

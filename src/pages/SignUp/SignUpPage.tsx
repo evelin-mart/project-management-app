@@ -39,7 +39,7 @@ export const SignUpPage = () => {
   const onSubmit: SubmitHandler<SignUpQuery> = (data) => {
     dispatch(createUser(data)).then((result) => {
       if (isFulfilled(result)) {
-        enqueueSnackbar('User has been created successfully', { variant: 'success' });
+        enqueueSnackbar(t('snackbar-user-create'), { variant: 'success' });
         reset();
       }
     });

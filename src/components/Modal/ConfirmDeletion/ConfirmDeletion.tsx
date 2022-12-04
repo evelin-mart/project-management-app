@@ -62,7 +62,7 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
     apiAction()
       .then((result) => {
         if (isFulfilled(result)) {
-          enqueueSnackbar(t(`${type}-success`), { variant: 'info' });
+          enqueueSnackbar(t(`snackbar-${type}`), { variant: 'info' });
         }
       })
       .finally(() => {

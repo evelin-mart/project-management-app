@@ -168,9 +168,9 @@ export const BoardPage = () => {
             alignItems="flex-start"
             component="div"
             sx={{
+              flexWrap: 'nowrap',
               minWidth: 'max-content',
               overflow: 'hidden',
-              height: '81vh',
             }}
           >
             {column?.map((column, i) => (
@@ -186,8 +186,7 @@ export const BoardPage = () => {
             ))}
             <Button
               variant="outlined"
-              style={{ backgroundColor: 'white', height: '4rem', width: '350px' }}
-              sx={{ m: 1 }}
+              sx={{ m: '5px', backgroundColor: 'white', height: '4rem', width: '310px' }}
               onClick={handleNewColumn}
             >
               {t('new-col')}

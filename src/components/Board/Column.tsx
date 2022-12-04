@@ -125,31 +125,25 @@ export const Column = ({
     <Box ref={columnRef} style={{ opacity, margin: '5px' }} data-handler-id={handlerId}>
       <ColumnStyle key={column.id}>
         <Grid container sx={{ overflowX: 'hidden' }}>
-          <Grid container direction="row" justifyContent="space-between" alignItems="center">
+          <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
             <Paper
               component="form"
               sx={{ width: '100%', mb: '5px' }}
               onSubmit={handleSubmit(onSubmit)}
             >
-              <Grid
-                container
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ width: '300px' }}
-              >
+              <Grid container direction="row" justifyContent="space-between" alignItems="center">
                 {!(column.id === editTitleColumnId) && (
                   <Typography
                     color="textPrimary"
                     variant="h4"
-                    component="h2"
+                    component="h3"
                     textAlign="start"
                     onClick={() => dispatch(setEditTitleColumnId(column.id))}
                     sx={{
                       px: 1,
                       cursor: 'text',
-                      width: '255px',
-                      wordBreak: 'break-all',
+                      overflow: 'hidden',
+                      maxWidth: '80%',
                     }}
                   >
                     {column.title}
@@ -200,7 +194,7 @@ export const Column = ({
             component="div"
             direction="column"
             sx={{
-              maxHeight: '65vh',
+              maxHeight: 'calc(100vh - 255px)',
               overflowY: 'auto',
               display: 'flex',
               flexDirection: 'column',

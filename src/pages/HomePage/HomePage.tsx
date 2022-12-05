@@ -8,6 +8,7 @@ import {
   useTheme,
   useMediaQuery,
   Container,
+  Stack,
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { styled } from '@mui/system';
@@ -98,7 +99,7 @@ export const HomePage = () => {
           <Image src={MainImage} alt="home image" loading="lazy" />
         </Grid>
       </Grid>
-      <Box sx={{ my: 10 }}>
+      <Box sx={{ mt: 5 }}>
         <Typography
           variant={smUp ? 'h4' : 'h5'}
           component="h2"
@@ -108,27 +109,53 @@ export const HomePage = () => {
         >
           {t('team')}
         </Typography>
-        <Grid container spacing={6} justifyContent="center" alignItems="stretch">
+        <Stack
+          gap={5}
+          justifyContent="center"
+          alignItems="stretch"
+          flexDirection={smUp ? 'row' : 'column'}
+        >
           {Object.entries(developers).map(([developer, { image, text }]) => (
-            <Grid item key={developer} xs={12} sm={6} md={4}>
-              <Card sx={{ maxWidth: '350px', height: '100%' }}>
-                <CardMedia
-                  component="img"
-                  image={image}
-                  alt={t(developer)}
-                  sx={{ height: '100px', width: 'auto', mt: 2, mx: 'auto' }}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div" align="center">
-                    {t(developer)}
-                  </Typography>
-                  <Typography variant="body2">{t(text)}</Typography>
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card key={developer} sx={{ maxWidth: '350px' }}>
+              <CardMedia
+                component="img"
+                image={image}
+                alt={t(developer)}
+                sx={{ height: '100px', width: 'auto', mt: 2, mx: 'auto' }}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h6" component="div" align="center">
+                  {t(developer)}
+                </Typography>
+                <Typography variant="body2">{t(text)}</Typography>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </Stack>
       </Box>
+      <Stack sx={{ my: 5, width: '100%', alignItems: 'center' }}>
+        <Typography
+          variant={smUp ? 'h4' : 'h5'}
+          component="h2"
+          align="center"
+          color="textPrimary"
+          sx={{ my: 2 }}
+        >
+          {t('guide')}
+        </Typography>
+        <iframe
+          style={{
+            aspectRatio: '16/9',
+            width: smUp ? '70%' : '100%',
+            height: 'auto',
+          }}
+          src="https://www.youtube.com/embed/qhAiLOYf01E"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </Stack>
     </Container>
   );
 };

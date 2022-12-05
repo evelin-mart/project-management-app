@@ -56,5 +56,6 @@
   "snackbar-board-change": "Доска успешно обновлена",
   "User was not founded!": "Пользователь не найден",
   "User login already exists!": "Пользователь с введенным логином уже существует",
-  "Unauthorized": "Ошибка авторизации"
+  "Unauthorized": "Ошибка авторизации",
+  "guide": "Краткое руководство"
 }

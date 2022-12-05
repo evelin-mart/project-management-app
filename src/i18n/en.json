@@ -56,5 +56,6 @@
   "snackbar-board-change": "Board has been changed successfully",
   "User was not founded!": "User was not found",
   "User login already exists!": "User login already exists",
-  "Unauthorized": "Unauthorized"
+  "Unauthorized": "Unauthorized",
+  "guide": "Quick Start Guide"
 }

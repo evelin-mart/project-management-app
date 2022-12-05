@@ -41,7 +41,6 @@ export const Footer = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               width: '100%',
-              // flexDirection: smUp ? 'row' : 'column',
               flexWrap: 'nowrap',
             }}
           >

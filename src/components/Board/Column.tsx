@@ -50,6 +50,7 @@ export const Column = ({
     formState: { errors },
     reset,
   } = useForm<FormValues>();
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     dispatch(
       updateColumnTitle({
@@ -62,6 +63,7 @@ export const Column = ({
     reset();
     dispatch(setEditTitleColumnId(''));
   };
+
   const columnRef = useRef<HTMLDivElement>(null);
 
   const task = column.tasks.length > 0 ? column.tasks.slice() : [];

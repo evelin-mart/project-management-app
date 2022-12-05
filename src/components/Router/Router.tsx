@@ -9,7 +9,7 @@ import { ProfilePage } from 'pages/ProfilePage';
 import { BoardsPage } from 'pages/BoardsPage';
 import { SignInPage } from 'pages/SignIn';
 import { SignUpPage } from 'pages/SignUp';
-import { BoardPage } from 'pages/BoardPage/BoardPage';
+import { BoardPage } from 'pages/BoardPage';
 import { CommonModal } from 'components/Modal';
 import { ProtectedUnauthorizedRoute } from './ProtectedUnauthorizedRoute';
 import { ProtectedAuthorizedRoute } from './ProtectedAuthorizedRoute';

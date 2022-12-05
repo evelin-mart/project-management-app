@@ -9,7 +9,15 @@ import {
 import { BaseService } from 'services/BaseService';
 import { RootState } from 'store';
 import { setSnackbar } from './snackbar';
-import { authorizeUser, hydrate, logout, userStateId, updateUser, createUser } from './user';
+import {
+  authorizeUser,
+  hydrate,
+  logout,
+  userStateId,
+  updateUser,
+  createUser,
+  deleteUser,
+} from './user';
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -29,6 +37,7 @@ listenerMiddleware.startListening({
   matcher: isAnyOf(
     logout,
     isFulfilled(createUser),
+    isFulfilled(deleteUser),
     isFulfilled(authorizeUser),
     isFulfilled(updateUser)
   ),

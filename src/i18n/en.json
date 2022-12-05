@@ -54,7 +54,7 @@
   "snackbar-board-create": "Board has been created successfully",
   "snackbar-user-change": "User has been changed successfully",
   "snackbar-board-change": "Board has been changed successfully",
-  "User was not founded!": "User was not found",
+  "User was not founded!": "Wrong login or password!",
   "User login already exists!": "User login already exists",
   "Unauthorized": "Unauthorized",
   "guide": "Quick Start Guide"

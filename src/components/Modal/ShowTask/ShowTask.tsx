@@ -8,7 +8,7 @@ export const ShowTask = ({ task, user }: { task: TaskData; user: string }) => {
 
   return (
     <>
-      <Typography variant="h5" align="center">
+      <Typography variant="h5" align="center" sx={{ wordBreak: 'break-all' }}>
         {task.title}
       </Typography>
       <Typography

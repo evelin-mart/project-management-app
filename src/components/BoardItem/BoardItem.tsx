@@ -54,7 +54,11 @@ export const BoardItem = ({ board }: { board: BoardData }) => {
     >
       <CardHeader
         title={
-          <Typography component="h5" variant="h5" sx={{ maxWidth: '135px', overflow: 'hidden' }}>
+          <Typography
+            component="h5"
+            variant="h5"
+            sx={{ maxWidth: '135px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
             {board.title}
           </Typography>
         }

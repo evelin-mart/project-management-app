@@ -148,10 +148,10 @@ export const Task = ({ task, columnId, moveTask, index }: ITaskComponent) => {
         </Typography>
       </CardContent>
       <Stack direction="row" justifyContent="space-between" sx={{ px: 2, py: 1, mt: 'auto' }}>
-        <Typography color="textPrimary" variant="subtitle1" sx={{ py: 1 }}>
+        <Typography color="textPrimary" variant="subtitle1" sx={{ py: 1, textAlign: 'start' }}>
           {t('user')}: {user}
         </Typography>
-        <Box>
+        <Box sx={{ flex: '0 0 80px', alignSelf: 'flex-end' }}>
           <IconButton aria-label="edit" onClick={handleEditTask}>
             <EditIcon />
           </IconButton>

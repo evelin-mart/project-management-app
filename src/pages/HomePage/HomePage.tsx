@@ -10,8 +10,7 @@ import {
   Container,
   Stack,
 } from '@mui/material';
-import { Box } from '@mui/system';
-import { styled } from '@mui/system';
+import { styled, Box } from '@mui/system';
 import MainImage from '../../assets/img/home-main-img.jpg';
 import DenisAvatar from '../../assets/img/denis-avatar.png';
 import EvelinAvatar from '../../assets/img/evelin-avatar.png';

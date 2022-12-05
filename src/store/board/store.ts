@@ -47,7 +47,6 @@ export const boardSlice = createSlice({
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(createTask.fulfilled, (state, action) => {
-        state.isLoading = false;
         const columnId = action.payload.columnId;
         const column = state.board.columns.find((column) => column.id === columnId);
         const task = {
@@ -61,26 +60,16 @@ export const boardSlice = createSlice({
           column.tasks.push(task);
         }
       })
-      .addCase(createTask.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(createTask.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(createColumn.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.board.columns = [...state.board.columns, { ...action.payload, tasks: [] }];
       })
-      .addCase(createColumn.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(createColumn.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateTask.fulfilled, (state, action) => {
-        state.isLoading = false;
         const { columnId, id } = action.payload;
         state.board.columns = state.board.columns.map((column) => {
           if (column.id === columnId) {
@@ -99,15 +88,10 @@ export const boardSlice = createSlice({
           }
         });
       })
-      .addCase(updateTask.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(updateTask.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(deleteTask.fulfilled, (state, action) => {
-        state.isLoading = false;
         const { columnId, taskId } = action.payload;
         state.board = {
           ...state.board,
@@ -122,28 +106,18 @@ export const boardSlice = createSlice({
           }),
         };
       })
-      .addCase(deleteTask.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(deleteTask.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(deleteColumn.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.board.columns = state.board.columns.filter(
           (column) => column.id !== action.payload.columnId
         );
       })
-      .addCase(deleteColumn.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(deleteColumn.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateColumnTitle.fulfilled, (state, action) => {
-        state.isLoading = false;
         state.board.columns = state.board.columns.map((column) => {
           if (column.id === action.payload.id) {
             return { ...action.payload, tasks: column.tasks };
@@ -152,19 +126,13 @@ export const boardSlice = createSlice({
           }
         });
       })
-      .addCase(updateColumnTitle.pending, (state) => {
-        state.isLoading = true;
-      })
       .addCase(updateColumnTitle.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateMoveColumn.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       })
       .addCase(updateMoveTask.rejected, (state, action) => {
-        state.isLoading = false;
         state.error = action.error.message || unknownErrorMessage;
       });
   },

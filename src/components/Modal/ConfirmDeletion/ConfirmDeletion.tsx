@@ -9,7 +9,7 @@ import { deleteBoardRequest } from 'services/types/Board.types';
 import { DeleteUserRequest } from 'services/types/Users.types';
 import { deleteColumnRequest } from 'services/types/Columns.types';
 import { deleteTaskRequest } from 'services/types/Tasks.types';
-import { deleteUser } from 'store/user';
+import { deleteUser, logout } from 'store/user';
 import { useSnackbar } from 'notistack';
 import { isFulfilled } from '@reduxjs/toolkit';
 
@@ -51,7 +51,13 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
         break;
       }
       case DeleteItems.USER: {
-        apiAction = () => dispatch(deleteUser({ ...args } as DeleteUserRequest));
+        apiAction = () =>
+          dispatch(deleteUser({ ...args } as DeleteUserRequest)).then((result) => {
+            if (isFulfilled(result)) {
+              dispatch(logout());
+            }
+            return result;
+          });
         break;
       }
       default: {

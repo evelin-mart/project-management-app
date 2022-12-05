@@ -26,7 +26,7 @@ export const Footer = () => {
       sx={{ backgroundColor: theme.palette.grey[100], boxShadow: 'none' }}
       component="footer"
     >
-      <Container maxWidth="xl" sx={{ py: smUp ? 0 : 2 }}>
+      <Container maxWidth="xl">
         <Toolbar
           disableGutters
           sx={{
@@ -41,11 +41,17 @@ export const Footer = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               width: '100%',
-              flexDirection: smUp ? 'row' : 'column',
+              // flexDirection: smUp ? 'row' : 'column',
+              flexWrap: 'nowrap',
             }}
           >
             <Link href="https://rs.school/react/" target="_blank">
-              <Image src={RsSchoolLogo} alt="home image" loading="lazy" />
+              <Image
+                src={RsSchoolLogo}
+                alt="home image"
+                loading="lazy"
+                sx={{ width: smUp ? '80px' : '50px' }}
+              />
             </Link>
             <Grid
               container
@@ -53,7 +59,7 @@ export const Footer = () => {
               justifyContent="center"
               alignItems="center"
               direction={smUp ? 'row' : 'column'}
-              sx={{ py: smUp ? 0 : 1 }}
+              sx={{ py: smUp ? 0 : 1, flexWrap: 'nowrap' }}
             >
               {Object.entries(gitHubUsers).map(([user, link]) => (
                 <Grid item key={user} sx={{ p: 0 }}>
@@ -68,7 +74,12 @@ export const Footer = () => {
                 </Grid>
               ))}
             </Grid>
-            <Typography component="span" color="text.primary" noWrap sx={{ overflow: 'unset' }}>
+            <Typography
+              component="span"
+              color="text.primary"
+              noWrap
+              sx={{ fontSize: smUp ? '1rem' : '10px', overflow: 'unset' }}
+            >
               2022. React 2022Q3
             </Typography>
           </Box>

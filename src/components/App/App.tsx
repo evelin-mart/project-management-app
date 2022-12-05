@@ -16,15 +16,13 @@ export const App = () => {
   }
 
   return (
-    <>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Snackbar>
-            <CssBaseline />
-            <Router />
-          </Snackbar>
-        </ThemeProvider>
-      </Provider>
-    </>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Snackbar>
+          <CssBaseline />
+          <Router />
+        </Snackbar>
+      </ThemeProvider>
+    </Provider>
   );
 };

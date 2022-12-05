@@ -9,7 +9,7 @@ import { deleteBoardRequest } from 'services/types/Board.types';
 import { DeleteUserRequest } from 'services/types/Users.types';
 import { deleteColumnRequest } from 'services/types/Columns.types';
 import { deleteTaskRequest } from 'services/types/Tasks.types';
-import { deleteUser, logout } from 'store/user';
+import { deleteUser } from 'store/user';
 import { useSnackbar } from 'notistack';
 import { isFulfilled } from '@reduxjs/toolkit';
 
@@ -36,6 +36,7 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
 
   const onSubmit = () => {
     let apiAction: () => Promise<unknown>;
+
     switch (type) {
       case DeleteItems.BOARD: {
         apiAction = () => dispatch(deleteBoard({ ...args } as deleteBoardRequest));
@@ -50,30 +51,23 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
         break;
       }
       case DeleteItems.USER: {
-        apiAction = async () => {
-          return dispatch(deleteUser({ ...args } as DeleteUserRequest)).then((result) => {
-            if (isFulfilled(result)) {
-              dispatch(logout());
-            }
-            return result;
-          });
-        };
+        apiAction = () => dispatch(deleteUser({ ...args } as DeleteUserRequest));
         break;
       }
       default: {
         apiAction = () => Promise.resolve();
       }
     }
-    return apiAction().then((result) => {
-      if (isFulfilled(result)) {
-        dispatch(closeModal());
-        enqueueSnackbar(t(`snackbar-${type}`), { variant: 'info' });
-      }
-    });
-  };
 
-  const handleSubmit = () => {
-    onSubmit().then(() => dispatch(closeModal()));
+    apiAction()
+      .then((result) => {
+        if (isFulfilled(result)) {
+          enqueueSnackbar(t(`snackbar-${type}`), { variant: 'info' });
+        }
+      })
+      .finally(() => {
+        dispatch(closeModal());
+      });
   };
 
   return (
@@ -85,7 +79,7 @@ export const ConfirmDeletion = ({ type, args }: SubmitDeleteProps) => {
         <Button variant="outlined" onClick={handleClose}>
           {t('cancel')}
         </Button>
-        <Button variant="outlined" color="error" onClick={handleSubmit}>
+        <Button variant="outlined" color="error" onClick={onSubmit}>
           {t('del')}
         </Button>
       </Stack>

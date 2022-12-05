@@ -47,8 +47,7 @@ export const AddBoard = () => {
         fullWidth
         label={t('title')}
         variant="outlined"
-        margin="normal"
-        sx={{ mb: 2 }}
+        margin="dense"
       />
       {errors?.title && (
         <Typography variant="body2" color="error">
@@ -64,7 +63,7 @@ export const AddBoard = () => {
         label={t('desc')}
         multiline
         maxRows={4}
-        margin="normal"
+        margin="dense"
       />
       {errors?.description && (
         <Typography variant="body2" color="error">

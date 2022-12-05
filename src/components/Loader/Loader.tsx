@@ -18,7 +18,6 @@ export const Loader = ({
         flexDirection: 'column',
         alignItems: 'center',
         height: '100%',
-        overflow: 'hidden',
       }}
     >
       {isLoading ? (

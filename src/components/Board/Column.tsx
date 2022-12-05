@@ -146,6 +146,8 @@ export const Column = ({
                       cursor: 'text',
                       overflow: 'hidden',
                       maxWidth: '80%',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     {column.title}
